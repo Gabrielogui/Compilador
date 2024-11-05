@@ -7,7 +7,9 @@ enum TOKEN_CAT {PR = 1, ID, CT_I, CT_R, CT_C, LT, SN, FIM_ARQ};
 
 /* Onde: ID: Identificador, SN: Sinal; CT_I: Constante numérica inteira */
 
-enum SINAIS {ATRIB = 1, ADICAO, SUBTRACAO, MULTIPLIC, DIVISAO, ABRE_PAR, FECHA_PAR}; // Sinais válidos da linguagem
+enum SINAIS {ATRIB = 1, ADICAO, SUBTRACAO, MULTIPLIC, DIVISAO, ABRE_PAR, FECHA_PAR, ABRE_COLCHETES, FECHA_COLCHETES,
+            ABRE_CHAVES, FECHA_CHAVES, VIRGULA, MAIOR_OU_IGUAL, MAIOR_QUE, MENOR_OU_IGUAL, MENOR_QUE, ATRIBUICAO, COMPARACAO,
+            NEGACAO, DIFERENTE, E_COMERCIAL, AND, OR}; // Sinais válidos da linguagem
 
 typedef struct {
     enum TOKEN_CAT cat; // deve receber uma das constantes de enum TOKEN_CAT

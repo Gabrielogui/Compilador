@@ -18,21 +18,62 @@ int main()
 // |=======| FUNÇÕES |=======|
 TOKEN analise_lexica(FILE *fd){
     // VARIÁVEIS DAS FUNÇÕES:
-    int estado;
+    int estado = 0;
     char lexema[TAM_LEXEMA] = "";
     int tamL = 0;
     char digitos[TAM_NUM] = "";
     int tamD = 0;
+
+    //TOKEN:
+    TOKEN t;
 
     // WHILE TRUE:
     while(1){
         char c = getc(fd);
         switch(estado){
             case 0:
+                if(c == ' '){
+                    estado = 0;
+                }else if(c == '/t'){
+                    estado = 0;
+                }else if(c == '/n'){
+                    estado = 0;
+                }else if(c >= 'a' && c <= 'Z'){
+                    estado = 1;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }else if(c == '_'){
+                    estado = 31;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }else if(c >= '0' && c <= '9'){
+                    estado = 2;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }
                 break;
             case 1:
+                if((c == '_') || (c >= 'a' && c <= 'Z') || (c >= '0' && c <= '9')){
+                    estado = 1;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }else{ // OUTRO*
+                    estado = 48;
+                }
                 break;
             case 2:
+                if(c >= '1' && c <= '9'){
+                    estado = 2;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }else if(c == '.'){
+                    estado = 3;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }else{
+                    estado = 47;
+                    ungetc(c, fd);
+                }
                 break;
             case 3:
                 break;
@@ -91,6 +132,15 @@ TOKEN analise_lexica(FILE *fd){
             case 30:
                 break;
             case 31:
+                if(c == '_'){
+                    estado = 31;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }else if(c >= 'a' && c <= 'Z'){
+                    estado = 1;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }
                 break;
             case 32:
                 break;
