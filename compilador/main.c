@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "analex.h"
 
 #define TAM_LEXEMA 50
@@ -43,13 +44,17 @@ TOKEN analise_lexica(FILE *fd){
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
                 }else if(c == '_'){
-                    estado = 31;
-                    lexema[tamL] = c;
-                    lexema[++tamL] = '\0';
-                }else if(c >= '0' && c <= '9'){
                     estado = 2;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
+                }else if(c >= '0' && c <= '9'){
+                    estado = 4;
+                    digitos[tamD] = c;
+                    digitos[++tamD] = '\0';
+                }else if(c == '"'){
+                    estado = 9;
+                }else{
+                    printf("\n[ERRO] - Estado no %d \n", estado);
                 }
                 break;
             case 1:
@@ -58,42 +63,82 @@ TOKEN analise_lexica(FILE *fd){
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
                 }else{ // OUTRO*
-                    estado = 48;
+                    estado = 3;
+                    ungetc(c, fd);
+                    t.cat = ID;
+                    strcpy(t.lexema, lexema);
+                    return t;
                 }
                 break;
             case 2:
-                if(c >= '1' && c <= '9'){
+                if(c == '_'){
                     estado = 2;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
-                }else if(c == '.'){
-                    estado = 3;
+                }else if(c >= 'a' && c <= 'Z'){
+                    estado = 1;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
                 }else{
-                    estado = 47;
-                    ungetc(c, fd);
+                    printf("\n[ERRO] - Estado no %d \n", estado);
                 }
                 break;
-            case 3:
+            case 3: // *ESTADO DE ACEITA플O*
                 break;
             case 4:
+                 if(c >= '0' && c <= '9'){
+                    estado = 4;
+                    digitos[tamD] = c;
+                    digitos[++tamD] = '\0';
+                }else if(c == '.'){
+                    estado = 6;
+                    digitos[tamD] = c;
+                    digitos[++tamD] = '\0';
+                }else{
+                    estado = 5;
+                    ungetc(c, fd);
+                    t.cat = CT_I;
+                    t.valor_i = atoi(digitos);
+                    return t;
+                }
                 break;
-            case 5:
+            case 5: // *ESTADO DE ACEITA플O*
                 break;
             case 6:
+                if(c >= '0' && c <= '9'){
+                    estado = 7;
+                    digitos[tamD] = c;
+                    digitos[++tamD] = '/0';
+                }else{
+                    printf("\n[ERRO] - Estado no %d \n", estado);
+                }
                 break;
             case 7:
+                if(c >= '0' && c <= '9'){
+                    estado = 7;
+                    digitos[tamD] = c;
+                    digitos[++tamD] = '/0';
+                }else{
+                    estado = 8;
+                    ungetc(c, fd);
+                    t.cat = CT_R;
+                    t.valor_r = atof(digitos);
+                }
                 break;
-            case 8:
+            case 8: // *ESTADO DE ACEITA플O*
                 break;
             case 9:
+                // SE VIER CARACTER IR PARA ESTADO 11
+                // SE VIER '\' IR PARA ESTADO 10
                 break;
             case 10:
+                // SE VIER 'n' IR PARA ESTADO 11
                 break;
             case 11:
+                // SE VIER CARACTER CONTINUAR NO ESTADO 11
+                // SE VIER '"' IR PARA ESTADO 12
                 break;
-            case 12:
+            case 12: // *ESTADO DE ACEITA플O*
                 break;
             case 13:
                 break;
@@ -132,15 +177,6 @@ TOKEN analise_lexica(FILE *fd){
             case 30:
                 break;
             case 31:
-                if(c == '_'){
-                    estado = 31;
-                    lexema[tamL] = c;
-                    lexema[++tamL] = '\0';
-                }else if(c >= 'a' && c <= 'Z'){
-                    estado = 1;
-                    lexema[tamL] = c;
-                    lexema[++tamL] = '\0';
-                }
                 break;
             case 32:
                 break;
