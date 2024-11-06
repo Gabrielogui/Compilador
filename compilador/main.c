@@ -50,11 +50,10 @@ int main()
             case SN:
                 break;
             case FIM_ARQ:
-                printf("Arquivo lido com sucesso!\n");
+                printf("\nArquivo lido com sucesso!\n");
                 break;
 
         }
-        printf("\n.......");
         if(tk.cat == FIM_ARQ){
             break;
         }
@@ -64,6 +63,7 @@ int main()
 }
 
 // |=======| FUNÇÕES |=======|
+// =======| ÁNALISE LÉXICA |=======
 TOKEN analise_lexica(FILE *fd){
     // VARIÁVEIS DAS FUNÇÕES:
     int estado = 0;
@@ -79,7 +79,7 @@ TOKEN analise_lexica(FILE *fd){
     while(1){
        // printf("\nentrou no while do analisador lexico");
         char c = fgetc(fd);
-        printf("\n %c \n", c);
+        printf("\n -> %c \n", c);
         system("pause");
         switch(estado){
             case 0:
@@ -91,8 +91,10 @@ TOKEN analise_lexica(FILE *fd){
                 }else if(c == '/n'){
                     estado = 0;
                     contLinhas++;
+                }else if(c == '/0'){
+                    estado = 0;
                 }else if(c >= 'a' && c <= 'z'){
-                    printf("\n1");
+                    //printf("\nentrou no 1");
                     estado = 1;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
@@ -165,10 +167,10 @@ TOKEN analise_lexica(FILE *fd){
                     estado = 39;
                     t.cat = SN;
                     t.codigo = MULTIPLICACAO;
-                }else if(c = '/'){
+                }else if(c == '/'){
                     estado = 40;
                 }else if(c == EOF){
-                    printf("Fim do aquivo!");
+                    printf("\n Final do arquivo");
                     t.cat = FIM_ARQ;
                     return t;
                 }else{
@@ -176,12 +178,13 @@ TOKEN analise_lexica(FILE *fd){
                 }
                 break;
             case 1:
+                printf("\n1");
                 if((c == '_') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')){
                     estado = 1;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
                 }else{ // OUTRO*
-                    printf("3");
+                    printf("\n3");
                     estado = 3;
                     ungetc(c, fd);
                     t.cat = ID;
@@ -190,6 +193,7 @@ TOKEN analise_lexica(FILE *fd){
                 }
                 break;
             case 2:
+                printf("\n2");
                 if(c == '_'){
                     estado = 2;
                     lexema[tamL] = c;
@@ -205,7 +209,8 @@ TOKEN analise_lexica(FILE *fd){
             case 3: // *ESTADO DE ACEITAÇÃO* - ID
                 break;
             case 4:
-                 if(c >= '0' && c <= '9'){
+                printf("\n4");
+                if(c >= '0' && c <= '9'){
                     estado = 4;
                     digitos[tamD] = c;
                     digitos[++tamD] = '\0';
@@ -224,6 +229,7 @@ TOKEN analise_lexica(FILE *fd){
             case 5: // *ESTADO DE ACEITAÇÃO* - CT_I
                 break;
             case 6:
+                printf("\n6");
                 if(c >= '0' && c <= '9'){
                     estado = 7;
                     digitos[tamD] = c;
