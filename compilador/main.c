@@ -203,7 +203,7 @@ TOKEN analise_lexica(FILE *fd){
                     digitos[tamD] = c;
                     digitos[++tamD] = '\0';
                 }else if(c == '"'){ // USAR O 'strig[]' PARA GUARDA-LA
-                    estado = 9;
+                    estado = 11;
                 }else if(c == '!'){
                     estado = 13;
                 }else if(c == '&'){
@@ -356,11 +356,11 @@ TOKEN analise_lexica(FILE *fd){
             case 8: // *ESTADO DE ACEITAÇÃO* - CT_F
                 break;
             case 9:
-                if((c != '"') && (c != '\n')){
+               /* if((c != '"') && (c != '\n')){
                     estado = 11;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
-                }
+                }*/
                 break;
             case 10:
                 break;
