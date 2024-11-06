@@ -49,9 +49,82 @@ int main()
                 printf("\n <CT_S, >"); // TERMINAR
                 break;
             case SN: // COLOCAR OS SINAIS
+                switch(tk.codigo){
+                    case ADICAO:
+                        printf("\n < , ADICAO - %d>", tk.codigo);
+                        break;
+                    case SUBTRACAO:
+                        printf("\n < , SUBTRACAO - %d>", tk.codigo);
+                        break;
+                    case MULTIPLICACAO:
+                        printf("\n < , MULTIPLICACAO - %d>", tk.codigo);
+                        break;
+                    case DIVISAO:
+                        printf("\n < , DIVISAO - %d>", tk.codigo);
+                        break;
+                    case ABRE_PAR:
+                        printf("\n < , ABRE_PAR - %d>", tk.codigo);
+                        break;
+                    case FECHA_PAR:
+                        printf("\n < , FECHA_PAR - %d>", tk.codigo);
+                        break;
+                    case ABRE_COLCHETES:
+                        printf("\n < , ABRE_COLCHETES - %d>", tk.codigo);
+                        break;
+                    case FECHA_COLCHETES:
+                        printf("\n < , FECHA_COLCHETES - %d>", tk.codigo);
+                        break;
+                    case ABRE_CHAVES:
+                        printf("\n < , ABRE_CHAVES - %d>", tk.codigo);
+                        break;
+                    case FECHA_CHAVES:
+                        printf("\n < , FECHA_CHAVES - %d>", tk.codigo);
+                        break;
+                    case VIRGULA:
+                        printf("\n < , VIRGULA - %d>", tk.codigo);
+                        break;
+                    case MAIOR_OU_IGUAL:
+                        printf("\n < , MAIOR_OU_IGUAL - %d>", tk.codigo);
+                        break;
+                    case MAIOR_QUE:
+                        printf("\n < , MAIOR_QUE - %d>", tk.codigo);
+                        break;
+                    case MENOR_OU_IGUAL:
+                        printf("\n < , MAIOR_OU_IGUAL - %d>", tk.codigo);
+                        break;
+                    case MENOR_QUE:
+                        printf("\n < , MAIOR_QUE - %d>", tk.codigo);
+                        break;
+                    case ATRIBUICAO:
+                        printf("\n < , ATRIBUICAO - %d>", tk.codigo);
+                        break;
+                    case COMPARACAO:
+                        printf("\n < , COMPARACAO  - %d>", tk.codigo);
+                        break;
+                    case NEGACAO:
+                        printf("\n < , NEGACAO - %d>", tk.codigo);
+                        break;
+                    case DIFERENTE:
+                        printf("\n < , DIFERENTE - %d>", tk.codigo);
+                        break;
+                    case E_COMERCIAL:
+                        printf("\n < , E_COMERCIAL - %d>", tk.codigo);
+                        break;
+                    case AND:
+                        printf("\n < , AND - %d>", tk.codigo);
+                        break;
+                    case OR:
+                        printf("\n < , OR - %d>", tk.codigo);
+                        break;
+
+                    /* ABRE_PAR, FECHA_PAR, ABRE_COLCHETES, FECHA_COLCHETES,
+            ABRE_CHAVES, FECHA_CHAVES, VIRGULA, MAIOR_OU_IGUAL, MAIOR_QUE, MENOR_OU_IGUAL, MENOR_QUE, ATRIBUICAO, COMPARACAO,
+            NEGACAO, DIFERENTE, E_COMERCIAL, AND, OR}; */
+                }
                 break;
             case FIM_ARQ:
                 printf("\nArquivo lido com sucesso!\n");
+                printf("\nQuantidade de linhas: %d ", contLinhas);
                 break;
 
         }
@@ -89,12 +162,13 @@ TOKEN analise_lexica(FILE *fd){
                 printf("\n0");
                 if(c == ' '){
                     estado = 0;
-                }else if(c == '/t'){
+                }else if(c == '\t'){
                     estado = 0;
-                }else if(c == '/n'){
+                }else if(c == '\n'){
                     estado = 0;
                     contLinhas++;
-                }else if(c == '/0'){
+                    //return t;
+                }else if(c == '\0'){
                     estado = 0;
                 }else if(c >= 'a' && c <= 'z'){
                     //printf("\nentrou no 1");

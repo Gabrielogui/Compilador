@@ -7,6 +7,8 @@ enum TOKEN_CAT {PR = 1, ID, CT_I, CT_R, CT_C, CT_S, SN, FIM_ARQ};
 
 /* Onde: ID: Identificador, SN: Sinal; CT_I: Constante numérica inteira ; CT_R: Constante Real ; CT_C: Constante caactere; CT_S: Constante String; FIM_ARQ: Fim do arquivo*/
 
+enum PALAVRAS_RESERVADAS {INT = 1};
+
 enum SINAIS {ADICAO = 1, SUBTRACAO, MULTIPLICACAO, DIVISAO, ABRE_PAR, FECHA_PAR, ABRE_COLCHETES, FECHA_COLCHETES,
             ABRE_CHAVES, FECHA_CHAVES, VIRGULA, MAIOR_OU_IGUAL, MAIOR_QUE, MENOR_OU_IGUAL, MENOR_QUE, ATRIBUICAO, COMPARACAO,
             NEGACAO, DIFERENTE, E_COMERCIAL, AND, OR}; // Sinais válidos da linguagem
