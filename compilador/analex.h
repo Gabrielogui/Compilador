@@ -3,7 +3,7 @@
 
 #define TAM_MAX_LEXEMA 31
 
-enum TOKEN_CAT {PR = 1, ID, CT_I, CT_R, CT_C, CT_S, SN, FIM_ARQ};
+enum TOKEN_CAT {PVR = 1, ID, CT_I, CT_R, CT_C, CT_S, SN, FIM_ARQ};
 
 /* Onde: ID: Identificador, SN: Sinal; CT_I: Constante numérica inteira ; CT_R: Constante Real ; CT_C: Constante caactere; CT_S: Constante String; FIM_ARQ: Fim do arquivo*/
 

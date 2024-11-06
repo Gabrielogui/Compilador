@@ -20,7 +20,7 @@ int main()
         printf("\n[ERRO] - ERRO ao abrir o arquivo\n");
     }
 
-    printf("\nLinha: %d", contLinhas);
+    //printf("\nLinha: %d", contLinhas);
 
     /*
     char c = fgetc(fd);
@@ -29,10 +29,12 @@ int main()
     printf("\nc = %c ; tk.cat = %d ", c, tk.cat);
     */
     while(1){
-        printf("\nEntrou no while do main");
+        //printf("\nEntrou no while do main");
         tk = analise_lexica(fd);
-        printf("\n-> %d ", tk.cat);
+        //printf("\n-> %d ", tk.cat);
         switch(tk.cat){
+            case PVR:
+                break;
             case ID:
                 printf("\n <ID, %s >", tk.lexema);
                 break;
@@ -43,83 +45,80 @@ int main()
                 printf("\n <CT_R, %f >", tk.valor_r);
                 break;
             case CT_C:
-                printf("\n <CT_C, >"); // TERMINAR
+                printf("\n <CT_C, %c >", tk.c); // TERMINAR
                 break;
             case CT_S:
-                printf("\n <CT_S, >"); // TERMINAR
+                printf("\n <CT_S, %s >", tk.lexema); // TERMINAR
                 break;
             case SN: // COLOCAR OS SINAIS
                 switch(tk.codigo){
                     case ADICAO:
-                        printf("\n < , ADICAO - %d>", tk.codigo);
+                        printf("\n <SN , ADICAO - %d>", tk.codigo);
                         break;
                     case SUBTRACAO:
-                        printf("\n < , SUBTRACAO - %d>", tk.codigo);
+                        printf("\n <SN , SUBTRACAO - %d>", tk.codigo);
                         break;
                     case MULTIPLICACAO:
-                        printf("\n < , MULTIPLICACAO - %d>", tk.codigo);
+                        printf("\n <SN , MULTIPLICACAO - %d>", tk.codigo);
                         break;
                     case DIVISAO:
-                        printf("\n < , DIVISAO - %d>", tk.codigo);
+                        printf("\n <SN , DIVISAO - %d>", tk.codigo);
                         break;
                     case ABRE_PAR:
-                        printf("\n < , ABRE_PAR - %d>", tk.codigo);
+                        printf("\n <SN , ABRE_PAR - %d>", tk.codigo);
                         break;
                     case FECHA_PAR:
-                        printf("\n < , FECHA_PAR - %d>", tk.codigo);
+                        printf("\n <SN , FECHA_PAR - %d>", tk.codigo);
                         break;
                     case ABRE_COLCHETES:
-                        printf("\n < , ABRE_COLCHETES - %d>", tk.codigo);
+                        printf("\n <SN , ABRE_COLCHETES - %d>", tk.codigo);
                         break;
                     case FECHA_COLCHETES:
-                        printf("\n < , FECHA_COLCHETES - %d>", tk.codigo);
+                        printf("\n <SN , FECHA_COLCHETES - %d>", tk.codigo);
                         break;
                     case ABRE_CHAVES:
-                        printf("\n < , ABRE_CHAVES - %d>", tk.codigo);
+                        printf("\n <SN , ABRE_CHAVES - %d>", tk.codigo);
                         break;
                     case FECHA_CHAVES:
-                        printf("\n < , FECHA_CHAVES - %d>", tk.codigo);
+                        printf("\n <SN , FECHA_CHAVES - %d>", tk.codigo);
                         break;
                     case VIRGULA:
-                        printf("\n < , VIRGULA - %d>", tk.codigo);
+                        printf("\n <SN , VIRGULA - %d>", tk.codigo);
                         break;
                     case MAIOR_OU_IGUAL:
-                        printf("\n < , MAIOR_OU_IGUAL - %d>", tk.codigo);
+                        printf("\n <SN , MAIOR_OU_IGUAL - %d>", tk.codigo);
                         break;
                     case MAIOR_QUE:
-                        printf("\n < , MAIOR_QUE - %d>", tk.codigo);
+                        printf("\n <SN , MAIOR_QUE - %d>", tk.codigo);
                         break;
                     case MENOR_OU_IGUAL:
-                        printf("\n < , MAIOR_OU_IGUAL - %d>", tk.codigo);
+                        printf("\n <SN , MENOR_OU_IGUAL - %d>", tk.codigo);
                         break;
                     case MENOR_QUE:
-                        printf("\n < , MAIOR_QUE - %d>", tk.codigo);
+                        printf("\n <SN , MENOR_QUE - %d>", tk.codigo);
                         break;
                     case ATRIBUICAO:
-                        printf("\n < , ATRIBUICAO - %d>", tk.codigo);
+                        printf("\n <SN , ATRIBUICAO - %d>", tk.codigo);
                         break;
                     case COMPARACAO:
-                        printf("\n < , COMPARACAO  - %d>", tk.codigo);
+                        printf("\n <SN , COMPARACAO  - %d>", tk.codigo);
                         break;
                     case NEGACAO:
-                        printf("\n < , NEGACAO - %d>", tk.codigo);
+                        printf("\n <SN , NEGACAO - %d>", tk.codigo);
                         break;
                     case DIFERENTE:
-                        printf("\n < , DIFERENTE - %d>", tk.codigo);
+                        printf("\n <SN , DIFERENTE - %d>", tk.codigo);
                         break;
                     case E_COMERCIAL:
-                        printf("\n < , E_COMERCIAL - %d>", tk.codigo);
+                        printf("\n <SN , E_COMERCIAL - %d>", tk.codigo);
                         break;
                     case AND:
-                        printf("\n < , AND - %d>", tk.codigo);
+                        printf("\n <SN , AND - %d>", tk.codigo);
                         break;
                     case OR:
-                        printf("\n < , OR - %d>", tk.codigo);
+                        printf("\n <SN , OR - %d>", tk.codigo);
                         break;
 
-                    /* ABRE_PAR, FECHA_PAR, ABRE_COLCHETES, FECHA_COLCHETES,
-            ABRE_CHAVES, FECHA_CHAVES, VIRGULA, MAIOR_OU_IGUAL, MAIOR_QUE, MENOR_OU_IGUAL, MENOR_QUE, ATRIBUICAO, COMPARACAO,
-            NEGACAO, DIFERENTE, E_COMERCIAL, AND, OR}; */
                 }
                 break;
             case FIM_ARQ:
@@ -145,8 +144,8 @@ TOKEN analise_lexica(FILE *fd){
     int tamL = 0;
     char digitos[TAM_NUM] = "";
     int tamD = 0;
-    char string[TAM_STR]; // USAR
-    int tamS = 0;
+    //char string[TAM_STR]; // USAR
+    //int tamS = 0;
 
     //TOKEN:
     TOKEN t;
@@ -155,11 +154,11 @@ TOKEN analise_lexica(FILE *fd){
     while(1){
        // printf("\nentrou no while do analisador lexico");
         char c = fgetc(fd);
-        printf("\n -> %c \n", c);
-        system("pause");
+        //printf("\n -> %c \n", c);
+        //system("pause");
         switch(estado){
             case 0:
-                printf("\n0");
+                //printf("\n0");
                 if(c == ' '){
                     estado = 0;
                 }else if(c == '\t'){
@@ -170,7 +169,7 @@ TOKEN analise_lexica(FILE *fd){
                     //return t;
                 }else if(c == '\0'){
                     estado = 0;
-                }else if(c >= 'a' && c <= 'z'){
+                }else if((c >= 'a' && c <= 'z') ||(c >= 'A' && c <= 'Z')){
                     //printf("\nentrou no 1");
                     estado = 1;
                     lexema[tamL] = c;
@@ -236,32 +235,37 @@ TOKEN analise_lexica(FILE *fd){
                     estado = 37;
                     t.cat = SN;
                     t.codigo = ADICAO;
+                    return t;
                 }else if(c == '-'){
                     estado = 38;
                     t.cat = SN;
                     t.codigo = SUBTRACAO;
+                    return t;
                 }else if(c == '*'){
                     estado = 39;
                     t.cat = SN;
                     t.codigo = MULTIPLICACAO;
+                    return t;
                 }else if(c == '/'){
                     estado = 40;
                 }else if(c == EOF){
-                    printf("\n Final do arquivo");
+                    //printf("\n Final do arquivo");
                     t.cat = FIM_ARQ;
                     return t;
+                }else if(c == '\''){
+                    estado = 44;
                 }else{
                     printf("\n[ERRO] - Estado no %d \n", estado);
                 }
                 break;
             case 1:
-                printf("\n1");
-                if((c == '_') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')){
+                //printf("\n1");
+                if((c == '_') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z')){
                     estado = 1;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
                 }else{ // OUTRO*
-                    printf("\n3");
+                   // printf("\n3");
                     estado = 3;
                     ungetc(c, fd);
                     t.cat = ID;
@@ -270,12 +274,12 @@ TOKEN analise_lexica(FILE *fd){
                 }
                 break;
             case 2:
-                printf("\n2");
+                //printf("\n2");
                 if(c == '_'){
                     estado = 2;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
-                }else if(c >= 'a' && c <= 'z'){
+                }else if((c >= 'a' && c <= 'z')||(c >= 'A' && c <= 'Z')){
                     estado = 1;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
@@ -286,7 +290,7 @@ TOKEN analise_lexica(FILE *fd){
             case 3: // *ESTADO DE ACEITA플O* - ID
                 break;
             case 4:
-                printf("\n4");
+                //printf("\n4");
                 if(c >= '0' && c <= '9'){
                     estado = 4;
                     digitos[tamD] = c;
@@ -306,7 +310,7 @@ TOKEN analise_lexica(FILE *fd){
             case 5: // *ESTADO DE ACEITA플O* - CT_I
                 break;
             case 6:
-                printf("\n6");
+                //printf("\n6");
                 if(c >= '0' && c <= '9'){
                     estado = 7;
                     digitos[tamD] = c;
@@ -331,8 +335,10 @@ TOKEN analise_lexica(FILE *fd){
             case 8: // *ESTADO DE ACEITA플O* - CT_F
                 break;
             case 9:
-                if(c != '"'){
+                if((c != '"') && (c != '\n')){
                     estado = 11;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
                 }
                 // SE VIER '\' IR PARA ESTADO 10
                 break;
@@ -340,13 +346,18 @@ TOKEN analise_lexica(FILE *fd){
                 // SE VIER 'n' IR PARA ESTADO 11
                 break;
             case 11:
-                if(c != '"'){
+                if((c != '"')&&(c != '\n')){
                     estado = 11;
-                }else{
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }else if(c == '"'){
                     estado = 12;
-                    ungetc(c, fd);
+                    //ungetc(c, fd);
+                    strcpy(t.lexema, lexema);
                     t.cat = CT_S;
                     return t;
+                }else{
+                    printf("[ERRO] - Estado no %d \n", estado);
                 }
                 // SE VIER CARACTER CONTINUAR NO ESTADO 11
                 // SE VIER '"' IR PARA ESTADO 12
@@ -363,6 +374,7 @@ TOKEN analise_lexica(FILE *fd){
                     estado = 14; // NEGA플O
                     t.cat = SN;
                     t.codigo = NEGACAO;
+                    return t;
                 }
                 break;
             case 14: // *ESTADO DE ACEITA플O* - NEGA플O
@@ -422,6 +434,7 @@ TOKEN analise_lexica(FILE *fd){
                     estado = 30;
                     t.cat = SN;
                     t.codigo = MAIOR_QUE;
+                    return t;
                 }
                 break;
             case 29: // *ESTADO DE ACEITA플O* - MAIOR OU IGUAL
@@ -469,22 +482,80 @@ TOKEN analise_lexica(FILE *fd){
             case 39: // *ESTADO DE ACEITA플O* - MULTIPLICA플O
                 break;
             case 40:
+                if(c == '/'){
+                    estado = 42;
+                }else{
+                    estado = 41;
+                    t.cat = SN;
+                    t.codigo = DIVISAO;
+                    return t;
+                }
                 break;
-            case 41:
+            case 41: // *ESTADO DE ACEITA플O* - DIVIS홒
                 break;
             case 42:
+                if(c != '\n'){
+                    estado = 42;
+                }else{
+                    estado = 0;
+                }
                 break;
             case 43:
                 break;
             case 44:
+                if(c == '\n'){
+                    estado = 47;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }else if(c == '\0'){
+                    estado = 46;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }else if((isprint(c) != '\0') && (isprint(c) != '\'') && (isprint(c) != '\\') && (isprint(c) != '\n')){
+                    estado = 50;
+                    lexema[tamL] = c;
+                    lexema[++tamL] = '\0';
+                }else{
+                    printf("\n[ERRO] - Estado no %d \n", estado);
+                }
                 break;
             case 45:
                 break;
             case 46:
+                if(c == '\''){
+                    estado = 48;
+                    t.cat = CT_C;
+                    t.c = lexema[0];
+                    return t;
+                }else{
+                    printf("\n[ERRO] - Estado no %d \n", estado);
+                }
                 break;
             case 47:
+                if(c == '\''){
+                    estado = 49;
+                    t.cat = CT_C;
+                    t.c = lexema[0];
+                    return t;
+                }else{
+                    printf("\n[ERRO] - Estado no %d \n", estado);
+                }
                 break;
-            case 48:
+            case 48: // *ESTADO DE ACEITA플O* - CHAR_CON
+                break;
+            case 49: // *ESTADO DE ACEITA플O* - CHAR_CON
+                break;
+            case 50:
+                if(c == '\''){
+                    estado = 51;
+                    t.cat = CT_C;
+                    t.c = lexema[0];
+                    return t;
+                }else{
+                    printf("\n[ERRO] - Estado no %d \n", estado);
+                }
+                break;
+            case 51: // *ESTADO DE ACEITA플O* - CHAR_CON
                 break;
         }
     }
