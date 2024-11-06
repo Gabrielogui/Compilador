@@ -5,6 +5,7 @@
 
 #define TAM_LEXEMA 50
 #define TAM_NUM 20
+#define TAM_STR 50
 
 // |=======|  DECLARAÇÃO DAS FUNÇÕES |=======|
 TOKEN analise_lexica(FILE*);
@@ -44,10 +45,10 @@ int main()
             case CT_C:
                 printf("\n <CT_C, >"); // TERMINAR
                 break;
-            case LT:
-                printf("\n <LT, >"); // TERMINAR
+            case CT_S:
+                printf("\n <CT_S, >"); // TERMINAR
                 break;
-            case SN:
+            case SN: // COLOCAR OS SINAIS
                 break;
             case FIM_ARQ:
                 printf("\nArquivo lido com sucesso!\n");
@@ -71,6 +72,8 @@ TOKEN analise_lexica(FILE *fd){
     int tamL = 0;
     char digitos[TAM_NUM] = "";
     int tamD = 0;
+    char string[TAM_STR]; // USAR
+    int tamS = 0;
 
     //TOKEN:
     TOKEN t;
@@ -106,7 +109,7 @@ TOKEN analise_lexica(FILE *fd){
                     estado = 4;
                     digitos[tamD] = c;
                     digitos[++tamD] = '\0';
-                }else if(c == '"'){
+                }else if(c == '"'){ // USAR O 'strig[]' PARA GUARDA-LA
                     estado = 9;
                 }else if(c == '!'){
                     estado = 13;
@@ -268,7 +271,7 @@ TOKEN analise_lexica(FILE *fd){
                 }else{
                     estado = 12;
                     ungetc(c, fd);
-                    t.cat = LT;
+                    t.cat = CT_S;
                     return t;
                 }
                 // SE VIER CARACTER CONTINUAR NO ESTADO 11
