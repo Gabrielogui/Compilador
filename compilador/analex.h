@@ -30,5 +30,6 @@ typedef struct {
 } TOKEN; // Tipo TOKEN
 #endif
 
+// |=======| CONTADOR DE LINHAS |=======|
 int contLinhas = 1;
 

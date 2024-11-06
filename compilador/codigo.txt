@@ -30,4 +30,4 @@ _OI_a
 ' '
 '\0'
 '\n'
-while
+while // PALAVRA RESERVADA

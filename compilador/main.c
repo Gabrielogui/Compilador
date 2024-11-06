@@ -50,18 +50,10 @@ int main()
         printf("\n[ERRO] - ERRO ao abrir o arquivo\n");
     }
 
-    //printf("\nLinha: %d", contLinhas);
-
-    /*
-    char c = fgetc(fd);
-    tk.cat = ID;
-
-    printf("\nc = %c ; tk.cat = %d ", c, tk.cat);
-    */
     while(1){
-        //printf("\nEntrou no while do main");
+
         tk = analise_lexica(fd);
-        //printf("\n-> %d ", tk.cat);
+
         switch(tk.cat){
             case PVR:
                 printf("\n <PVR, %s >", tk.lexema);
@@ -149,14 +141,17 @@ int main()
                     case OR:
                         printf("\n <SN , OR - %d>", tk.codigo);
                         break;
-
+                    default:
+                        printf("\n[ERRO] - Erro ao ler o estado");
+                        break;
                 }
                 break;
             case FIM_ARQ:
                 printf("\nArquivo lido com sucesso!\n");
-                printf("\nQuantidade de linhas: %d ", contLinhas);
                 break;
-
+            default:
+                printf("\n[ERRO] - Erro ao ler o estado");
+                break;
         }
         if(tk.cat == FIM_ARQ){
             break;
@@ -175,8 +170,6 @@ TOKEN analise_lexica(FILE *fd){
     int tamL = 0;
     char digitos[TAM_NUM] = "";
     int tamD = 0;
-    //char string[TAM_STR]; // USAR
-    //int tamS = 0;
 
     //TOKEN:
     TOKEN t;
@@ -185,11 +178,8 @@ TOKEN analise_lexica(FILE *fd){
     while(1){
        // printf("\nentrou no while do analisador lexico");
         char c = fgetc(fd);
-        //printf("\n -> %c \n", c);
-        //system("pause");
         switch(estado){
             case 0:
-                //printf("\n0");
                 if(c == ' '){
                     estado = 0;
                 }else if(c == '\t'){
@@ -201,7 +191,6 @@ TOKEN analise_lexica(FILE *fd){
                 }else if(c == '\0'){
                     estado = 0;
                 }else if((c >= 'a' && c <= 'z') ||(c >= 'A' && c <= 'Z')){
-                    //printf("\nentrou no 1");
                     estado = 1;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
@@ -290,13 +279,11 @@ TOKEN analise_lexica(FILE *fd){
                 }
                 break;
             case 1:
-                //printf("\n1");
                 if((c == '_') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z')){
                     estado = 1;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
                 }else{ // OUTRO*
-                   // printf("\n3");
                     estado = 3;
                     ungetc(c, fd);
                     if(verificarPV(lexema) == 1){
@@ -311,7 +298,6 @@ TOKEN analise_lexica(FILE *fd){
                 }
                 break;
             case 2:
-                //printf("\n2");
                 if(c == '_'){
                     estado = 2;
                     lexema[tamL] = c;
@@ -327,7 +313,6 @@ TOKEN analise_lexica(FILE *fd){
             case 3: // *ESTADO DE ACEITA플O* - ID
                 break;
             case 4:
-                //printf("\n4");
                 if(c >= '0' && c <= '9'){
                     estado = 4;
                     digitos[tamD] = c;
@@ -347,7 +332,6 @@ TOKEN analise_lexica(FILE *fd){
             case 5: // *ESTADO DE ACEITA플O* - CT_I
                 break;
             case 6:
-                //printf("\n6");
                 if(c >= '0' && c <= '9'){
                     estado = 7;
                     digitos[tamD] = c;
@@ -377,10 +361,8 @@ TOKEN analise_lexica(FILE *fd){
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
                 }
-                // SE VIER '\' IR PARA ESTADO 10
                 break;
             case 10:
-                // SE VIER 'n' IR PARA ESTADO 11
                 break;
             case 11:
                 if((c != '"')&&(c != '\n')){
@@ -389,15 +371,12 @@ TOKEN analise_lexica(FILE *fd){
                     lexema[++tamL] = '\0';
                 }else if(c == '"'){
                     estado = 12;
-                    //ungetc(c, fd);
                     strcpy(t.lexema, lexema);
                     t.cat = CT_S;
                     return t;
                 }else{
                     printf("[ERRO] - Estado no %d \n", estado);
                 }
-                // SE VIER CARACTER CONTINUAR NO ESTADO 11
-                // SE VIER '"' IR PARA ESTADO 12
                 break;
             case 12: // *ESTADO DE ACEITA플O* - STRINGCON
                 break;
@@ -596,6 +575,9 @@ TOKEN analise_lexica(FILE *fd){
                 }
                 break;
             case 51: // *ESTADO DE ACEITA플O* - CHAR_CON
+                break;
+            default:
+                printf("\n[ERRO] - Erro ao ler o estado");
                 break;
         }
     }
