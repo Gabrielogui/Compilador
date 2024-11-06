@@ -7,8 +7,38 @@
 #define TAM_NUM 20
 #define TAM_STR 50
 
+#define QTD_PV 23
+
 // |=======|  DECLARAÇÃO DAS FUNÇÕES |=======|
 TOKEN analise_lexica(FILE*);
+int verificarPV(char[]);
+
+// |=======| PALAVRAS RESERVADAS |=======|
+const char *palavrasReservadas[QTD_PV] = {
+    "const",
+    "pr",
+    "init",
+    "endp",
+    "char",
+    "real",
+    "int",
+    "bool",
+    "do",
+    "while",
+    "endw",
+    "var",
+    "from",
+    "dt",
+    "to",
+    "by",
+    "if",
+    "endv",
+    "elif",
+    "else",
+    "endi",
+    "getout",
+    "putreal"
+};
 
 // |=======| MAIN |=======|
 int main()
@@ -34,6 +64,7 @@ int main()
         //printf("\n-> %d ", tk.cat);
         switch(tk.cat){
             case PVR:
+                printf("\n <PVR, %s >", tk.lexema);
                 break;
             case ID:
                 printf("\n <ID, %s >", tk.lexema);
@@ -45,10 +76,10 @@ int main()
                 printf("\n <CT_R, %f >", tk.valor_r);
                 break;
             case CT_C:
-                printf("\n <CT_C, %c >", tk.c); // TERMINAR
+                printf("\n <CT_C, %c >", tk.c);
                 break;
             case CT_S:
-                printf("\n <CT_S, %s >", tk.lexema); // TERMINAR
+                printf("\n <CT_S, %s >", tk.lexema);
                 break;
             case SN: // COLOCAR OS SINAIS
                 switch(tk.codigo){
@@ -268,9 +299,15 @@ TOKEN analise_lexica(FILE *fd){
                    // printf("\n3");
                     estado = 3;
                     ungetc(c, fd);
-                    t.cat = ID;
-                    strcpy(t.lexema, lexema);
-                    return t;
+                    if(verificarPV(lexema) == 1){
+                        t.cat = PVR;
+                        strcpy(t.lexema, lexema);
+                        return t;
+                    }else{
+                        t.cat = ID;
+                        strcpy(t.lexema, lexema);
+                        return t;
+                    }
                 }
                 break;
             case 2:
@@ -503,15 +540,11 @@ TOKEN analise_lexica(FILE *fd){
             case 43:
                 break;
             case 44:
-                if(c == '\n'){
-                    estado = 47;
-                    lexema[tamL] = c;
-                    lexema[++tamL] = '\0';
-                }else if(c == '\0'){
-                    estado = 46;
-                    lexema[tamL] = c;
-                    lexema[++tamL] = '\0';
-                }else if((isprint(c) != '\0') && (isprint(c) != '\'') && (isprint(c) != '\\') && (isprint(c) != '\n')){
+                if(c == '\\'){
+                    estado = 45;
+                   // lexema[tamL] = c;
+                   // lexema[++tamL] = '\0';
+                }else if((isprint(c) != '\0') && (c != '\"') && (c != '\n')){
                     estado = 50;
                     lexema[tamL] = c;
                     lexema[++tamL] = '\0';
@@ -520,12 +553,19 @@ TOKEN analise_lexica(FILE *fd){
                 }
                 break;
             case 45:
+                if(c == 'n'){
+                    estado = 47;
+                }else if(c == '0'){
+                    estado = 46;
+                }else{
+                    printf("\n[ERRO] - Estado no %d \n", estado);
+                }
                 break;
             case 46:
                 if(c == '\''){
                     estado = 48;
                     t.cat = CT_C;
-                    t.c = lexema[0];
+                    t.c = '\0';
                     return t;
                 }else{
                     printf("\n[ERRO] - Estado no %d \n", estado);
@@ -535,7 +575,7 @@ TOKEN analise_lexica(FILE *fd){
                 if(c == '\''){
                     estado = 49;
                     t.cat = CT_C;
-                    t.c = lexema[0];
+                    t.c = '\n';
                     return t;
                 }else{
                     printf("\n[ERRO] - Estado no %d \n", estado);
@@ -559,4 +599,15 @@ TOKEN analise_lexica(FILE *fd){
                 break;
         }
     }
+}
+
+// =======| VERIFICAÇÃO DAS PALAVRAS RESERVADAS |=======
+int verificarPV(char lexema[]){
+    int i;
+    for(i = 0 ; i < QTD_PV ; i++){
+        if(strcmp(lexema, palavrasReservadas[i]) == 0){
+            return 1;
+        }
+    }
+    return -1; // RETORNA SE NÃO ACHAR A PALAVRA RESERVADA
 }
