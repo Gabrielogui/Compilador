@@ -53,6 +53,67 @@ TOKEN analise_lexica(FILE *fd){
                     digitos[++tamD] = '\0';
                 }else if(c == '"'){
                     estado = 9;
+                }else if(c == '!'){
+                    estado = 13;
+                }else if(c == '&'){
+                    estado = 16;
+                }else if(c == '|'){
+                    estado = 19;
+                }else if(c == '('){
+                    estado = 21;
+                    t.cat = SN;
+                    t.codigo = ABRE_PAR;
+                    return t;
+                }else if(c == ')'){
+                    estado = 22;
+                    t.cat = SN;
+                    t.codigo = FECHA_PAR;
+                    return t;
+                }else if(c == '['){
+                    estado = 23;
+                    t.cat = SN;
+                    t.codigo = ABRE_COLCHETES;
+                    return t;
+                }else if(c == ']'){
+                    estado = 24;
+                    t.cat = SN;
+                    t.codigo = FECHA_COLCHETES;
+                    return t;
+                }else if(c == '{'){
+                    estado = 25;
+                    t.cat = SN;
+                    t.codigo = ABRE_CHAVES;
+                    return t;
+                }else if(c == '}'){
+                    estado = 26;
+                    t.cat = SN;
+                    t.codigo = FECHA_CHAVES;
+                    return t;
+                }else if(c == ','){
+                    estado = 27;
+                    t.cat = SN;
+                    t.codigo = VIRGULA;
+                    return t;
+                }else if(c == '>'){
+                    estado = 28;
+                }else if(c == '<'){
+                    estado = 31;
+                }else if(c == '='){
+                    estado = 34;
+                }else if(c == '+'){
+                    estado = 37;
+                    t.cat = SN;
+                    t.codigo = ADICAO;
+                }else if(c == '-'){
+                    estado = 38;
+                    t.cat = SN;
+                    t.codigo = SUBTRACAO;
+                }else if(c == '*'){
+                    estado = 39;
+                    t.cat = SN;
+                    t.codigo = MULTIPLICACAO;
+                }else if(c = '/'){
+                    estado = 40;
                 }else{
                     printf("\n[ERRO] - Estado no %d \n", estado);
                 }
@@ -83,7 +144,7 @@ TOKEN analise_lexica(FILE *fd){
                     printf("\n[ERRO] - Estado no %d \n", estado);
                 }
                 break;
-            case 3: // *ESTADO DE ACEITAÇÃO*
+            case 3: // *ESTADO DE ACEITAÇÃO* - ID
                 break;
             case 4:
                  if(c >= '0' && c <= '9'){
@@ -102,7 +163,7 @@ TOKEN analise_lexica(FILE *fd){
                     return t;
                 }
                 break;
-            case 5: // *ESTADO DE ACEITAÇÃO*
+            case 5: // *ESTADO DE ACEITAÇÃO* - CT_I
                 break;
             case 6:
                 if(c >= '0' && c <= '9'){
@@ -123,76 +184,148 @@ TOKEN analise_lexica(FILE *fd){
                     ungetc(c, fd);
                     t.cat = CT_R;
                     t.valor_r = atof(digitos);
+                    return t;
                 }
                 break;
-            case 8: // *ESTADO DE ACEITAÇÃO*
+            case 8: // *ESTADO DE ACEITAÇÃO* - CT_F
                 break;
             case 9:
-                // SE VIER CARACTER IR PARA ESTADO 11
+                if(c != '"'){
+                    estado = 11;
+                }
                 // SE VIER '\' IR PARA ESTADO 10
                 break;
             case 10:
                 // SE VIER 'n' IR PARA ESTADO 11
                 break;
             case 11:
+                if(c != '"'){
+                    estado = 11;
+                }else{
+                    estado = 12;
+                    ungetc(c, fd);
+                    t.cat = LT;
+                    return t;
+                }
                 // SE VIER CARACTER CONTINUAR NO ESTADO 11
                 // SE VIER '"' IR PARA ESTADO 12
                 break;
-            case 12: // *ESTADO DE ACEITAÇÃO*
+            case 12: // *ESTADO DE ACEITAÇÃO* - STRINGCON
                 break;
             case 13:
+                if(c == '='){ // DIFERENTE
+                    estado = 15;
+                    t.cat = SN;
+                    t.codigo = DIFERENTE;
+                    return t;
+                }else{
+                    estado = 14; // NEGAÇÃO
+                    t.cat = SN;
+                    t.codigo = NEGACAO;
+                }
                 break;
-            case 14:
+            case 14: // *ESTADO DE ACEITAÇÃO* - NEGAÇÃO
                 break;
-            case 15:
+            case 15: // *ESTADO DE ACEITAÇÃO* - DIFERENÇA
                 break;
             case 16:
+                if(c == '&'){
+                    estado = 18;
+                    t.cat = SN;
+                    t.codigo = AND;
+                    return t;
+                }else{
+                    estado = 17;
+                    t.cat = SN;
+                    t.codigo = E_COMERCIAL;
+                    return t;
+                }
                 break;
-            case 17:
+            case 17: // *ESTADO DE ACEITAÇÃO* - E_COMERCIAL (&)
                 break;
-            case 18:
+            case 18: // *ESTADO DE ACEITAÇÃO* - AND
                 break;
             case 19:
+                if(c == '|'){
+                    estado = 20;
+                    t.cat = SN;
+                    t.codigo = OR;
+                    return t;
+                }else{
+                    printf("\n[ERRO] - Estado no %d \n", estado);
+                }
                 break;
-            case 20:
+            case 20: // *ESTADO DE ACEITAÇÃO* - OR
                 break;
-            case 21:
+            case 21: // *ESTADO DE ACEITAÇÃO* - ABRE PARÊNTESE
                 break;
-            case 22:
+            case 22: // *ESTADO DE ACEITAÇÃO* - FECHA PARÊNTESE
                 break;
-            case 23:
+            case 23: // *ESTADO DE ACEITAÇÃO* - ABRE COLCHETE
                 break;
-            case 24:
+            case 24: // *ESTADO DE ACEITAÇÃO* - FECHA COLCHETE
                 break;
-            case 25:
+            case 25: // *ESTADO DE ACEITAÇÃO* - ABRE CHAVES
                 break;
-            case 26:
+            case 26: // *ESTADO DE ACEITAÇÃO* - FECHA CHAVES
                 break;
-            case 27:
+            case 27: // *ESTADO DE ACEITAÇÃO* - VÍRGULA
                 break;
             case 28:
+                if(c == '='){
+                    estado = 29;
+                    t.cat = SN;
+                    t.codigo = MAIOR_OU_IGUAL;
+                    return t;
+                }else{
+                    estado = 30;
+                    t.cat = SN;
+                    t.codigo = MAIOR_QUE;
+                }
                 break;
-            case 29:
+            case 29: // *ESTADO DE ACEITAÇÃO* - MAIOR OU IGUAL
                 break;
-            case 30:
+            case 30: // *ESTADO DE ACEITAÇÃO* - MAIOR QUE
                 break;
             case 31:
+                if(c == '='){
+                    estado = 33;
+                    t.cat = SN;
+                    t.codigo = MENOR_OU_IGUAL;
+                    return t;
+                }else{
+                    estado = 32;
+                    t.cat = SN;
+                    t.codigo = MENOR_QUE;
+                    return t;
+                }
                 break;
-            case 32:
+            case 32: // *ESTADO DE ACEITAÇÃO* - MENOR QUE
                 break;
-            case 33:
+            case 33: // *ESTADO DE ACEITAÇÃO* - MENOR OU IGUAL
                 break;
             case 34:
+                if(c == '='){
+                    estado = 36;
+                    t.cat = SN;
+                    t.codigo = COMPARACAO;
+                    return t;
+                }else{
+                    estado = 35;
+                    t.cat = SN;
+                    t.codigo = ATRIBUICAO;
+                    return t;
+                }
                 break;
-            case 35:
+            case 35: // *ESTADO DE ACEITAÇÃO* - ATRIBUIÇÃO
                 break;
-            case 36:
+            case 36: // *ESTADO DE ACEITAÇÃO* - COMPARAÇÃO
                 break;
-            case 37:
+            case 37: // *ESTADO DE ACEITAÇÃO* - ADIÇÃO
                 break;
-            case 38:
+            case 38: // *ESTADO DE ACEITAÇÃO* - SUBTRAÇÃO
                 break;
-            case 39:
+            case 39: // *ESTADO DE ACEITAÇÃO* - MULTIPLICAÇÃO
                 break;
             case 40:
                 break;
