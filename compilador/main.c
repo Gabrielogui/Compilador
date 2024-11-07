@@ -7,7 +7,7 @@
 #define TAM_NUM 20
 #define TAM_STR 50
 
-#define QTD_PV 23
+#define QTD_PV 28
 
 // |=======|  DECLARAÇÃO DAS FUNÇÕES |=======|
 TOKEN analise_lexica(FILE*);
@@ -20,8 +20,8 @@ const char *palavrasReservadas[QTD_PV] = {
     "init",
     "endp",
     "char",
-    "real",
     "int",
+    "real",
     "bool",
     "do",
     "while",
@@ -31,12 +31,17 @@ const char *palavrasReservadas[QTD_PV] = {
     "dt",
     "to",
     "by",
-    "if",
     "endv",
+    "if",
     "elif",
     "else",
     "endi",
+    "getint",
     "getout",
+    "getchar",
+    "getreal",
+    "putint",
+    "putchar",
     "putreal"
 };
 
@@ -186,9 +191,7 @@ TOKEN analise_lexica(FILE *fd){
                     estado = 0;
                 }else if(c == '\n'){
                     estado = 0;
-                    printf("\t | PULOU LINHA | ");
                     contLinhas++;
-                    //return t;
                 }else if(c == '\0'){
                     estado = 0;
                 }else if((c >= 'a' && c <= 'z') ||(c >= 'A' && c <= 'Z')){

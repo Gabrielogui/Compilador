@@ -1,9 +1,9 @@
 # depslib dependency file v1.0
-1730984244 source:e:\users\gabriel\documents\github\compilador\compilador\main.c
+1730985218 source:e:\users\gabriel\documents\github\compilador\compilador\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"analex.h"
 
-1730924887 e:\users\gabriel\documents\github\compilador\compilador\analex.h
+1730984956 e:\users\gabriel\documents\github\compilador\compilador\analex.h
 
