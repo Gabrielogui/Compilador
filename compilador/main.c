@@ -157,7 +157,7 @@ int main()
             break;
         }
     }
-
+    printf("\n -> %d ", contLinhas);
     return 0;
 }
 
@@ -186,6 +186,7 @@ TOKEN analise_lexica(FILE *fd){
                     estado = 0;
                 }else if(c == '\n'){
                     estado = 0;
+                    printf("\t | PULOU LINHA | ");
                     contLinhas++;
                     //return t;
                 }else if(c == '\0'){
@@ -388,6 +389,7 @@ TOKEN analise_lexica(FILE *fd){
                     return t;
                 }else{
                     estado = 14; // NEGAÇÃO
+                    ungetc(c, fd);
                     t.cat = SN;
                     t.codigo = NEGACAO;
                     return t;
@@ -405,6 +407,7 @@ TOKEN analise_lexica(FILE *fd){
                     return t;
                 }else{
                     estado = 17;
+                    ungetc(c, fd);
                     t.cat = SN;
                     t.codigo = E_COMERCIAL;
                     return t;
@@ -448,6 +451,7 @@ TOKEN analise_lexica(FILE *fd){
                     return t;
                 }else{
                     estado = 30;
+                    ungetc(c, fd);
                     t.cat = SN;
                     t.codigo = MAIOR_QUE;
                     return t;
@@ -465,6 +469,7 @@ TOKEN analise_lexica(FILE *fd){
                     return t;
                 }else{
                     estado = 32;
+                    ungetc(c, fd);
                     t.cat = SN;
                     t.codigo = MENOR_QUE;
                     return t;
@@ -482,6 +487,7 @@ TOKEN analise_lexica(FILE *fd){
                     return t;
                 }else{
                     estado = 35;
+                    ungetc(c, fd);
                     t.cat = SN;
                     t.codigo = ATRIBUICAO;
                     return t;
@@ -502,6 +508,7 @@ TOKEN analise_lexica(FILE *fd){
                     estado = 42;
                 }else{
                     estado = 41;
+                    ungetc(c, fd);
                     t.cat = SN;
                     t.codigo = DIVISAO;
                     return t;
@@ -514,6 +521,7 @@ TOKEN analise_lexica(FILE *fd){
                     estado = 42;
                 }else{
                     estado = 0;
+                    contLinhas++;
                 }
                 break;
             case 43:

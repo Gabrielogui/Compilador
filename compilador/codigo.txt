@@ -1,9 +1,9 @@
 aa   // ID
-12   // CT_I
-1.56 // CT_R
-1.2  // Gabriel
+12   // INTCON
+1.56 // REAL
+1.2  // REAL
 // SN:
-()
+()   // PARÊNTESES
 []
 {}
 ,
@@ -22,13 +22,13 @@ aa   // ID
 -
 *
 /
-"Gabriel" // STRING CT_S
-'a'       // CHAR_CON
+"Gabriel" // STRING
+'a'       // CHAR
 'b'
 _OI_a
 1a
 ' '
 '\0'
 '\n'
-while // PALAVRA RESERVADA
+while    // PVR
 ""
