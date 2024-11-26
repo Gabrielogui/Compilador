@@ -4,12 +4,6 @@
 #include "analex.h"
 
 
-
-// |=======|  DECLARAÇÃO DAS FUNÇÕES |=======|
-
-
-
-
 // |=======| MAIN |=======|
 int main()
 {

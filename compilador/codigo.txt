@@ -32,3 +32,4 @@ _OI_a
 '\n'
 while     // PVR
 ""
+putstr

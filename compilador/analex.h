@@ -9,8 +9,8 @@ enum TOKEN_CAT {PVR = 1, ID, CT_I, CT_R, CT_C, CT_S, SN, FIM_ARQ};
 /* Onde: ID: Identificador, SN: Sinal; CT_I: Constante numérica inteira ; CT_R: Constante Real ; CT_C: Constante caactere; CT_S: Constante String; FIM_ARQ: Fim do arquivo*/
 
 // |=======| PALAVRAS RESERVADAS |=======|
-enum PALAVRAS_RESERVADAS {CONST = 1, PR, INIT, ENDP, CHAR, INT, REAL, BOOL, DO, WHILE, ENDW, VAR, FROM, DT, TO, BY,
-                          ENDV, IF, ELIF, ELSE, ENDI, GETINT, GETOUT, GETCHAR, GETREAL, PUTINT, PUTCHAR, PUTREAL};
+enum PALAVRAS_RESERVADAS {CONST = 1, PROT, DEF, INIT, ENDP, CHAR, INT, REAL, BOOL, DO, WHILE, ENDW, VAR, FROM, DT, TO, BY,
+                          ENDV, IF, ELIF, ELSE, ENDI, GETINT, GETOUT, GETCHAR, GETREAL, GETSTR, PUTINT, PUTCHAR, PUTREAL, PUTSTR};
 
 // |=======| SINAIS |=======|
 enum SINAIS {ADICAO = 1, SUBTRACAO, MULTIPLICACAO, DIVISAO, ABRE_PAR, FECHA_PAR, ABRE_COLCHETES, FECHA_COLCHETES,

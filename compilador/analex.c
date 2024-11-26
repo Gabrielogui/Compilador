@@ -9,7 +9,7 @@
 #define TAM_NUM 20
 #define TAM_STR 50
 
-#define QTD_PV 28
+#define QTD_PV 31
 
 /* ANALIZADOR LÉXICO */
 
@@ -19,7 +19,8 @@ contLinhas = 1;
 // |=======| PALAVRAS RESERVADAS |=======|
 const char *palavrasReservadas[QTD_PV] = {
     "const",
-    "pr",
+    "prot",
+    "def",
     "init",
     "endp",
     "char",
@@ -43,9 +44,11 @@ const char *palavrasReservadas[QTD_PV] = {
     "getout",
     "getchar",
     "getreal",
+    "getstr",
     "putint",
     "putchar",
-    "putreal"
+    "putreal",
+    "putstr"
 };
 
 // |=======| FUNÇÕES |=======|
@@ -486,3 +489,4 @@ int verificarPV(char lexema[]){
     }
     return -1; // RETORNA SE NÃO ACHAR A PALAVRA RESERVADA
 }
+
