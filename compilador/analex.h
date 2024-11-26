@@ -31,5 +31,11 @@ typedef struct {
 #endif
 
 // |=======| CONTADOR DE LINHAS |=======|
-int contLinhas = 1;
+extern int contLinhas;
+
+// |=======| DECLARAÇÃO DA FUNÇÃO |=======|
+TOKEN analise_lexica(FILE*);
+int verificarPV(char[]);
+
+
 
