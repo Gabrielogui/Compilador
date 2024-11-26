@@ -11,16 +11,16 @@
 enum escopo {GLOBAL, LOCAL};
 
 // TIPO:
-enum tipo {INT, REAL, CHAR, BOOL, NA};
+enum tipo {INT_TIPO, REAL_TIPO, CHAR_TIPO, BOOL_TIPO, NA_TIPO};
 
 // CATEGORIA:
 enum categoria {VAR_GLOBAL, VAR_LOCAL, PROTOTIPO, PROCEDIMENTO, PAR_PROCEDIMENTO};
 
 // PASSAGEM:
-enum passagem {COPIA, REFERENCIA, NA};
+enum passagem {COPIA, REFERENCIA, NA_PASSAGEM};
 
 // ZUMBI:
-enum zumbi {VIVO, ZUMBI, NA};
+enum zumbi {VIVO, ZUMBI, NA_ZUMBI};
 
 // ARRAY:
 enum isArray {ESCALAR, VETOR, MATRIZ};
@@ -28,7 +28,16 @@ enum isArray {ESCALAR, VETOR, MATRIZ};
 // |=======| STRUCT DO REGISTRO DA TABELA DE SÍMBOLO(TS) |=======|
 typedef struct{
     char lexema[TAM_MAX_LEXEMA];
-    enum escopo;
+    enum escopo escopo;
+    enum tipo tipo;
+    enum categoria categoria;
+    enum passagem passagem;
+    enum zumbi zumbi;
+    enum isArray isArray;
+    int dim01;
+    int dim02;
+    //int endereco;
+    //int rotulo;
 }REG_TS;
 
 // |=======| STRUCT DA TABELA DE SÍMBOLO(TS) |=======|

@@ -30,8 +30,10 @@ typedef struct {
 } TOKEN; // Tipo TOKEN
 #endif
 
-// |=======| CONTADOR DE LINHAS |=======|
-extern int contLinhas;
+// |=======| VARIÁVEIS GLOBAIS |=======|
+extern int contLinhas; // CONTADOR DE LINHAS
+//extern FILE *fd;
+//extern TOKEN tk;
 
 // |=======| DECLARAÇÃO DA FUNÇÃO |=======|
 TOKEN analise_lexica(FILE*);
