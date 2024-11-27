@@ -7,6 +7,7 @@
 // |=======| VARIAVEIS GLOBAIS |=======|
 FILE *fd;
 TOKEN tk;
+contLinhas = 1;
 
 // |=======| DECLARAÇÃO DAS FUNÇÕES |=======|
 void testarAnalex();
@@ -142,6 +143,7 @@ void testarAnalex(){
 }
 
 // |=======| FUNÇÃO DO TESTE DA ANÁLISE SINTÁTICA |=======|
+
 void testarAnasint(){
 
     if((fd = fopen("codigo.txt", "r")) == NULL){
@@ -151,12 +153,14 @@ void testarAnasint(){
     tk.processado = 1;
     while(1){
 
-    tk = analise_lexica(fd);
-    if(tk.cat == FIM_ARQ){
-        printf("\nArquivo encerrado\n");
-        break;
-    }
+        tk = analise_lexica(fd);
+        if(tk.cat == FIM_ARQ){
+            printf("\nArquivo encerrado\n");
+            break;
+        }
 
-    tk.processado = 1;
+        prog();
+
+        tk.processado = 1;
     }
 }

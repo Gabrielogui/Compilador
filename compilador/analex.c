@@ -13,8 +13,6 @@
 
 /* ANALIZADOR LÉXICO */
 
-// |=======| DECLARAÇÃO DO CONTADOR DE LINHA |=======|
-contLinhas = 1;
 
 // |=======| PALAVRAS RESERVADAS |=======|
 const char *palavrasReservadas[QTD_PV] = {

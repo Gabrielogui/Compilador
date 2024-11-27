@@ -46,5 +46,12 @@ typedef struct{
     int topo;
 }TABELA_SIMBOLO;
 
+// |=======| DECLARAÇÕES DAS FUNÇÕES |=======|
+
+void prog();
+
+void decl_list_var();
+void decl_def_proc();
+void decl_var();
 
 #endif // ANASINT_H_INCLUDED

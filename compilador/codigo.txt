@@ -1,3 +1,8 @@
-def soma(&result, int a, int b)
-    result = a + b
-    ENDP
+char
+int
+bool
+real
+
+def
+proc
+proc
