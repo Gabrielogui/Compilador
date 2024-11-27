@@ -4,12 +4,28 @@
 #include "analex.h"
 #include "anasint.h"
 
+// |=======| VARIAVEIS GLOBAIS |=======|
+FILE *fd;
+TOKEN tk;
+
+// |=======| DECLARAÇÃO DAS FUNÇÕES |=======|
+void testarAnalex();
+void testarAnasint();
 
 // |=======| MAIN |=======|
 int main()
 {
-    FILE *fd;
-    TOKEN tk;
+    printf("\n |=======| TESTAR ANALISE LEXICA |=======|");
+    testarAnalex();
+
+    printf("\n |=======| TESTAR ANALISE SINTATICA |=======|");
+    testarAnasint();
+
+    return 0;
+}
+
+// |=======| FUNÇÃO DO TESTE DA ANÁLISE LÉXICA |=======|
+void testarAnalex(){
 
     if((fd = fopen("codigo.txt", "r")) == NULL){
         printf("\n[ERRO] - ERRO ao abrir o arquivo\n");
@@ -123,8 +139,24 @@ int main()
         }
     }
     printf("\n -> %d ", contLinhas);
-    return 0;
 }
 
+// |=======| FUNÇÃO DO TESTE DA ANÁLISE SINTÁTICA |=======|
+void testarAnasint(){
 
+    if((fd = fopen("codigo.txt", "r")) == NULL){
+        printf("\n[ERRO] - ERRO ao abrir o arquivo\n");
+    }
 
+    tk.processado = 1;
+    while(1){
+
+    tk = analise_lexica(fd);
+    if(tk.cat == FIM_ARQ){
+        printf("\nArquivo encerrado\n");
+        break;
+    }
+
+    tk.processado = 1;
+    }
+}

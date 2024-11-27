@@ -1,35 +1,3 @@
-aa   // ID
-12   // INTCON
-1.56 // REAL
-1.2  // REAL
-// SN:
-()   // PARÊNTESES
-[]
-{}
-,
->=
->
-<=
-<
-=
-==
-!
-!=
-&
-&&
-||
-+
--
-*
-/
-"Gabriel" // STRING
-'a'       // CHAR
-'b'
-_OI_a
-1a
-' '
-'\0'
-'\n'
-while     // PVR
-""
-putstr
+def soma(&result, int a, int b)
+    result = a + b
+    ENDP

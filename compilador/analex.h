@@ -20,6 +20,7 @@ enum SINAIS {ADICAO = 1, SUBTRACAO, MULTIPLICACAO, DIVISAO, ABRE_PAR, FECHA_PAR,
 // |=======| TOKEN |=======|
 typedef struct {
     enum TOKEN_CAT cat; // deve receber uma das constantes de enum TOKEN_CAT
+    int processado;
     union { // parte variável do registro
         int codigo; // para tokens das categorias SN
         char lexema[TAM_MAX_LEXEMA]; // cadeia de caracteres que corresponde ao nome do token da cat. ID
@@ -32,8 +33,8 @@ typedef struct {
 
 // |=======| VARIÁVEIS GLOBAIS |=======|
 extern int contLinhas; // CONTADOR DE LINHAS
-//extern FILE *fd;
-//extern TOKEN tk;
+extern FILE *fd;       // ARQUIVO A SER LIDO
+extern TOKEN tk;       // TOKEN
 
 // |=======| DECLARAÇÃO DA FUNÇÃO |=======|
 TOKEN analise_lexica(FILE*);
