@@ -15,12 +15,12 @@
 	<ctype.h>
 	"analex.h"
 
-1732744669 source:e:\users\gabriel\documents\github\compilador\compilador\anasint.c
+1732828720 source:e:\users\gabriel\documents\github\compilador\compilador\anasint.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"analex.h"
 	"anasint.h"
 
-1732740330 e:\users\gabriel\documents\github\compilador\compilador\anasint.h
+1732828720 e:\users\gabriel\documents\github\compilador\compilador\anasint.h
 

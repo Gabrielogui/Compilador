@@ -25,6 +25,9 @@ enum zumbi {VIVO, ZUMBI, NA_ZUMBI};
 // ARRAY:
 enum isArray {ESCALAR, VETOR, MATRIZ};
 
+// É CONSTANTE:
+enum eh_const {SIM, NAO};
+
 // |=======| STRUCT DO REGISTRO DA TABELA DE SÍMBOLO(TS) |=======|
 typedef struct{
     char lexema[TAM_MAX_LEXEMA];
@@ -36,6 +39,14 @@ typedef struct{
     enum isArray isArray;
     int dim01;
     int dim02;
+    enum eh_const eh_const;
+    union {
+        int constInt;
+        float constReal;
+        char constChar;
+        char constString[TAM_MAX_LEXEMA];
+        int constBool; // 0 = TRUE ; 1 = FALSE
+    };
     //int endereco;
     //int rotulo;
 }REG_TS;
@@ -53,5 +64,8 @@ void prog();
 void decl_list_var();
 void decl_def_proc();
 void decl_var();
+
+// |=======| VARIÁVEIS GLOBAIS |=======|
+extern TABELA_SIMBOLO ts;
 
 #endif // ANASINT_H_INCLUDED

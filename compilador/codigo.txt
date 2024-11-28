@@ -1,5 +1,5 @@
 char
-int
+int a
 bool
 real
 
