@@ -85,7 +85,8 @@ void decl_list_var(){
 // ======= DECL_VAR =======
 void decl_var(){
 
-    int tipoAtual;
+    // DECLARAÇÃO DE VARIÁVEIS:
+
 
     if(strcmp(tk.lexema, "int") == 0){
         ts.Linhas[ts.topo].tipo = INT_TIPO;
@@ -150,15 +151,16 @@ void decl_var(){
 
                 if(tk.cat == SN && tk.codigo == ABRE_COLCHETES){
                     tk = analise_lexica(fd);
+                    printf("\n %s", tk.lexema);
                     if(tk.cat == CT_I || (tk.cat == ID && ts.Linhas[ts.topo].eh_const == SIM)){ // PRECISA USAR TABELA DE SIMBOLO - SABER SE O ID É UMA CONSTANTE
 
                         if(ts.Linhas[ts.topo].eh_const == SIM){
-                            while(ts.topo != 0){
+                            /*while(ts.topo != 0){
 
                                 if()
 
                                 ts.topo--;
-                            }
+                            }*/
                         }else{
                             ts.Linhas[ts.topo].dim01 = tk.valor_i; // PASSAR CERTO
                         }
@@ -172,7 +174,7 @@ void decl_var(){
                             tk = analise_lexica(fd);
 
                         }else{
-                            error("Tem que fechar o colchetes apos abri-lo")
+                            error("Tem que fechar o colchetes apos abri-lo");
                         }
                     }else{
                         error("Tem que ser inteiro ou constante apos '['");
@@ -186,6 +188,31 @@ void decl_var(){
                     tk = analise_lexica(fd);
 
                     if(tk.cat == SN && tk.codigo == ABRE_CHAVES){
+                        tk = analise_lexica(fd);
+
+                        if(!((tk.cat == CT_I ) || (tk.cat == CT_C ) || (tk.cat == CT_R ))){
+                            error("Valor esperado! ");
+                        }
+
+
+                        while(1){
+                            tk = analise_lexica(fd);
+
+                            if((tk.cat == SN) && (tk.codigo == VIRGULA)){
+                                tk = analise_lexica(fd);
+                                if(!((tk.cat == CT_I ) || (tk.cat == CT_C ) || (tk.cat == CT_R ))){
+                                    error("Valor esperado! ");
+                                }
+                            }else if((tk.cat == SN) && (tk.codigo == FECHA_CHAVES)){
+                                break;
+                            }else{
+                                error("Fecha chaves ou virgula esperadao");
+                            }
+
+
+                        }
+
+
 
                     }else{
                         error("Tem que vir '{' apos atribuicao");

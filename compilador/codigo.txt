@@ -1,8 +1,1 @@
-char
-int a
-bool
-real
-
-def
-proc
-proc
+char a[7][8] = {4, 5, 6}
