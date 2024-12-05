@@ -8,6 +8,7 @@
 FILE *fd;
 TOKEN tk;
 contLinhas = 1;
+lido = 0;
 
 // |=======| DECLARAÇÃO DAS FUNÇÕES |=======|
 void testarAnalex();
@@ -152,13 +153,11 @@ void testarAnasint(){
 
     tk.processado = 1;
     while(1){
-
         tk = analise_lexica(fd);
         if(tk.cat == FIM_ARQ){
             printf("\nArquivo encerrado\n");
             break;
         }
-
         prog();
 
         tk.processado = 1;

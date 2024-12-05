@@ -67,5 +67,6 @@ void decl_var();
 
 // |=======| VARIÁVEIS GLOBAIS |=======|
 extern TABELA_SIMBOLO ts;
+extern int lido;
 
 #endif // ANASINT_H_INCLUDED

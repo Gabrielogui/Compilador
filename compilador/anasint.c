@@ -40,6 +40,8 @@ void error(char msg[]) {
 // ======= PROG =======
 void prog(){
 
+    printf("\n%s", tk.lexema);
+
     if((strcmp(tk.lexema, "proc") == 0) || (strcmp(tk.lexema, "def") == 0)){
         decl_def_proc();
     } else if((strcmp(tk.lexema, "const") == 0) || (verificarTipo(tk.lexema) == 0)){
@@ -54,7 +56,11 @@ void decl_def_proc(){
 
     ts.Linhas[ts.topo].escopo = LOCAL;
 
-    printf("\nproc ou def\n");
+    if(strcmp(tk.lexema, "prot") == 0){
+
+    }else if(strcmp(tk.lexema, "def") == 0){
+
+    }
 }
 
 // ======= DECL_LIST_VAR =======
@@ -76,8 +82,11 @@ void decl_list_var(){
     }
     decl_var();
 
+    lido = 1;
+
     tk = analise_lexica(fd);
     while(tk.cat == SN && tk.codigo == VIRGULA){
+        tk = analise_lexica(fd);
         decl_var();
     }
 }
@@ -138,13 +147,33 @@ void decl_var(){
     }else if(tk.cat == SN && tk.codigo == ABRE_COLCHETES){
         tk = analise_lexica(fd);
 
-        if(tk.cat == ID){
+        if(tk.cat == ID){ // OLHAR ESSA BUSCA
             while(ts.topo != 0){
 
             }
         }
 
-        if(tk.cat == CT_I || (tk.cat == ID && ts.Linhas[ts.topo].eh_const == SIM)){ // PRECISA USAR TABELA DE SIMBOLO - SABER SE O ID É UMA CONSTANTE
+        if(tk.cat == CT_I || (tk.cat == ID)){ // PRECISA USAR TABELA DE SIMBOLO - SABER SE O ID É UMA CONSTANTE
+
+            if(tk.cat == ID){ // BUSCA DO DIM01 CASO SEJA CONSTANTE
+                int topoAux = ts.topo;
+                while(topoAux >= 0){
+                    if(strcmp(ts.Linhas[topoAux].lexema, tk.lexema) == 0){
+                        if(ts.Linhas[topoAux].eh_const == SIM){
+                            if(ts.Linhas[topoAux].tipo == INT_TIPO){
+                                ts.Linhas[ts.topo].dim01 = ts.Linhas[topoAux].constInt;
+                            }else{
+                                error("A constante nao eh compativel");
+                            }
+                        }
+
+                    }
+                }
+            }else{
+                ts.Linhas[ts.topo].dim01 = tk.valor_i;
+            }
+
+
             tk = analise_lexica(fd);
             if(tk.cat == SN && tk.codigo == FECHA_COLCHETES){
                 tk = analise_lexica(fd);
@@ -154,15 +183,22 @@ void decl_var(){
                     printf("\n %s", tk.lexema);
                     if(tk.cat == CT_I || (tk.cat == ID && ts.Linhas[ts.topo].eh_const == SIM)){ // PRECISA USAR TABELA DE SIMBOLO - SABER SE O ID É UMA CONSTANTE
 
-                        if(ts.Linhas[ts.topo].eh_const == SIM){
-                            /*while(ts.topo != 0){
+                        if(tk.cat == ID){ // BUSCA DO DIM01 CASO SEJA CONSTANTE
+                            int topoAux = ts.topo;
+                            while(topoAux >= 0){
+                                if(strcmp(ts.Linhas[topoAux].lexema, tk.lexema) == 0){
+                                    if(ts.Linhas[topoAux].eh_const == SIM){
+                                        if(ts.Linhas[topoAux].tipo == INT_TIPO){
+                                            ts.Linhas[ts.topo].dim02 = ts.Linhas[topoAux].constInt;
+                                        }else{
+                                            error("A constante nao eh compativel");
+                                        }
+                                    }
 
-                                if()
-
-                                ts.topo--;
-                            }*/
+                                }
+                            }
                         }else{
-                            ts.Linhas[ts.topo].dim01 = tk.valor_i; // PASSAR CERTO
+                            ts.Linhas[ts.topo].dim02 = tk.valor_i; // PASSAR CERTO
                         }
 
 
@@ -230,6 +266,8 @@ void decl_var(){
     if((ts.Linhas[ts.topo].isArray != VETOR) && (ts.Linhas[ts.topo].isArray != MATRIZ)){
         ts.Linhas[ts.topo].isArray = ESCALAR;
     }
+
+    ts.topo++; // INCREMENTAÇÃO DO TOPO
 
 
 }

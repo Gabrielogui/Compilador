@@ -6,5 +6,12 @@
     - CONST EM STRING EXISTE?
     - TOKEN NÃO PROCESSADO SER PROCESSADO POR OUTRA FUNÇÃO
     - REVER ESTRUTURA: char a[hh]
-    - PRECISA GUARDAR VALOR NA TABELA DE SIMBOLOS?
+    - PRECISA GUARDAR VALOR NA TABELA DE SIMBOLOS? nao
+    - PODE TER UMA VARIAVEL COM O MESMO NOME DE UMA VARIAVEL CONSTANTE ? NÃO PODE
+    se for constante tem q ter =
+
+-> FUNÇÕES JÁ FEITAS: (Falta tabela de simbolos)
+    - prog
+    - decl_list_var
+    - decl_var
 
