@@ -10,7 +10,7 @@ TOKEN tk;
 contLinhas = 1;
 lido = 0;
 
-// |=======| DECLARAÇÃO DAS FUNÇÕES |=======|
+// |=======| DECLARAï¿½ï¿½O DAS FUNï¿½ï¿½ES |=======|
 void testarAnalex();
 void testarAnasint();
 
@@ -26,7 +26,7 @@ int main()
     return 0;
 }
 
-// |=======| FUNÇÃO DO TESTE DA ANÁLISE LÉXICA |=======|
+// |=======| FUNï¿½ï¿½O DO TESTE DA ANï¿½LISE Lï¿½XICA |=======|
 void testarAnalex(){
 
     if((fd = fopen("codigo.txt", "r")) == NULL){
@@ -143,23 +143,23 @@ void testarAnalex(){
     printf("\n -> %d ", contLinhas);
 }
 
-// |=======| FUNÇÃO DO TESTE DA ANÁLISE SINTÁTICA |=======|
+// |=======| FUNï¿½ï¿½O DO TESTE DA ANï¿½LISE SINTï¿½TICA |=======|
 
 void testarAnasint(){
 
     if((fd = fopen("codigo.txt", "r")) == NULL){
         printf("\n[ERRO] - ERRO ao abrir o arquivo\n");
     }
-
-    tk.processado = 1;
     while(1){
-        tk = analise_lexica(fd);
+        if(tk.processado != 1)
+        {
+            tk = analise_lexica(fd);
+            tk.processado = 0;
+        }
         if(tk.cat == FIM_ARQ){
             printf("\nArquivo encerrado\n");
             break;
         }
         prog();
-
-        tk.processado = 1;
     }
 }

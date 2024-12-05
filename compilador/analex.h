@@ -6,7 +6,7 @@
 // |=======| CATEGORIAS |=======|
 enum TOKEN_CAT {PVR = 1, ID, CT_I, CT_R, CT_C, CT_S, SN, FIM_ARQ};
 
-/* Onde: ID: Identificador, SN: Sinal; CT_I: Constante numérica inteira ; CT_R: Constante Real ; CT_C: Constante caactere; CT_S: Constante String; FIM_ARQ: Fim do arquivo*/
+/* Onde: ID: Identificador, SN: Sinal; CT_I: Constante numï¿½rica inteira ; CT_R: Constante Real ; CT_C: Constante caactere; CT_S: Constante String; FIM_ARQ: Fim do arquivo*/
 
 // |=======| PALAVRAS RESERVADAS |=======|
 enum PALAVRAS_RESERVADAS {CONST = 1, PROT, DEF, INIT, ENDP, CHAR, INT, REAL, BOOL, DO, WHILE, ENDW, VAR, FROM, DT, TO, BY,
@@ -15,13 +15,13 @@ enum PALAVRAS_RESERVADAS {CONST = 1, PROT, DEF, INIT, ENDP, CHAR, INT, REAL, BOO
 // |=======| SINAIS |=======|
 enum SINAIS {ADICAO = 1, SUBTRACAO, MULTIPLICACAO, DIVISAO, ABRE_PAR, FECHA_PAR, ABRE_COLCHETES, FECHA_COLCHETES,
             ABRE_CHAVES, FECHA_CHAVES, VIRGULA, MAIOR_OU_IGUAL, MAIOR_QUE, MENOR_OU_IGUAL, MENOR_QUE, ATRIBUICAO, COMPARACAO,
-            NEGACAO, DIFERENTE, E_COMERCIAL, AND, OR}; // Sinais válidos da linguagem
+            NEGACAO, DIFERENTE, E_COMERCIAL, AND, OR}; // Sinais vï¿½lidos da linguagem
 
 // |=======| TOKEN |=======|
 typedef struct {
     enum TOKEN_CAT cat; // deve receber uma das constantes de enum TOKEN_CAT
-    int processado;
-    union { // parte variável do registro
+    int processado; // 1 = nÃ£o processado
+    union { // parte variï¿½vel do registro
         int codigo; // para tokens das categorias SN
         char lexema[TAM_MAX_LEXEMA]; // cadeia de caracteres que corresponde ao nome do token da cat. ID
         int valor_i; // valor da constante inteira em tokens da cat. CT_I
@@ -31,12 +31,12 @@ typedef struct {
 } TOKEN; // Tipo TOKEN
 #endif
 
-// |=======| VARIÁVEIS GLOBAIS |=======|
+// |=======| VARIï¿½VEIS GLOBAIS |=======|
 extern int contLinhas; // CONTADOR DE LINHAS
 extern FILE *fd;       // ARQUIVO A SER LIDO
 extern TOKEN tk;       // TOKEN
 
-// |=======| DECLARAÇÃO DA FUNÇÃO |=======|
+// |=======| DECLARAï¿½ï¿½O DA FUNï¿½ï¿½O |=======|
 TOKEN analise_lexica(FILE*);
 int verificarPV(char[]);
 

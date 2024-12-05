@@ -9,6 +9,8 @@
     - PRECISA GUARDAR VALOR NA TABELA DE SIMBOLOS? nao
     - PODE TER UMA VARIAVEL COM O MESMO NOME DE UMA VARIAVEL CONSTANTE ? NÃO PODE
     se for constante tem q ter =
+    - contLinhas ta errado !!!
+    - PERGUNTA: TIPO BOOL EXEMPLO: BOOL X = 0 ??? OU BOOL X = FALSE ???? A GENTE PRECISA FZR ???
 
 -> FUNÇÕES JÁ FEITAS: (Falta tabela de simbolos)
     - prog

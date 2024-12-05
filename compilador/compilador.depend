@@ -24,3 +24,28 @@
 
 1733412338 e:\users\gabriel\documents\github\compilador\compilador\anasint.h
 
+1733429209 source:c:\users\joker\onedrive\햞ea de trabalho\compilador\compilador_gabao\compilador\compilador\analex.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	"analex.h"
+
+1733429573 c:\users\joker\onedrive\햞ea de trabalho\compilador\compilador_gabao\compilador\compilador\analex.h
+
+1733436353 source:c:\users\joker\onedrive\햞ea de trabalho\compilador\compilador_gabao\compilador\compilador\anasint.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"analex.h"
+	"anasint.h"
+
+1733430092 c:\users\joker\onedrive\햞ea de trabalho\compilador\compilador_gabao\compilador\compilador\anasint.h
+
+1733434588 source:c:\users\joker\onedrive\햞ea de trabalho\compilador\compilador_gabao\compilador\compilador\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"analex.h"
+	"anasint.h"
+

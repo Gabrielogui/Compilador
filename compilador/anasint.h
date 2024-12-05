@@ -4,7 +4,7 @@
 #define TAM_MAX_LEXEMA 31
 #define TAM_MAX_TS 80
 
-// LEXEMA ; ESCOPO ; TIPO ; CATEGORIA ; PASSAGEM ; ZUMBI ; ARRAY ; DIM1 ; DIM2 ; ENDEREÇO ; RÓTULO
+// LEXEMA ; ESCOPO ; TIPO ; CATEGORIA ; PASSAGEM ; ZUMBI ; ARRAY ; DIM1 ; DIM2 ; ENDEREï¿½O ; Rï¿½TULO
 
 // |=======| ENUMs |=======|
 // ESCOPO:
@@ -25,10 +25,10 @@ enum zumbi {VIVO, ZUMBI, NA_ZUMBI};
 // ARRAY:
 enum isArray {ESCALAR, VETOR, MATRIZ};
 
-// É CONSTANTE:
+// ï¿½ CONSTANTE:
 enum eh_const {SIM, NAO};
 
-// |=======| STRUCT DO REGISTRO DA TABELA DE SÍMBOLO(TS) |=======|
+// |=======| STRUCT DO REGISTRO DA TABELA DE Sï¿½MBOLO(TS) |=======|
 typedef struct{
     char lexema[TAM_MAX_LEXEMA];
     enum escopo escopo;
@@ -51,22 +51,21 @@ typedef struct{
     //int rotulo;
 }REG_TS;
 
-// |=======| STRUCT DA TABELA DE SÍMBOLO(TS) |=======|
+// |=======| STRUCT DA TABELA DE Sï¿½MBOLO(TS) |=======|
 typedef struct{
     REG_TS Linhas[TAM_MAX_TS];
     int topo;
 }TABELA_SIMBOLO;
 
-// |=======| DECLARAÇÕES DAS FUNÇÕES |=======|
+// |=======| DECLARAï¿½ï¿½ES DAS FUNï¿½ï¿½ES |=======|
 
 void prog();
-
 void decl_list_var();
 void decl_def_proc();
 void decl_var();
 
-// |=======| VARIÁVEIS GLOBAIS |=======|
+// |=======| VARIï¿½VEIS GLOBAIS |=======|
 extern TABELA_SIMBOLO ts;
-extern int lido;
+//extern int lido;
 
 #endif // ANASINT_H_INCLUDED
