@@ -155,9 +155,9 @@ void decl_var(){
                 ts.Linhas[ts.topo].constChar = tk.c;
             }
             tk = analise_lexica(fd);
-        }else if(ts.Linhas[ts.topo].tipo == CHAR_TIPO && tk.cat == CT_S){
+        }else if(ts.Linhas[ts.topo].tipo == BOOL_TIPO && tk.cat == CT_I){
             if(ts.Linhas[ts.topo].eh_const == SIM){
-                strcpy(ts.Linhas[ts.topo].constString, tk.lexema);
+                ts.Linhas[ts.topo].constBool = tk.valor_i;
             }
             tk = analise_lexica(fd);
         }else{
@@ -259,27 +259,25 @@ void decl_var(){
 
                 if(tk.cat == SN && tk.codigo == ATRIBUICAO){
                     tk = analise_lexica(fd);
-
                     if(tk.cat == SN && tk.codigo == ABRE_CHAVES){
                         tk = analise_lexica(fd);
-
                         if(!((tk.cat == CT_I ) || (tk.cat == CT_C ) || (tk.cat == CT_R ))){
                             error("Valor esperado! ");
                         }
-
-
                         while(1){
                             tk = analise_lexica(fd);
-
                             if((tk.cat == SN) && (tk.codigo == VIRGULA)){
                                 tk = analise_lexica(fd);
                                 if(!((tk.cat == CT_I ) || (tk.cat == CT_C ) || (tk.cat == CT_R ))){
                                     error("Valor esperado! ");
+                                }else{
+                                    tk.processado = 0;
                                 }
                             }else if((tk.cat == SN) && (tk.codigo == FECHA_CHAVES)){
+                                tk = analise_lexica(fd);
                                 break;
                             }else{
-                                error("Fecha chaves ou virgula esperadao");
+                                error("Fecha chaves ou virgula esperado");
                             }
 
 
@@ -301,6 +299,7 @@ void decl_var(){
 
     }
     if((ts.Linhas[ts.topo].isArray != VETOR) && (ts.Linhas[ts.topo].isArray != MATRIZ)){
+        //printf("\nvericiando");
         ts.Linhas[ts.topo].isArray = ESCALAR;
     }
     //printf("\n%d", tk.cat);
