@@ -23,7 +23,7 @@ enum passagem {COPIA, REFERENCIA, NA_PASSAGEM};
 enum zumbi {VIVO, ZUMBI, NA_ZUMBI};
 
 // ARRAY:
-enum isArray {ESCALAR, VETOR, MATRIZ};
+enum isArray {ESCALAR, VETOR, MATRIZ, NA_ISARRAY};
 
 // � CONSTANTE:
 enum eh_const {SIM, NAO};

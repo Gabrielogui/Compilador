@@ -1,11 +1,14 @@
-const int z = 8
-int a, b, c
-char d[z] = {'b','c'}
-int inteiro[4] = {1, 2, 4}
-char normal[8] = {'b','c'}
+// const int z = 8
+// int a, b, c
+// char d[z] = {'b','c'}
+// int inteiro[4] = {1, 2, 4}
+// char normal[8] = {'b','c'}
 
-char e = 'v'
-int k
-int l,m
-bool x = 7
-char calica[2][z]
+// char e = 'v'
+// int k
+// int l,m
+// bool x = 7
+// char calica[2][z]
+
+
+prot id(int, &real)

@@ -47,7 +47,7 @@ void prog(){
     if(tk.cat == FIM_ARQ){
         printf("\nArquivo encerrado\n");
     }
-    else if((strcmp(tk.lexema, "proc") == 0) || (strcmp(tk.lexema, "def") == 0)){
+    else if((strcmp(tk.lexema, "prot") == 0) || (strcmp(tk.lexema, "def") == 0)){
         decl_def_proc();
     } else if((strcmp(tk.lexema, "const") == 0) || (verificarTipo(tk.lexema) == 0)){
         decl_list_var();
@@ -59,12 +59,214 @@ void prog(){
 // ======= DECL_DEF_PROC =======
 void decl_def_proc(){
 
-    ts.Linhas[ts.topo].escopo = LOCAL;
+    /*
+        decl_def_proc ::=
+            prot idproc ( [[&] tipo { [ ] } { , [&] tipo { [ ] } }]] )
+            |
+            def ( init | idproc ( [ [&] tipo id1{ [( intcon2 | idconst2 )] } { , [&] tipo id2 { [( intcon2 | idconst2 )] } }] ) ) {decl_list_var} { cmd } endp
+    */
 
+    int saida_aux = 0;
     if(strcmp(tk.lexema, "prot") == 0){
-
-    }else if(strcmp(tk.lexema, "def") == 0){
-
+        ts.Linhas[ts.topo].categoria = PROTOTIPO;
+        ts.Linhas[ts.topo].escopo = GLOBAL;
+        ts.Linhas[ts.topo].tipo = NA_TIPO;
+        ts.Linhas[ts.topo].passagem = NA_PASSAGEM;
+        ts.Linhas[ts.topo].zumbi = NA_ZUMBI;
+        ts.Linhas[ts.topo].isArray = NA_ISARRAY;
+        ts.Linhas[ts.topo].dim01 = 0;
+        ts.Linhas[ts.topo].dim02 = 0;
+        ts.Linhas[ts.topo].eh_const = NAO;
+        tk = analise_lexica(fd);
+        if(tk.cat == ID)
+        {
+            strcpy(ts.Linhas[ts.topo].lexema, tk.lexema);
+            ts.topo++;
+            tk = analise_lexica(fd);
+            if(tk.cat == SN && tk.codigo == ABRE_PAR)
+            {
+                tk = analise_lexica(fd);
+                if(tk.cat == SN && tk.codigo == E_COMERCIAL)
+                {
+                    ts.Linhas[ts.topo].passagem = REFERENCIA;
+                    ts.Linhas[ts.topo].escopo = LOCAL;
+                    ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
+                    tk = analise_lexica(fd);
+                }
+                else if((verificarTipo(tk.lexema)) == 0)
+                {
+                    ts.Linhas[ts.topo].passagem = COPIA;
+                    ts.Linhas[ts.topo].escopo = LOCAL;
+                    ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
+                }
+            }
+            else
+            {
+                error("'(' esperado!");
+            }
+            if(strcmp(tk.lexema, "int") == 0)
+            {
+                ts.Linhas[ts.topo].tipo = INT_TIPO;
+            }
+            else if(strcmp(tk.lexema, "real") == 0)
+            {
+                ts.Linhas[ts.topo].tipo = REAL_TIPO;
+            }
+            else if(strcmp(tk.lexema, "char") == 0)
+            {
+                ts.Linhas[ts.topo].tipo = CHAR_TIPO;
+            }
+            else if(strcmp(tk.lexema, "bool") == 0)
+            {
+                ts.Linhas[ts.topo].tipo = BOOL_TIPO;
+            }
+            else
+            {
+                error("tipo esperado!");
+            }
+            ts.Linhas[ts.topo].zumbi = NA_ZUMBI;
+            ts.Linhas[ts.topo].eh_const = NAO;
+            tk = analise_lexica(fd);
+            if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
+            {
+                tk = analise_lexica(fd);
+                if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
+                {
+                    tk = analise_lexica(fd);
+                    if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
+                    {
+                        tk = analise_lexica(fd);
+                        if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
+                        {
+                            ts.Linhas[ts.topo].isArray = MATRIZ;
+                            ts.topo++;
+                            tk = analise_lexica(fd);
+                        }
+                        else
+                        {
+                            error("']' esperado!");
+                        }
+                    }
+                    else
+                    {
+                        ts.Linhas[ts.topo].isArray = VETOR;
+                        ts.topo++;
+                    }
+                }
+                else
+                {
+                    error("']' esperado!");
+                }
+            }
+            else
+            {
+                ts.Linhas[ts.topo].isArray = ESCALAR;
+                ts.topo++;
+            }
+            if(tk.cat == SN && tk.codigo == FECHA_PAR)
+            {
+                saida_aux = 1;
+                tk.processado = 0;
+                pass;
+            }
+            else if(tk.cat == SN && tk.codigo == VIRGULA)
+            {
+                while(tk.cat == SN && tk.codigo == VIRGULA)
+                {
+                    tk = analise_lexica(fd);
+                    if(tk.cat == SN && tk.codigo == E_COMERCIAL)
+                    {
+                        ts.Linhas[ts.topo].passagem = REFERENCIA;
+                        ts.Linhas[ts.topo].escopo = LOCAL;
+                        ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
+                        tk = analise_lexica(fd);
+                    }
+                    else if((verificarTipo(tk.lexema)) == 0)
+                    {
+                        ts.Linhas[ts.topo].passagem = COPIA;
+                        ts.Linhas[ts.topo].escopo = LOCAL;
+                        ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
+                    }
+                    if(strcmp(tk.lexema, "int") == 0)
+                    {
+                        ts.Linhas[ts.topo].tipo = INT_TIPO;
+                    }
+                    else if(strcmp(tk.lexema, "real") == 0)
+                    {
+                        ts.Linhas[ts.topo].tipo = REAL_TIPO;
+                    }
+                    else if(strcmp(tk.lexema, "char") == 0)
+                    {
+                        ts.Linhas[ts.topo].tipo = CHAR_TIPO;
+                    }
+                    else if(strcmp(tk.lexema, "bool") == 0)
+                    {
+                        ts.Linhas[ts.topo].tipo = BOOL_TIPO;
+                    }
+                    ts.Linhas[ts.topo].zumbi = NA_ZUMBI;
+                    ts.Linhas[ts.topo].eh_const = NAO;
+                    tk = analise_lexica(fd);
+                    if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
+                    {
+                        tk = analise_lexica(fd);
+                        if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
+                        {
+                            tk = analise_lexica(fd);
+                            if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
+                            {
+                                tk = analise_lexica(fd);
+                                if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
+                                {
+                                    ts.Linhas[ts.topo].isArray = MATRIZ;
+                                    ts.topo++;
+                                    tk = analise_lexica(fd);
+                                }
+                                else
+                                {
+                                    error("']' esperado!");
+                                }
+                            }
+                            else
+                            {
+                                ts.Linhas[ts.topo].isArray = VETOR;
+                                ts.topo++;
+                            }
+                        }
+                        else
+                        {
+                            error("']' esperado!");
+                        }
+                    }
+                    else
+                    {
+                        ts.Linhas[ts.topo].isArray = ESCALAR;
+                        ts.topo++;
+                    }
+                    if(tk.cat == SN && tk.codigo == FECHA_PAR)
+                    {
+                        saida_aux = 1;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                error("')' ou ',' esperado!");
+            }
+            if(saida_aux == 1)
+            {
+                tk.processado = 0;
+                pass;
+            }
+        }
+        else
+        {
+            error("prototipo sem identificador!");
+        }
+    }
+    else if(strcmp(tk.lexema, "def") == 0)
+    {
+        ts.Linhas[ts.topo].escopo = LOCAL;
     }
 }
 

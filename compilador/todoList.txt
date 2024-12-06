@@ -11,6 +11,9 @@
     se for constante tem q ter =
     - contLinhas ta errado !!!
     - PERGUNTA: TIPO BOOL EXEMPLO: BOOL X = 0 ??? OU BOOL X = FALSE ???? A GENTE PRECISA FZR ???
+    - DUVIDA: ESCOPO DE PROT
+    - DUVIDA: CATEGORIA DE VARIAVEL DE PROT
+    - DUVIDA: ZUMBI DE PROT
 
 -> FUNÇÕES JÁ FEITAS: (Falta tabela de simbolos)
     - prog
