@@ -50,6 +50,10 @@ void prog(){
     else if((strcmp(tk.lexema, "prot") == 0) || (strcmp(tk.lexema, "def") == 0)){
         decl_def_proc();
     } else if((strcmp(tk.lexema, "const") == 0) || (verificarTipo(tk.lexema) == 0)){
+        ts.Linhas[ts.topo].escopo    = GLOBAL;
+        ts.Linhas[ts.topo].categoria = VAR_GLOBAL;
+        ts.Linhas[ts.topo].passagem  = NA_PASSAGEM;
+        ts.Linhas[ts.topo].zumbi     = NA_ZUMBI;
         decl_list_var();
     }else{
         error("Nao iniciou o procedimento!");
@@ -89,15 +93,11 @@ void decl_def_proc(){
                 if(tk.cat == SN && tk.codigo == E_COMERCIAL)
                 {
                     ts.Linhas[ts.topo].passagem = REFERENCIA;
-                    ts.Linhas[ts.topo].escopo = LOCAL;
-                    ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
                     tk = analise_lexica(fd);
                 }
                 else if((verificarTipo(tk.lexema)) == 0)
                 {
                     ts.Linhas[ts.topo].passagem = COPIA;
-                    ts.Linhas[ts.topo].escopo = LOCAL;
-                    ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
                 }
             }
             else
@@ -126,6 +126,8 @@ void decl_def_proc(){
             }
             ts.Linhas[ts.topo].zumbi = NA_ZUMBI;
             ts.Linhas[ts.topo].eh_const = NAO;
+            ts.Linhas[ts.topo].escopo = LOCAL;
+            ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
             tk = analise_lexica(fd);
             if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
             {
@@ -266,17 +268,259 @@ void decl_def_proc(){
     }
     else if(strcmp(tk.lexema, "def") == 0)
     {
-        ts.Linhas[ts.topo].escopo = LOCAL;
+        ts.Linhas[ts.topo].escopo = GLOBAL;
+        ts.Linhas[ts.topo].tipo = NA_TIPO;
+        ts.Linhas[ts.topo].categoria = PROCEDIMENTO;
+        ts.Linhas[ts.topo].passagem = NA_PASSAGEM;
+        ts.Linhas[ts.topo].zumbi = NA_ZUMBI;
+        ts.Linhas[ts.topo].isArray = NA_ISARRAY;
+        ts.Linhas[ts.topo].dim01 = 0;
+        ts.Linhas[ts.topo].dim02 = 0;
+        ts.Linhas[ts.topo].eh_const = NAO;
+
+        tk = analise_lexica(fd);
+        if(tk.cat == PVR && strcmp(tk.lexema, "init") == 0)
+        {
+            strcpy(ts.Linhas[ts.topo].lexema, tk.lexema);
+            ts.topo++;
+            tk = analise_lexica(fd);
+        }
+        else if(tk.cat == ID)
+        {
+            strcpy(ts.Linhas[ts.topo].lexema, tk.lexema);
+            ts.topo++;
+            tk = analise_lexica(fd);
+            if(tk.cat == SN && tk.codigo == ABRE_PAR)
+            {
+                do{
+                    tk = analise_lexica(fd);
+                    if(tk.cat == SN && tk.codigo == E_COMERCIAL)
+                    {
+                        ts.Linhas[ts.topo].passagem = REFERENCIA;
+                        tk = analise_lexica(fd);
+                    }
+                    else if((verificarTipo(tk.lexema)) == 0)
+                    {
+                        ts.Linhas[ts.topo].passagem = COPIA;
+                    }
+                    else if(tk.cat == SN && tk.codigo == FECHA_PAR)
+                    {
+                        break;
+                    }
+                    if(strcmp(tk.lexema, "int") == 0)
+                    {
+                        ts.Linhas[ts.topo].tipo = INT_TIPO;
+                    }
+                    else if(strcmp(tk.lexema, "real") == 0)
+                    {
+                        ts.Linhas[ts.topo].tipo = REAL_TIPO;
+                    }
+                    else if(strcmp(tk.lexema, "char") == 0)
+                    {
+                        ts.Linhas[ts.topo].tipo = CHAR_TIPO;
+                    }
+                    else if(strcmp(tk.lexema, "bool") == 0)
+                    {
+                        ts.Linhas[ts.topo].tipo = BOOL_TIPO;
+                    }
+                    else
+                    {
+                        error("tipo esperado!");
+                    }
+                    ts.Linhas[ts.topo].zumbi = VIVO;
+                    ts.Linhas[ts.topo].eh_const = NAO;
+                    ts.Linhas[ts.topo].escopo = LOCAL;
+                    ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
+                    tk = analise_lexica(fd);
+                    if(tk.cat == ID)
+                    {
+                        strcpy(ts.Linhas[ts.topo].lexema, tk.lexema);
+                        tk = analise_lexica(fd);
+                        if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
+                        {
+                           tk = analise_lexica(fd);
+                           if(tk.cat == ID) // BUSCA DO DIM01 CASO SEJA CONSTANTE
+                           {
+                                int topoAux1 = ts.topo;
+                                int strcmp_aux1 = 0;
+                                while(topoAux1 >= 0)
+                                {
+                                    if(strcmp(ts.Linhas[topoAux1].lexema, tk.lexema) == 0)
+                                    {
+                                        strcmp_aux1 = 1;
+                                        if(ts.Linhas[topoAux1].eh_const == SIM)
+                                        {
+                                            if(ts.Linhas[topoAux1].tipo == INT_TIPO)
+                                            {
+                                                ts.Linhas[ts.topo].dim01 = ts.Linhas[topoAux1].constInt;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                error("A constante nao eh compativel");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            error("A constante nao eh compativel");
+                                        }
+                                    }
+                                    topoAux1--;
+                                }
+                                if(topoAux1 < 0 && strcmp_aux1 == 0)
+                                {
+                                    error("A constante nao eh compativel");
+                                }
+                           }
+                           else if(tk.cat == CT_I)
+                           {
+                               ts.Linhas[ts.topo].dim01 = tk.valor_i;
+                           }
+                           else
+                           {
+                               error("Array sem dimensao!");
+                           }
+                           tk = analise_lexica(fd);
+                           if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
+                           {
+                               tk = analise_lexica(fd);
+                               if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
+                               {
+                                   tk = analise_lexica(fd);
+                                   if(tk.cat == ID) // BUSCA DO DIM02 CASO SEJA CONSTANTE
+                                   {
+                                        int topoAux2 = ts.topo;
+                                        int strcmp_aux2 = 0;
+                                        while(topoAux2 >= 0)
+                                        {
+                                            if(strcmp(ts.Linhas[topoAux2].lexema, tk.lexema) == 0)
+                                            {
+                                                strcmp_aux2 = 1;
+                                                if(ts.Linhas[topoAux2].eh_const == SIM)
+                                                {
+                                                    if(ts.Linhas[topoAux2].tipo == INT_TIPO)
+                                                    {
+                                                        ts.Linhas[ts.topo].dim02 = ts.Linhas[topoAux2].constInt;
+                                                        break;
+                                                    }
+                                                    else
+                                                    {
+                                                        error("A constante nao eh compativel");
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    error("A constante nao eh compativel");
+                                                }
+                                            }
+                                            topoAux2--;
+                                        }
+                                        if(topoAux2 < 0 && strcmp_aux2 == 0)
+                                        {
+                                            error("A constante nao eh compativel");
+                                        }
+                                   }
+                                   else if(tk.cat == CT_I)
+                                   {
+                                       ts.Linhas[ts.topo].dim02 = tk.valor_i;
+                                   }
+                                   else
+                                   {
+                                       error("Array sem dimensao!");
+                                   }
+                                   ts.Linhas[ts.topo].isArray = MATRIZ;
+                                   tk = analise_lexica(fd);
+                                   if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
+                                   {
+                                       tk = analise_lexica(fd);
+                                   }
+                                   else
+                                   {
+                                       error("']' esperado!");
+                                   }
+                            }
+                            else
+                            {
+                                ts.Linhas[ts.topo].isArray = VETOR;
+                            }
+                           }
+                           else
+                           {
+                               error("']' esperado!");
+                           }
+
+                        }
+                        else
+                        {
+                            ts.Linhas[ts.topo].isArray = ESCALAR;
+                            ts.Linhas[ts.topo].dim01 = 0;
+                            ts.Linhas[ts.topo].dim02 = 0;
+                        }
+                        ts.topo++;
+                    }
+                    else
+                    {
+                        error("parametro de procedimento sem identificador!");
+                    }
+                }while(tk.cat == SN && tk.codigo == VIRGULA);
+            }
+            if(tk.cat == SN && tk.codigo == FECHA_PAR)
+            {
+                tk = analise_lexica(fd);
+            }
+            else
+            {
+                error("')' esperado!");
+            }
+        }
+        else
+        {
+            error("procedimento sem identificador!");
+        }
+
+        //while do decl list var    negaçao desse if((strcmp(tk.lexema, "const") == 0) || (verificarTipo(tk.lexema) == 0))
+        while((strcmp(tk.lexema, "const") == 0) || (verificarTipo(tk.lexema) == 0))
+        {
+            ts.Linhas[ts.topo].escopo    = LOCAL;
+            ts.Linhas[ts.topo].categoria = VAR_LOCAL;
+            ts.Linhas[ts.topo].passagem  = NA_PASSAGEM;
+            ts.Linhas[ts.topo].zumbi     = NA_ZUMBI;
+            decl_list_var();
+            if(tk.processado != 1)
+            {
+                tk = analise_lexica(fd);
+                tk.processado = 0;
+            }
+        }
+
+
+        // fazer função cmd
+
+        if(tk.cat == PVR && strcmp(tk.lexema, "endp") == 0)
+        {
+            // limpando a tabela de simbolos
+            while(ts.Linhas[ts.topo].categoria == VAR_LOCAL && ts.Linhas[ts.topo].escopo == LOCAL)
+            {
+                memset(&ts.Linhas[ts.topo], 0, sizeof(REG_TS));
+            }
+
+            int topo_auxx = ts.topo;
+            while(ts.Linhas[topo_auxx].zumbi == VIVO)
+            {
+                ts.Linhas[topo_auxx].zumbi = ZUMBI;
+                topo_auxx--;
+            }
+        }
+        else
+        {
+            error("endp esperado!");
+        }
     }
 }
 
 // ======= DECL_LIST_VAR =======
 void decl_list_var(){
 
-    ts.Linhas[ts.topo].escopo    = GLOBAL;
-    ts.Linhas[ts.topo].categoria = VAR_GLOBAL;
-    ts.Linhas[ts.topo].passagem  = NA_PASSAGEM;
-    ts.Linhas[ts.topo].zumbi     = NA_ZUMBI;
 
     if(strcmp(tk.lexema, "const") == 0){
         ts.Linhas[ts.topo].eh_const = SIM;

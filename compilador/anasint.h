@@ -63,6 +63,7 @@ void prog();
 void decl_list_var();
 void decl_def_proc();
 void decl_var();
+void cmd();
 
 // |=======| VARI�VEIS GLOBAIS |=======|
 extern TABELA_SIMBOLO ts;
