@@ -14,9 +14,13 @@
     - DUVIDA: ESCOPO DE PROT
     - DUVIDA: CATEGORIA DE VARIAVEL DE PROT
     - DUVIDA: ZUMBI DE PROT
+    - PERGUNTAR: SOBRE PUTSTR E GETSTR
+
 
 -> FUNÇÕES JÁ FEITAS: (Falta tabela de simbolos)
     - prog
     - decl_list_var
     - decl_var
+    - decl_def_proc
+    - cmd !!!!!!!!!!!!!!!!!!!(falta ajeitar dps de terminar as outras)!!!!!!!!!!!!!!!!!!!!
 

@@ -493,6 +493,15 @@ void decl_def_proc(){
             }
         }
 
+        while(tk.cat == PVR && strcmp(tk.lexema, "endp") != 0) // verificar depois se esta certo
+        {
+            cmd();
+            if(tk.processado != 1)
+            {
+                tk = analise_lexica(fd);
+                tk.processado = 0;
+            }
+        }
 
         // fazer função cmd
 
@@ -752,4 +761,346 @@ void decl_var(){
     ts.topo++; // INCREMENTA��O DO TOPO
 
 
+}
+
+void cmd()
+{
+    if(tk.cat == PVR && strcmp(tk.lexema, "do") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == ID)
+        {
+            tk = analise_lexica(fd);
+            if(tk.cat == SN && tk.codigo == ABRE_PAR)
+            {
+                do{
+                    tk = analise_lexica(fd);
+                    //expr();
+
+                }while(tk.cat == SN && tk.codigo == VIRGULA);
+                if(tk.cat == SN && tk.codigo == FECHA_PAR)
+                {
+                    pass; // TALVEZ ALGO AQUI
+                }
+                else
+                {
+                    error("')' esperado!");
+                }
+            }
+            else
+            {
+                error("'(' esperado!");
+            }
+        }
+        else
+        {
+            error("identificador de procedimento esperado!");
+        }
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "while") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == SN && tk.codigo == ABRE_PAR)
+        {
+            tk = analise_lexica(fd);
+            //expr();
+            // TALVEZ tk = analise_lexica(fd);
+            if(tk.cat == SN && tk.codigo == FECHA_PAR)
+            {
+                tk = analise_lexica(fd);
+                if(tk.cat == PVR && strcmp(tk.lexema, "endw") == 0)
+                {
+                    pass; // TALVEZ ALGO AQUI
+                }
+                else
+                {
+                    while(strcmp(tk.lexema, "endw") != 0)
+                    {
+                        cmd();
+                        tk = analise_lexica(fd);
+                    }
+                    if(tk.cat != PVR && strcmp(tk.lexema, "endw") != 0)
+                    {
+                        error("'endw' esperado!");
+                    }
+                }
+            }
+            else
+            {
+                error("')' esperado!");
+            }
+        }
+        else
+        {
+            error("'(' esperado!");
+        }
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "var") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == ID)
+        {
+            tk = analise_lexica(fd);
+            if(tk.cat == PVR && strcmp(tk.lexema, "from") == 0)
+            {
+                tk = analise_lexica(fd); // TALVEZ NAO TENHA
+                //expr();
+                //tk = analise_lexica(fd); TALVEZ NAO TENHA
+                if(tk.cat == PVR && ((strcmp(tk.lexema, "to") == 0) || (strcmp(tk.lexema, "dt") == 0)))
+                {
+                    tk = analise_lexica(fd); // TALVEZ NAO TENHA
+                    //expr();
+                    //tk = analise_lexica(fd); TALVEZ NAO TENHA
+                    if(tk.cat == PVR && strcmp(tk.lexema, "by") == 0)
+                    {
+                        tk = analise_lexica(fd);
+                        if(tk.cat == CT_I || tk.cat == ID)
+                        {
+                            if(tk.cat == ID){
+                                int topoAux1 = ts.topo;
+                                int strcmp_aux1 = 0;
+                                while(topoAux1 >= 0){
+                                    if(strcmp(ts.Linhas[topoAux1].lexema, tk.lexema) == 0){
+                                        strcmp_aux1 = 1;
+                                        if(ts.Linhas[topoAux1].eh_const == SIM){
+                                            if(ts.Linhas[topoAux1].tipo == INT_TIPO){
+                                                break;
+                                            }else{
+                                                error("A constante nao eh compativel");
+                                            }
+                                        }else{
+                                            error("A constante nao eh compativel");
+                                        }
+                                    }
+                                    topoAux1--;
+                                }
+                                if(topoAux1 < 0 && strcmp_aux1 == 0){
+                                    error("A constante nao eh compativel");
+                                }
+                            }
+                            tk = analise_lexica(fd);
+                        }
+                        else
+                        {
+                            error("inteiro ou identificador esperado!");
+                        }
+                    }
+                    while(tk.cat != PVR && strcmp(tk.lexema, "endv") != 0)
+                    {
+                        cmd();
+                        tk = analise_lexica(fd);
+                    }
+                }
+                else
+                {
+                    error("'to' ou 'dt' esperado");
+                }
+            }
+            else
+            {
+                error("'from' esperado!");
+            }
+        }
+        else
+        {
+            error("identificador esperado!");
+        }
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "if") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == SN && tk.codigo == ABRE_PAR)
+        {
+            tk = analise_lexica(fd);
+            //expr();
+            //tk = analise_lexica(fd); TALVEZ NAO TENHA
+            if(tk.cat == SN && tk.codigo == FECHA_PAR)
+            {
+                tk = analise_lexica(fd);
+                while((strcmp(tk.lexema, "elif") != 0) && (strcmp(tk.lexema, "else") != 0) && (strcmp(tk.lexema, "endi") != 0))
+                {
+                    cmd();
+                    tk = analise_lexica(fd);
+                }
+                while(tk.cat == PVR && (strcmp(tk.lexema, "elif") == 0))
+                {
+                    tk = analise_lexica(fd);
+                    if(tk.cat == SN && tk.codigo == ABRE_PAR)
+                    {
+                        tk = analise_lexica(fd);
+                        //expr();
+                        //tk = analise_lexica(fd); TALVEZ NAO TENHA
+                        if(tk.cat == SN && tk.codigo == FECHA_PAR)
+                        {
+                            tk = analise_lexica(fd);
+                            while((strcmp(tk.lexema, "elif") != 0) && (strcmp(tk.lexema, "else") != 0) && (strcmp(tk.lexema, "endi") != 0))
+                            {
+                                cmd();
+                                tk = analise_lexica(fd);
+                            }
+                        }
+                        else
+                        {
+                            error("')' esperado!");
+                        }
+                    }
+                    else
+                    {
+                        error("'(' esperado!");
+                    }
+                }
+                if(tk.cat == PVR && strcmp(tk.lexema, "else") == 0)
+                {
+                    tk = analise_lexica(fd);
+                    while(strcmp(tk.lexema, "endi") != 0)
+                    {
+                        cmd();
+                        tk = analise_lexica(fd);
+                    }
+                }
+                if(tk.cat == PVR && strcmp(tk.lexema, "endi") == 0)
+                {
+                    pass; // TALVEZ ALGO AQUI
+                }
+                else
+                {
+                    error("'endi' esperado!");
+                }
+            }
+            else
+            {
+                error("')' esperado!");
+            }
+
+
+        }
+        else
+        {
+            error("'(' esperado!");
+        }
+    }
+    else if(tk.cat == ID)
+    {
+        //atrib();
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "getout") == 0)
+    {
+        pass; // TALVEZ ALGO AQUI
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "getint") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == ID)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else
+        {
+            error("identificador esperado!");
+        }
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "getreal") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == ID)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else
+        {
+            error("identificador esperado!");
+        }
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "getchar") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == ID)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else
+        {
+            error("identificador esperado!");
+        }
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "getstr") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == ID)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else
+        {
+            error("identificador esperado!");
+        }
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "putint") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == ID)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else if(tk.cat == CT_I)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else
+        {
+            error("identificador ou inteiro esperado!");
+        }
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "putreal") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == ID)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else if(tk.cat == CT_R)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else
+        {
+            error("identificador ou real esperado!");
+        }
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "putchar") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == ID)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else if(tk.cat == CT_C)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else
+        {
+            error("identificador ou char esperado!");
+        }
+    }
+    else if(tk.cat == PVR && strcmp(tk.lexema, "putstr") == 0)
+    {
+        tk = analise_lexica(fd);
+        if(tk.cat == ID)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else if(tk.cat == CT_S)
+        {
+            pass; // TALVEZ ALGO AQUI
+        }
+        else
+        {
+            error("identificador ou string esperado!");
+        }
+    }
+    else
+    {
+        error("comando invalido!");
+    }
 }
