@@ -1127,12 +1127,46 @@ void expr_simp(){
     }
 
     termo();
+    if(tk.processado != 1)
+    {
+        tk = analise_lexica(fd);
+        tk.processado = 0;
+    }
+
+    while((tk.cat == SN && (tk.codigo == ADICAO || tk.codigo == SUBTRACAO || tk.codigo == OR )) || (tk.cat == ID))
+    {
+        if(tk.cat == SN && (tk.codigo == ADICAO || tk.codigo == SUBTRACAO || tk.codigo == OR ))
+        {
+            tk = analise_lexica(fd);
+        }
+
+        termo();
+        if(tk.processado != 1)
+        {
+            tk = analise_lexica(fd);
+            tk.processado = 0;
+        }
+
+    }
 
 }
 
 void termo(){
 
     fator();
+
+    tk = analise_lexica(fd);
+
+    while((tk.cat == SN && (tk.codigo == MULTIPLICACAO || tk.codigo == DIVISAO || tk.codigo == AND)) || (tk.cat == ID))
+    {
+        if(tk.cat == SN && (tk.codigo == MULTIPLICACAO || tk.codigo == DIVISAO || tk.codigo == AND))
+        {
+            tk = analise_lexica(fd);
+        }
+
+        fator();
+        tk = analise_lexica(fd);
+    }
 }
 
 void fator(){
