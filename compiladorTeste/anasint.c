@@ -566,7 +566,7 @@ void decl_list_var(){
 void decl_var(){
     // DECLARA��O DE VARI�VEIS:
     if(var_virg_aux == 1){
-        int topoAux_virg = ts.topo - 1;
+        int topoAux_virg = ts.topo - 1; // CUIDADO COM ISSO
         ts.Linhas[ts.topo].tipo = ts.Linhas[var_virg_aux].tipo;
         var_virg_aux = 0;
     }else if(strcmp(tk.lexema, "int") == 0){
@@ -1103,4 +1103,115 @@ void cmd()
     {
         error("comando invalido!");
     }
+}
+
+void atrib(){
+
+}
+
+void expr()
+{
+    expr_simp();
+
+    tk = analise_lexica(fd);
+
+
+
+
+}
+
+void expr_simp(){
+    if(tk.cat == SN && (tk.codigo == ADICAO || tk.codigo == SUBTRACAO))
+    {
+        tk = analise_lexica(fd);
+    }
+
+    termo();
+
+}
+
+void termo(){
+
+    fator();
+}
+
+void fator(){
+
+    if(tk.cat == ID)
+    {
+        tk = analise_lexica(fd);
+    }
+    else
+    {
+        error("identificador esperado!");
+    }
+
+    while(tk.cat == CT_I || tk.cat == CT_R || tk.cat == CT_C || (tk.cat == SN && (tk.codigo == ABRE_PAR || tk.codigo == NEGACAO)))
+    {
+        if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
+        {
+            tk = analise_lexica(fd);
+
+            expr();
+
+            tk = analise_lexica(fd); // TALVEZ SEJA INUTIL
+
+            if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
+            {
+                tk = analise_lexica(fd);
+            }
+            else
+            {
+                error("']' esperado!");
+            }
+
+        }
+        else
+        {
+            error("'[' esperado!");
+        }
+    }
+
+    if(tk.cat == CT_I)
+    {
+        pass;
+    }
+    else if(tk.cat == CT_R)
+    {
+        pass;
+    }
+    else if(tk.cat == CT_C)
+    {
+        pass;
+    }
+    else if(tk.cat == SN && tk.codigo == ABRE_PAR)
+    {
+        tk = analise_lexica(fd);
+
+        expr();
+
+        tk = analise_lexica(fd);
+
+        if(tk.cat == SN && tk.codigo == FECHA_PAR)
+        {
+            pass;
+        }
+        else
+        {
+            error("')' esperado! ");
+        }
+
+    }
+    else if(tk.cat == SN && tk.codigo == NEGACAO)
+    {
+        tk = analise_lexica(fd);
+
+        fator();
+    }
+    else
+    {
+        error("fator invalido!");
+    }
+
+
 }
