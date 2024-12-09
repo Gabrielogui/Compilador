@@ -64,7 +64,7 @@ void decl_list_var();
 void decl_def_proc();
 void decl_var();
 void cmd();
-//void atrib(); - FAZER
+void atrib();
 void expr();
 void expr_simp();
 void termo();

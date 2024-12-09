@@ -18,16 +18,12 @@ prot id(int, &real, char, bool, &int, real, &char, &bool)
 def gabao(int a, &real b[z][8], char c, bool d, &int e, real f, &char g, &bool h)
     int inteiroo = 23
     do id()
-    while()
-        var dada from to by z endv
-    endw
 
-    if()
+    if(x==2)
         var dada from to by 8 endv
-    elif()
-    elif()
+        varvar = 2 + poxa
+    elif(y != 'c')
     else
-        ofmaiw
     endi
     getout
     getint daw
@@ -47,26 +43,7 @@ endp
 def init
     do id()
     while()
-        var dada from to by z endv
+        var id from to by z endv
     endw
 
-    if()
-        var dada from to by 8 endv
-    elif()
-    elif()
-    else
-        ofmaiw
-    endi
-    getout
-    getint daw
-    getreal dddd
-    getchar cc
-    putint 3
-    putint da
-    putreal 3.0
-    putreal dad
-    putchar 'c'
-    putint dadd
-    putstr "dadad"
-    putstr da
 endp

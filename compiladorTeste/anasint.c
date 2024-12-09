@@ -775,7 +775,12 @@ void cmd()
             {
                 do{
                     tk = analise_lexica(fd);
-                    //expr();
+                    expr();
+                    if(tk.processado != 1)
+                    {
+                        tk = analise_lexica(fd);
+                        tk.processado = 0;
+                    }
 
                 }while(tk.cat == SN && tk.codigo == VIRGULA);
                 if(tk.cat == SN && tk.codigo == FECHA_PAR)
@@ -803,8 +808,13 @@ void cmd()
         if(tk.cat == SN && tk.codigo == ABRE_PAR)
         {
             tk = analise_lexica(fd);
-            //expr();
-            // TALVEZ tk = analise_lexica(fd);
+            expr();
+            if(tk.processado != 1)
+            {
+                tk = analise_lexica(fd);
+                tk.processado = 0;
+            }
+
             if(tk.cat == SN && tk.codigo == FECHA_PAR)
             {
                 tk = analise_lexica(fd);
@@ -844,13 +854,21 @@ void cmd()
             if(tk.cat == PVR && strcmp(tk.lexema, "from") == 0)
             {
                 tk = analise_lexica(fd); // TALVEZ NAO TENHA
-                //expr();
-                //tk = analise_lexica(fd); TALVEZ NAO TENHA
+                expr();
+                if(tk.processado != 1)
+                {
+                    tk = analise_lexica(fd);
+                    tk.processado = 0;
+                }
                 if(tk.cat == PVR && ((strcmp(tk.lexema, "to") == 0) || (strcmp(tk.lexema, "dt") == 0)))
                 {
                     tk = analise_lexica(fd); // TALVEZ NAO TENHA
-                    //expr();
-                    //tk = analise_lexica(fd); TALVEZ NAO TENHA
+                    expr();
+                    if(tk.processado != 1)
+                    {
+                        tk = analise_lexica(fd);
+                        tk.processado = 0;
+                    }
                     if(tk.cat == PVR && strcmp(tk.lexema, "by") == 0)
                     {
                         tk = analise_lexica(fd);
@@ -912,8 +930,12 @@ void cmd()
         if(tk.cat == SN && tk.codigo == ABRE_PAR)
         {
             tk = analise_lexica(fd);
-            //expr();
-            //tk = analise_lexica(fd); TALVEZ NAO TENHA
+            expr();
+            if(tk.processado != 1)
+            {
+                tk = analise_lexica(fd);
+                tk.processado = 0;
+            }
             if(tk.cat == SN && tk.codigo == FECHA_PAR)
             {
                 tk = analise_lexica(fd);
@@ -928,8 +950,12 @@ void cmd()
                     if(tk.cat == SN && tk.codigo == ABRE_PAR)
                     {
                         tk = analise_lexica(fd);
-                        //expr();
-                        //tk = analise_lexica(fd); TALVEZ NAO TENHA
+                        expr();
+                        if(tk.processado != 1)
+                        {
+                            tk = analise_lexica(fd);
+                            tk.processado = 0;
+                        }
                         if(tk.cat == SN && tk.codigo == FECHA_PAR)
                         {
                             tk = analise_lexica(fd);
@@ -981,7 +1007,7 @@ void cmd()
     }
     else if(tk.cat == ID)
     {
-        //atrib();
+        atrib();
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "getout") == 0)
     {
@@ -1105,7 +1131,48 @@ void cmd()
     }
 }
 
-void atrib(){
+void atrib()
+{
+    tk = analise_lexica(fd);
+    while(tk.codigo != ATRIBUICAO)
+    {
+        if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
+        {
+            tk = analise_lexica(fd);
+
+            expr();
+
+            if(tk.processado != 1)
+            {
+                tk = analise_lexica(fd);
+                tk.processado = 0;
+            }
+
+            if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
+            {
+                tk = analise_lexica(fd);
+            }
+            else
+            {
+                error("']' esperado!");
+            }
+
+        }
+        else
+        {
+            error("'[' esperado!");
+        }
+    }
+    if(tk.cat == SN && tk.codigo == ATRIBUICAO)
+    {
+        tk = analise_lexica(fd);
+        expr();
+    }
+    else
+    {
+        error("'=' esperado!");
+    }
+
 
 }
 
@@ -1113,10 +1180,19 @@ void expr()
 {
     expr_simp();
 
-    tk = analise_lexica(fd);
+    if(tk.processado != 1)
+    {
+        tk = analise_lexica(fd);
+        tk.processado = 0;
+    }
 
+    if(tk.cat == SN && (tk.codigo == COMPARACAO || tk.codigo == DIFERENTE || tk.codigo == MENOR_OU_IGUAL
+    || tk.codigo == MENOR_QUE || tk.codigo == MAIOR_OU_IGUAL || tk.codigo == MAIOR_QUE))
+    {
+        tk = analise_lexica(fd);
 
-
+        expr_simp();
+    }
 
 }
 
@@ -1167,6 +1243,7 @@ void termo(){
         fator();
         tk = analise_lexica(fd);
     }
+    tk.processado = 1;
 }
 
 void fator(){
@@ -1174,38 +1251,37 @@ void fator(){
     if(tk.cat == ID)
     {
         tk = analise_lexica(fd);
-    }
-    else
-    {
-        error("identificador esperado!");
-    }
 
-    while(tk.cat == CT_I || tk.cat == CT_R || tk.cat == CT_C || (tk.cat == SN && (tk.codigo == ABRE_PAR || tk.codigo == NEGACAO)))
-    {
-        if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
+        while(tk.cat != CT_I && tk.cat != CT_R && tk.cat != CT_C && tk.codigo != ABRE_PAR && tk.codigo != NEGACAO)
         {
-            tk = analise_lexica(fd);
-
-            expr();
-
-            tk = analise_lexica(fd); // TALVEZ SEJA INUTIL
-
-            if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
+            if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
             {
                 tk = analise_lexica(fd);
+
+                expr();
+
+                if(tk.processado != 1)
+                {
+                    tk = analise_lexica(fd);
+                    tk.processado = 0;
+                }
+
+                if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
+                {
+                    tk = analise_lexica(fd);
+                }
+                else
+                {
+                    error("']' esperado!");
+                }
+
             }
             else
             {
-                error("']' esperado!");
+                error("'[' esperado!");
             }
-
-        }
-        else
-        {
-            error("'[' esperado!");
         }
     }
-
     if(tk.cat == CT_I)
     {
         pass;
