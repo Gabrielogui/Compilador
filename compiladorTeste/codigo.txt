@@ -22,9 +22,13 @@ endp
 def origin()
     do id(b + a - c && 2 + 2 * 55 / b + 1 * 4 - 2 || x * 1 + (g * l) || (gabriel + 2 / luiza) + 4 - 2 != (45 / caio) + !Alan)
 
-    while(gabriel != fluor)
-        luiz = 'v'
-        do id()
+    while(h != 66 + 1)
+        gabriel = 22
+        alan = 33
+        lucas[77] = 44
+
+        do lulinha()
+        do tatenia(55 + a / (caio + gabriel) == 33)
     endw
 endp
 
@@ -32,3 +36,4 @@ endp
 // EXPR + outras funções adicionadas
 // Fazer as funções da tabela de simbolo
 // Resolver 'contLinhas'
+// Resolver loop do 'atrib'

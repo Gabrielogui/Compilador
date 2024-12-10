@@ -1265,7 +1265,7 @@ void expr_simp(){
         tk.processado = 0;
     }
     printf("\n 31 %d | %s", tk.codigo, tk.lexema);
-    while((tk.cat == SN && (tk.codigo == ADICAO || tk.codigo == SUBTRACAO || tk.codigo == OR )) || (tk.cat == ID))
+    while((tk.cat == SN && (tk.codigo == ADICAO || tk.codigo == SUBTRACAO || tk.codigo == OR )) /*|| (tk.cat == ID)*/)
     {
         if(tk.cat == SN && (tk.codigo == ADICAO || tk.codigo == SUBTRACAO || tk.codigo == OR ))
         {
@@ -1293,7 +1293,7 @@ void termo(){
 
     printf("\n 28 %d | %s", tk.codigo, tk.lexema);
 
-    while((tk.cat == SN && (tk.codigo == MULTIPLICACAO || tk.codigo == DIVISAO || tk.codigo == AND)) || (tk.cat == ID))
+    while((tk.cat == SN && (tk.codigo == MULTIPLICACAO || tk.codigo == DIVISAO || tk.codigo == AND)) /*|| (tk.cat == ID)*/)
     {
         if(tk.cat == SN && (tk.codigo == MULTIPLICACAO || tk.codigo == DIVISAO || tk.codigo == AND))
         {
