@@ -16,34 +16,24 @@ prot id(int, &real, char, bool, &int, real, &char, &bool)
 
 
 def gabao(int a, &real b[z][8], char c, bool d, &int e, real f, &char g, &bool h)
-    int inteiroo = 23
-    do id()
 
-    if(x==2)
-        var dada from to by 8 endv
-        varvar = 2 + poxa
-    elif(y != 'c')
-    else
-    endi
-    getout
-    getint daw
-    getreal dddd
-    getchar cc
-    putint 3
-    putint da
-    putreal 3.0
-    putreal dad
-    putchar 'c'
-    putint dadd
-    putstr "dadad"
-    putstr da
 endp
 
 
 def init
-    do id()
-    while()
-        var id from to by z endv
+    do id(7)
+    do id(77)
+
+    do id(- 5 / 2 + b * (a - c) * (a + b) - 1 && (a + jota) || (menino + menina) + Gabriel >= a && gabriel - 2 * 1.4 - 'c', 55, 3 + 2 > 7, 77)
+
+    while(- 5 / 2 + b * (a - c) * (a + b) - 1 && (a + jota) || (menino + menina) + Gabriel >= a && gabriel - 2 * 1.4 - 'c')
+        do d()
+
     endw
+
+    var id from 2 + 1 / f to 3 / t by z endv
+
+    if(a >= 3)
+    endi
 
 endp
