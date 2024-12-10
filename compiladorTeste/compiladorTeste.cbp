@@ -31,6 +31,18 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="analex.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="analex.h" />
+		<Unit filename="anasint.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="anasint.h" />
+		<Unit filename="codigo.txt" />
+		<Unit filename="compiladorTeste.cbp" />
+		<Unit filename="compiladorTeste.depend" />
+		<Unit filename="compiladorTeste.layout" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -156,10 +156,12 @@ void testarAnasint(){
             tk = analise_lexica(fd);
             tk.processado = 0;
         }
+
         if(tk.cat == FIM_ARQ){
             printf("\nArquivo encerrado\n");
             break;
         }
         prog();
+
     }
 }
