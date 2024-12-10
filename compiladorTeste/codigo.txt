@@ -20,9 +20,15 @@ def gabao(int a, &real b[z][8], char c, bool d, &int e, real f, &char g, &bool h
 endp
 
 def origin()
-    do id(b)
+    do id(b + a - c && 2 + 2 * 55 / b + 1 * 4 - 2 || x * 1 + (g * l) || (gabriel + 2 / luiza) + 4 - 2 != (45 / caio) + !Alan)
+
+    while(gabriel != fluor)
+        luiz = 'v'
+        do id()
+    endw
 endp
 
 // Deixar CMD funcional
 // EXPR + outras funções adicionadas
 // Fazer as funções da tabela de simbolo
+// Resolver 'contLinhas'
