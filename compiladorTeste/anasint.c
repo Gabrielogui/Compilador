@@ -493,13 +493,14 @@ void decl_def_proc(){
             }
         }
 
-        while(strcmp(tk.lexema, "endp") != 0 || tk.cat != FIM_ARQ) // verificar depois se esta certo
+        while(tk.cat == PVR && strcmp(tk.lexema, "endp") != 0) // verificar depois se esta certo
         {
             cmd();
-            printf("\n minha pika %d, %s", tk.codigo, tk.lexema);
-            tk = analise_lexica(fd); // VERIFICAR DEPOIS
-            printf("\n minha pika %d, %s", tk.codigo, tk.lexema);
-            tk.processado = 0;
+            if(tk.processado != 1)
+            {
+                tk = analise_lexica(fd);
+                tk.processado = 0;
+            }
         }
 
         // fazer função cmd
@@ -762,55 +763,38 @@ void decl_var(){
 
 }
 
-// ======= CMD =======
 void cmd()
 {
     if(tk.cat == PVR && strcmp(tk.lexema, "do") == 0)
     {
-        int flag = 0;
         tk = analise_lexica(fd);
         if(tk.cat == ID)
         {
             tk = analise_lexica(fd);
-            tk.processado = 0;
             if(tk.cat == SN && tk.codigo == ABRE_PAR)
             {
                 do{
-                    if(tk.cat == SN && tk.codigo == VIRGULA){
-                        flag = 1;
-                    }
-
                     tk = analise_lexica(fd);
-
-                    if(tk.cat == SN && tk.codigo == FECHA_PAR) // do id(7)
-                    {
-                        break;
-                    }
-
-
-                    flag = 0;
-
                     expr();
-
-                    printf("\n %s", tk.lexema);
+                    if(tk.processado != 1)
+                    {
+                        tk = analise_lexica(fd);
+                        tk.processado = 0;
+                    }
 
                 }while(tk.cat == SN && tk.codigo == VIRGULA);
-
                 if(tk.cat == SN && tk.codigo == FECHA_PAR)
                 {
-                    if(flag == 1){
-                        error("Virgula mal colocada! ");
-                    }
+                    pass; // TALVEZ ALGO AQUI
                 }
                 else
                 {
-                    printf("\n%s", tk.lexema);
-                    error("')' esperado! ");
+                    error("')' esperado!");
                 }
             }
             else
             {
-                error("'(' esperado! ");
+                error("'(' esperado!");
             }
         }
         else
@@ -1143,12 +1127,10 @@ void cmd()
     }
     else
     {
-        printf("\n %s, %d", tk.lexema, tk.codigo);
         error("comando invalido!");
     }
 }
 
-// ======= ATRIBUIÇÃO =======
 void atrib()
 {
     tk = analise_lexica(fd);
@@ -1184,9 +1166,7 @@ void atrib()
     if(tk.cat == SN && tk.codigo == ATRIBUICAO)
     {
         tk = analise_lexica(fd);
-        printf("\n Aminesia %d, %s", tk.codigo, tk.lexema);
         expr();
-        printf("\n Astutu %d, %s", tk.codigo, tk.lexema);
     }
     else
     {
@@ -1196,7 +1176,6 @@ void atrib()
 
 }
 
-// ======= EXPRESSÃO =======
 void expr()
 {
     expr_simp();
@@ -1217,7 +1196,6 @@ void expr()
 
 }
 
-// ======= ECPRESSÃO SIMPLES =======
 void expr_simp(){
     if(tk.cat == SN && (tk.codigo == ADICAO || tk.codigo == SUBTRACAO))
     {
@@ -1249,17 +1227,11 @@ void expr_simp(){
 
 }
 
-// ======= TERMO =======
 void termo(){
 
     fator();
 
-    if(tk.processado != 1)
-    {
-        printf(".");
-        tk = analise_lexica(fd);
-        tk.processado = 0;
-    }
+    tk = analise_lexica(fd);
 
     while((tk.cat == SN && (tk.codigo == MULTIPLICACAO || tk.codigo == DIVISAO || tk.codigo == AND)) || (tk.cat == ID))
     {
@@ -1269,37 +1241,19 @@ void termo(){
         }
 
         fator();
-        if(tk.processado != 1)
-        {
-            tk = analise_lexica(fd);
-            tk.processado = 0;
-        }
+        tk = analise_lexica(fd);
     }
     tk.processado = 1;
 }
 
-// ======= FATOR =======
 void fator(){
 
     if(tk.cat == ID)
     {
         tk = analise_lexica(fd);
-        tk.processado = 0;
 
-        while(tk.cat != CT_I && tk.cat != CT_R && tk.cat != CT_C && tk.codigo != ABRE_PAR && tk.codigo != FECHA_PAR &&
-              tk.codigo != NEGACAO && tk.codigo != ADICAO && tk.codigo != SUBTRACAO && tk.codigo != MULTIPLICACAO && tk.codigo != DIVISAO &&
-              tk.codigo != COMPARACAO && tk.codigo != DIFERENTE && tk.codigo != MENOR_OU_IGUAL && tk.codigo != MENOR_QUE &&
-              tk.codigo != MAIOR_OU_IGUAL && tk.codigo != MAIOR_QUE && tk.codigo != AND && tk.codigo != OR &&
-              strcmp(tk.lexema, "to") != 0 && strcmp(tk.lexema, "dt") == 0 && strcmp(tk.lexema, "by") == 0 )
+        while(tk.cat != CT_I && tk.cat != CT_R && tk.cat != CT_C && tk.codigo != ABRE_PAR && tk.codigo != NEGACAO)
         {
-
-            if(tk.cat == SN && tk.codigo == VIRGULA){
-                tk.processado = 0;
-                break;
-            }
-
-            printf("\n %d ", tk.codigo);
-            printf("\n%s", tk.lexema);
             if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
             {
                 tk = analise_lexica(fd);
@@ -1308,15 +1262,12 @@ void fator(){
 
                 if(tk.processado != 1)
                 {
-                    printf("\nAtta");
                     tk = analise_lexica(fd);
                     tk.processado = 0;
                 }
-                // do id(r[a[4]])
 
                 if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
                 {
-                    printf("\n%d - IF FECHA COCHETES", tk.codigo);
                     tk = analise_lexica(fd);
                 }
                 else
@@ -1325,22 +1276,14 @@ void fator(){
                 }
 
             }
-            else if(tk.cat == SN && tk.codigo == FECHA_COLCHETES){
-                break;
-            }
             else
             {
                 error("'[' esperado!");
             }
         }
-        printf("\n -> -> -> %d %s", tk.codigo, tk.lexema);
-
-        tk.processado = 1;
     }
-    else if(tk.cat == CT_I)
+    if(tk.cat == CT_I)
     {
-
-        printf("\n%d", tk.valor_i);
         pass;
     }
     else if(tk.cat == CT_R)
@@ -1353,20 +1296,15 @@ void fator(){
     }
     else if(tk.cat == SN && tk.codigo == ABRE_PAR)
     {
-        printf("\n%d", tk.codigo);
         tk = analise_lexica(fd);
 
         expr();
 
-        if(tk.processado != 1)
-        {
-            tk = analise_lexica(fd);
-            tk.processado = 0;
-        }
+        tk = analise_lexica(fd);
 
         if(tk.cat == SN && tk.codigo == FECHA_PAR)
         {
-            tk.processado = 0;
+            pass;
         }
         else
         {
