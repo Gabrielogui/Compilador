@@ -779,6 +779,8 @@ void cmd()
     printf("\n 9 %d | %s", tk.codigo, tk.lexema);
     if(tk.cat == PVR && strcmp(tk.lexema, "do") == 0) // VOLTAR PARA REVER A PORRA DA VÍRGULA
     {
+        int flag_virgula = 0;
+
         printf("\n 10 %d | %s", tk.codigo, tk.lexema);
         tk = analise_lexica(fd);
         printf("\n 11 %d | %s", tk.codigo, tk.lexema); // do id()
@@ -793,10 +795,16 @@ void cmd()
                 printf("\n 14 %d | %s", tk.codigo, tk.lexema);
                 do{
 
+                    if(tk.cat == SN && tk.codigo == VIRGULA){
+                        tk = analise_lexica(fd);
+                        flag_virgula = 1;
+                    }
+
                     if(tk.cat == SN && tk.codigo == FECHA_PAR){
                         break;
                     }
                     printf("\n 15 %d | %s", tk.codigo, tk.lexema);
+                    flag_virgula = 0;
                     expr();
                     printf("\n 16 %d | %s", tk.codigo, tk.lexema);
                     if(tk.processado != 1)
@@ -808,10 +816,13 @@ void cmd()
 
                 }while(tk.cat == SN && tk.codigo == VIRGULA);
 
+
                 if(tk.cat == SN && tk.codigo == FECHA_PAR)
                 {
+                    if(flag_virgula == 1){
+                        error("Virgula mal colocada! ");
+                    }
                     tk.processado = 0;
-                    pass; // TALVEZ ALGO AQUI
                 }
                 else
                 {
@@ -892,34 +903,50 @@ void cmd()
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "var") == 0)
     {
+        printf("\n 90 %d | %s", tk.codigo, tk.lexema);
         tk = analise_lexica(fd);
+        printf("\n 91 %d | %s", tk.codigo, tk.lexema);
         if(tk.cat == ID)
         {
+            printf("\n 911 %d | %s", tk.codigo, tk.lexema);
             tk = analise_lexica(fd);
+            printf("\n 92 %d | %s", tk.codigo, tk.lexema);
             if(tk.cat == PVR && strcmp(tk.lexema, "from") == 0)
             {
+                printf("\n 921 %d | %s", tk.codigo, tk.lexema);
                 tk = analise_lexica(fd); // TALVEZ NAO TENHA
+                printf("\n 93 %d | %s", tk.codigo, tk.lexema);
                 expr();
+                printf("\n 94 %d | %s", tk.codigo, tk.lexema);
                 if(tk.processado != 1)
                 {
                     tk = analise_lexica(fd);
                     tk.processado = 0;
                 }
+                printf("\n 95 %d | %s", tk.codigo, tk.lexema);
                 if(tk.cat == PVR && ((strcmp(tk.lexema, "to") == 0) || (strcmp(tk.lexema, "dt") == 0)))
                 {
+                    printf("\n 951 %d | %s", tk.codigo, tk.lexema);
                     tk = analise_lexica(fd); // TALVEZ NAO TENHA
+                    printf("\n 96 %d | %s", tk.codigo, tk.lexema);
                     expr();
+                    printf("\n 97 %d | %s", tk.codigo, tk.lexema);
                     if(tk.processado != 1)
                     {
                         tk = analise_lexica(fd);
                         tk.processado = 0;
                     }
+                    printf("\n 971 %d | %s", tk.codigo, tk.lexema);
                     if(tk.cat == PVR && strcmp(tk.lexema, "by") == 0)
                     {
+                        printf("\n 972 %d | %s", tk.codigo, tk.lexema);
                         tk = analise_lexica(fd);
+                        printf("\n 98 %d | %s", tk.codigo, tk.lexema);
                         if(tk.cat == CT_I || tk.cat == ID)
                         {
+                            printf("\n 981 %d | %s", tk.codigo, tk.lexema);
                             if(tk.cat == ID){
+                                printf("\n 99 %d | %s", tk.codigo, tk.lexema);
                                 int topoAux1 = ts.topo;
                                 int strcmp_aux1 = 0;
                                 while(topoAux1 >= 0){
@@ -941,18 +968,28 @@ void cmd()
                                     error("A constante nao eh compativel");
                                 }
                             }
+                            printf("\n 100 %d | %s", tk.codigo, tk.lexema);
                             tk = analise_lexica(fd);
+                            printf("\n 101 %d | %s", tk.codigo, tk.lexema);
                         }
                         else
                         {
                             error("inteiro ou identificador esperado!");
                         }
                     }
-                    while(tk.cat != PVR && strcmp(tk.lexema, "endv") != 0)
+                    while(strcmp(tk.lexema, "endv") != 0)
                     {
+                        printf("\n 102 %d | %s", tk.codigo, tk.lexema);
                         cmd();
-                        tk = analise_lexica(fd);
+                        printf("\n 103 %d | %s", tk.codigo, tk.lexema);
+                        if(tk.processado != 1){
+                            tk = analise_lexica(fd);
+                            tk.processado = 0;
+                        }
+                        printf("\n 104 %d | %s", tk.codigo, tk.lexema);
                     }
+                    tk = analise_lexica(fd);
+                    tk.processado = 1;
                 }
                 else
                 {
@@ -1319,7 +1356,7 @@ void fator(){
         while(tk.cat != CT_I && tk.cat != CT_R && tk.cat != CT_C && tk.codigo != ABRE_PAR && tk.codigo != FECHA_PAR &&
               tk.codigo != NEGACAO && tk.codigo != ADICAO && tk.codigo != SUBTRACAO && tk.codigo != MULTIPLICACAO && tk.codigo != DIVISAO &&
               tk.codigo != COMPARACAO && tk.codigo != DIFERENTE && tk.codigo != MENOR_OU_IGUAL && tk.codigo != MENOR_QUE &&
-              tk.codigo != MAIOR_OU_IGUAL && tk.codigo != MAIOR_QUE && tk.codigo != AND && tk.codigo != OR &&
+              tk.codigo != MAIOR_OU_IGUAL && tk.codigo != MAIOR_QUE && tk.codigo != AND && tk.codigo != OR && tk.codigo != VIRGULA &&
               strcmp(tk.lexema, "to") != 0 && strcmp(tk.lexema, "dt") == 0 && strcmp(tk.lexema, "by") == 0 )
         {
             printf("\n 22 %d | %s", tk.codigo, tk.lexema);

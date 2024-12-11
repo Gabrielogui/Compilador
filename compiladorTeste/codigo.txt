@@ -27,13 +27,38 @@ def origin()
         alan = 33
         lucas[77] = 44
 
-        do lulinha()
+        do lulinha((5))
         do tatenia(55 + a / (caio + gabriel) == 33)
     endw
+
+    do et(a, b, c) //
+    do id(a == 2, b == c, k >= hehe)
+
+    var id from b == 2 to 67 + c by z
+        lucas = 20
+        lulinha = 30
+        caio[tati + alan] = a + b / 1000
+
+        while(luiz != abacate)
+            do luiz(!(comer))
+        endw
+
+        do carro()
+    endv
+
+    if(2 > 1)
+        while(t > 2)
+            t = 'x'
+        endw
+    endi
+
 endp
 
 // Deixar CMD funcional
-// EXPR + outras funções adicionadas
+// EXPR + outras funções adicionadas - CHECK
 // Fazer as funções da tabela de simbolo
 // Resolver 'contLinhas'
-// Resolver loop do 'atrib'
+// Resolver loop do 'atrib' - CHECK
+// Testar var - CHECK
+// Testar if
+// DO -> Consertar vírgula - CHECK
