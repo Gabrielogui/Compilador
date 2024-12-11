@@ -12,6 +12,7 @@
 TABELA_SIMBOLO ts;
 
 int var_virg_aux = 0;
+int flag_endi = 0;
 
 // |=======| TABELA DE TIPOS |=======|
 const char *tipos[TAM_TIPOS] = {
@@ -1008,43 +1009,89 @@ void cmd()
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "if") == 0)
     {
+
+        printf("\n 130 %d | %s", tk.codigo, tk.lexema);
         tk = analise_lexica(fd);
+        printf("\n 131 %d | %s", tk.codigo, tk.lexema);
         if(tk.cat == SN && tk.codigo == ABRE_PAR)
         {
+            printf("\n 1311 %d | %s", tk.codigo, tk.lexema);
             tk = analise_lexica(fd);
+            printf("\n 132 %d | %s", tk.codigo, tk.lexema);
             expr();
+            printf("\n 133 %d | %s", tk.codigo, tk.lexema);
             if(tk.processado != 1)
             {
                 tk = analise_lexica(fd);
                 tk.processado = 0;
             }
+            printf("\n 134 %d | %s", tk.codigo, tk.lexema);
             if(tk.cat == SN && tk.codigo == FECHA_PAR)
             {
+                printf("\n 135 %d | %s", tk.codigo, tk.lexema);
                 tk = analise_lexica(fd);
+                printf("\n 136 %d | %s", tk.codigo, tk.lexema);
+
+                if(strcmp(tk.lexema, "endi") == 0){
+                    flag_endi++;
+                }
+
                 while((strcmp(tk.lexema, "elif") != 0) && (strcmp(tk.lexema, "else") != 0) && (strcmp(tk.lexema, "endi") != 0))
                 {
+                    flag_endi++;
+                    printf("\n adicionando mais uma flag do endi %d", flag_endi);
+                    printf("\n 137 %d | %s", tk.codigo, tk.lexema);
                     cmd();
-                    tk = analise_lexica(fd);
+                    printf("\n 138 %d | %s", tk.codigo, tk.lexema);
+                    if(strcmp(tk.lexema, "endi") != 0){
+                        if(tk.processado != 1){
+                            tk = analise_lexica(fd);
+                            tk.processado = 0;
+                        }
+                    }else{
+                        tk.processado = 0;
+                    }
+
+                    printf("\n 139 %d | %s", tk.codigo, tk.lexema);
                 }
                 while(tk.cat == PVR && (strcmp(tk.lexema, "elif") == 0))
                 {
+                    printf("\n 140 %d | %s", tk.codigo, tk.lexema);
                     tk = analise_lexica(fd);
+                    printf("\n 141 %d | %s", tk.codigo, tk.lexema);
                     if(tk.cat == SN && tk.codigo == ABRE_PAR)
                     {
+                        printf("\n 142 %d | %s", tk.codigo, tk.lexema);
                         tk = analise_lexica(fd);
+                        printf("\n 143 %d | %s", tk.codigo, tk.lexema);
                         expr();
+                        printf("\n 144 %d | %s", tk.codigo, tk.lexema);
                         if(tk.processado != 1)
                         {
                             tk = analise_lexica(fd);
                             tk.processado = 0;
                         }
+                        printf("\n 145 %d | %s", tk.codigo, tk.lexema);
                         if(tk.cat == SN && tk.codigo == FECHA_PAR)
                         {
+                            printf("\n 146 %d | %s", tk.codigo, tk.lexema);
                             tk = analise_lexica(fd);
+                            printf("\n 147 %d | %s", tk.codigo, tk.lexema);
                             while((strcmp(tk.lexema, "elif") != 0) && (strcmp(tk.lexema, "else") != 0) && (strcmp(tk.lexema, "endi") != 0))
                             {
+                                printf("\n 148 %d | %s", tk.codigo, tk.lexema);
                                 cmd();
-                                tk = analise_lexica(fd);
+                                printf("\n 149 %d | %s", tk.codigo, tk.lexema);
+                                if(strcmp(tk.lexema, "endi") != 0){
+                                    if(tk.processado != 1){
+                                        tk = analise_lexica(fd);
+                                        tk.processado = 0;
+                                    }
+                                }else{
+                                    tk.processado = 0;
+                                }
+
+                                printf("\n 150 %d | %s", tk.codigo, tk.lexema);
                             }
                         }
                         else
@@ -1059,15 +1106,43 @@ void cmd()
                 }
                 if(tk.cat == PVR && strcmp(tk.lexema, "else") == 0)
                 {
+                    printf("\n 151 %d | %s", tk.codigo, tk.lexema);
                     tk = analise_lexica(fd);
+                    printf("\n 152 %d | %s", tk.codigo, tk.lexema);
                     while(strcmp(tk.lexema, "endi") != 0)
                     {
+                        printf("\n 153 %d | %s", tk.codigo, tk.lexema);
                         cmd();
-                        tk = analise_lexica(fd);
+                        printf("\n 154 %d | %s", tk.codigo, tk.lexema);
+                        if(strcmp(tk.lexema, "endi") != 0){
+                            if(tk.processado != 1){
+                                tk = analise_lexica(fd);
+                                tk.processado = 0;
+                            }
+                        }else{
+                            tk.processado = 0;
+                        }
+                        printf("\n 155 %d | %s", tk.codigo, tk.lexema);
                     }
                 }
                 if(tk.cat == PVR && strcmp(tk.lexema, "endi") == 0)
                 {
+                    printf("\n 156 %d | %s", tk.codigo, tk.lexema);
+                    while(flag_endi > 1){
+                        printf("\n 157 %d | %s", tk.codigo, tk.lexema);
+                        if(tk.processado != 1){
+                                tk = analise_lexica(fd);
+                                printf("\n 158 %d | %s", tk.codigo, tk.lexema);
+                                tk.processado = 0;
+                                /*if(strcmp(tk.lexema, "endp") == 0)
+                                {
+                                    tk.processado = 1;
+                                }*/
+                            }
+                        printf("\n FLAG: %d", flag_endi);
+                        flag_endi--;
+                    }
+                    printf("\n 159 %d | %s", tk.codigo, tk.lexema);
                     pass; // TALVEZ ALGO AQUI
                 }
                 else

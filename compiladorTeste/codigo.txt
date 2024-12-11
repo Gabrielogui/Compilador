@@ -46,10 +46,21 @@ def origin()
         do carro()
     endv
 
-    if(2 > 1)
-        while(t > 2)
-            t = 'x'
-        endw
+    if(2555)
+        while(luiza == 2)
+
+            endw
+        if(80)
+
+        elif(b == 1)
+
+            if(luiz == 1)
+
+            endi
+        elif(c)
+
+        endi
+
     endi
 
 endp
@@ -62,3 +73,4 @@ endp
 // Testar var - CHECK
 // Testar if
 // DO -> Consertar vírgula - CHECK
+// IF tem algo errado
