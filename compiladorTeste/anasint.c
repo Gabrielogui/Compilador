@@ -42,7 +42,7 @@ void error(char msg[]) {
 
 // ======= PROG =======
 void prog(){
-
+    printf("\n%d", contLinhas);
     printf("\n%s", tk.lexema);
 
     if(tk.cat == FIM_ARQ){
@@ -1030,6 +1030,9 @@ void cmd()
             {
                 printf("\n 135 %d | %s", tk.codigo, tk.lexema);
                 tk = analise_lexica(fd);
+                if(strcmp(tk.lexema, "if") == 0){
+                    flag_endi++;
+                }
                 printf("\n 136 %d | %s", tk.codigo, tk.lexema);
 
                 if(strcmp(tk.lexema, "endi") == 0){

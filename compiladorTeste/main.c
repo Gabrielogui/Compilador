@@ -17,8 +17,8 @@ void testarAnasint();
 // |=======| MAIN |=======|
 int main()
 {
-    printf("\n |=======| TESTAR ANALISE LEXICA |=======|");
-    testarAnalex();
+    /*printf("\n |=======| TESTAR ANALISE LEXICA |=======|");
+    testarAnalex();*/
 
     printf("\n |=======| TESTAR ANALISE SINTATICA |=======|");
     testarAnasint();
