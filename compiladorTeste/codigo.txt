@@ -1,19 +1,60 @@
-prot teste(&int[][], int[], char[][], bool)
+const int z = 8
+int a, b, c
+char d[z] = {'b','c'}
+int inteiro[4] = {1, 2, 4}
+char normal[8] = {'b','c'}
 
-def teste(&int a[2], int b[2],char p[3][2], bool ll)
-    int z
+char e = 'v'
+int k
+int l,m
+bool x = 7
+char calica[2][z]
+
+
+prot id(int, &real)
+prot id(int, &real, char, bool, &int, real, &char, &bool)
+
+
+def gabao(int a, &real b[z][8], char c, bool d, &int e, real f, &char g, &bool h)
+    char h = 'c'
 endp
-def init
-   int fat,n,z
-   getint n
-   if (n <= 1)
-        fat = 1
-    else
-        fat = n
-        z = n
-        while (z > 2)
-            z = z - 1
-            fat = fat * z
+
+def origin()
+    do id(b + a - c && 2 + 2 * 55 / b + 1 * 4 - 2 || x * 1 + (g * l) || (gabriel + 2 / luiza) + 4 - 2 != (45 / caio) + !Alan)
+
+    while(h != 66 + 1)
+        gabriel = 22
+        alan = 33
+        lucas[77] = 44
+
+        do lulinha((5))
+        do tatenia(55 + a / (caio + gabriel) == 33)
+    endw
+
+    do et(a, b, c) //
+    do id(a == 2, b == c, k >= hehe)
+
+    var id from b == 2 to 67 + c by g
+        lucas = 20
+        lulinha = 30
+        caio[tati + alan] = a + b / 1000
+
+        while(luiz != abacate)
+            do luiz(!(comer))
         endw
-    endi
+
+        do carro()
+    endv
+
+
 endp
+
+// Deixar CMD funcional - CHECK
+// EXPR + outras funções adicionadas - CHECK
+// Fazer as funções da tabela de simbolo
+// Resolver 'contLinhas' - CHECK
+// Resolver loop do 'atrib' - CHECK
+// Testar var - CHECK
+// Testar if - CHECK
+// DO -> Consertar vírgula - CHECK
+// IF tem algo errado

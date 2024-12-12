@@ -14,6 +14,34 @@ TABELA_SIMBOLO ts;
 int var_virg_aux = 0;
 int flag_endi = 0;
 
+// |=======| FUNÇÃO TABELA DE SÍMBOLOS |=======|
+void inserirTabelaDeSimbolos(){
+
+}
+
+void tirarTabelaDeSimbolos(){
+
+}
+
+int consultaTabelaDeSimbolos(char lexema[TAM_MAX_LEXEMA]){
+     // BUSCA DO DIM01 CASO SEJA CONSTANTE
+    int topoAux1 = ts.topo;
+    int strcmp_aux1 = 0;
+    while(topoAux1 >= 0){
+        if(strcmp(ts.Linhas[topoAux1].lexema, lexema) == 0){
+            strcmp_aux1 = 1;
+            return topoAux1;
+
+
+        }
+        topoAux1--;
+    }
+    if(topoAux1 < 0 && strcmp_aux1 == 0){
+        return -1;
+    }
+}
+
+
 // |=======| TABELA DE TIPOS |=======|
 const char *tipos[TAM_TIPOS] = {
     "int",
@@ -44,6 +72,7 @@ void error(char msg[]) {
 void prog(){
     printf("\n%d", contLinhas);
     printf("\n%s", tk.lexema);
+
 
     if(tk.cat == FIM_ARQ){
         printf("\nArquivo encerrado\n");
@@ -512,11 +541,16 @@ void decl_def_proc(){
             printf("\n 7 %d | %s", tk.codigo, tk.lexema);
         }
 
+
+
         printf("\n 8 %d | %s", tk.codigo, tk.lexema);
         // fazer função cmd
 
+
+
         if(tk.cat == PVR && strcmp(tk.lexema, "endp") == 0)
         {
+
             // limpando a tabela de simbolos
             while(ts.Linhas[ts.topo].categoria == VAR_LOCAL && ts.Linhas[ts.topo].escopo == LOCAL)
             {
@@ -641,25 +675,16 @@ void decl_var(){
         if(tk.cat == CT_I || (tk.cat == ID)){ // PRECISA USAR TABELA DE SIMBOLO - SABER SE O ID � UMA CONSTANTE
 
             if(tk.cat == ID){ // BUSCA DO DIM01 CASO SEJA CONSTANTE
-                int topoAux1 = ts.topo;
-                int strcmp_aux1 = 0;
-                while(topoAux1 >= 0){
-                    if(strcmp(ts.Linhas[topoAux1].lexema, tk.lexema) == 0){
-                        strcmp_aux1 = 1;
-                        if(ts.Linhas[topoAux1].eh_const == SIM){
-                            if(ts.Linhas[topoAux1].tipo == INT_TIPO){
-                                ts.Linhas[ts.topo].dim01 = ts.Linhas[topoAux1].constInt;
-                                break;
-                            }else{
-                                error("A constante nao eh compativel");
-                            }
-                        }else{
-                            error("A constante nao eh compativel");
-                        }
+                int a = consultaTabelaDeSimbolos(tk.lexema);
+                if(a == -1) error("Constante nao eh compativel");
+                if(ts.Linhas[a].eh_const == SIM){
+                    if(ts.Linhas[a].tipo == INT_TIPO){
+                        ts.Linhas[ts.topo].dim01 = ts.Linhas[a].constInt;
+
+                    }else{
+                        error("A constante nao eh compativel");
                     }
-                    topoAux1--;
-                }
-                if(topoAux1 < 0 && strcmp_aux1 == 0){
+                }else{
                     error("A constante nao eh compativel");
                 }
             }else{
