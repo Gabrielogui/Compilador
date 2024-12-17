@@ -12,7 +12,20 @@ def init
     elif(4)
         a = 1
         var id from 4 to 5 endv
-        elif(3)
+
+    else
+        banco = 'b'
+        while(a)
+            var id from a to a endv
+        endw
+
+        if(b)
+
+        elif(c)
+            b = 2
+
+        endi
+
     endi
 
 

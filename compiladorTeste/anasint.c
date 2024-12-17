@@ -1093,6 +1093,21 @@ void cmd()
         // ELSE
         if(tk.cat == PVR && strcmp(tk.lexema, "else") == 0){ // if(expr) {cmd} {elif(expr) {cmd} } [else {cmd}] endi
 
+            tk.processado = 0;
+            // LAÇO DO CMD '{cmd}'
+            while(1){
+                // CONFERINDO SE ELE SAI DE CMD PROCESSADO (SE PEGOU O PRÓXIMO APÓS CMD)
+                if(tk.processado != 1){
+                    tk = analise_lexica(fd);
+                    tk.processado = 0;
+                }
+
+                // CONDIÇÕES PARA SAIR DO LAÇO
+                if(tk.cat == PVR && (strcmp(tk.lexema, "endi") == 0)) break;
+
+                cmd();
+
+            }
         }
 
         if(tk.cat == PVR && strcmp(tk.lexema, "endi") == 0) tk.processado = 0;
