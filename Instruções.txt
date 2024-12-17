@@ -1,0 +1,1 @@
+O projeto está sendo desenvolvido na IDE Code::Blocks 20.03. O arquivo de configuração do projeto é o "compiladorTeste.cbp". Não sabemos se pode dar algum problema rodando o projeto em outra IDE.
