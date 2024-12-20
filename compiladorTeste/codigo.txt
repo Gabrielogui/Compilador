@@ -1,11 +1,6 @@
-prot id(int, char)
 
-char h
+def init
 
-def id2(int c)
-
-endp
-
-def id(int a, char b)
+    franca = 2
 
 endp

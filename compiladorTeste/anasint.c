@@ -468,9 +468,9 @@ void decl_def_proc(){
                     {
                         error("tipo esperado!");
                     }
-                    ts.Linhas[ts.topo].zumbi = VIVO;
-                    ts.Linhas[ts.topo].eh_const = NAO;
-                    ts.Linhas[ts.topo].escopo = LOCAL;
+                    ts.Linhas[ts.topo].zumbi     = VIVO;
+                    ts.Linhas[ts.topo].eh_const  = NAO;
+                    ts.Linhas[ts.topo].escopo    = LOCAL;
                     ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
                     tk = analise_lexica(fd);
                     if(tk.cat == ID)
