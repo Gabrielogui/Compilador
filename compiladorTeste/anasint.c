@@ -1008,7 +1008,15 @@ void cmd()
       //  printf("\n 91 %d | %s", tk.codigo, tk.lexema);
         if(tk.cat == ID)
         {
-       //     printf("\n 911 %d | %s", tk.codigo, tk.lexema);
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+            if(consulta == -1){
+                error("Identificador nao foi declarado antes");
+            }
+            if(ts.Linhas[consulta].categoria != VAR_LOCAL && ts.Linhas[consulta].categoria != VAR_GLOBAL &&
+                ts.Linhas[consulta].categoria != PAR_PROCEDIMENTO){
+                error("Identificador do var precisa ser uma variavel ou parametro! ");
+            }
+
             tk = analise_lexica(fd);
         //    printf("\n 92 %d | %s", tk.codigo, tk.lexema);
             if(tk.cat == PVR && strcmp(tk.lexema, "from") == 0)
@@ -1193,6 +1201,14 @@ void cmd()
     }
     else if(tk.cat == ID)
     {
+        int consulta = consultaTabelaDeSimbolos(tk.lexema);
+        if(consulta == -1){
+            error("Identificador nao foi declarado antes");
+        }
+        if(ts.Linhas[consulta].categoria != VAR_LOCAL && ts.Linhas[consulta].categoria != VAR_GLOBAL &&
+            ts.Linhas[consulta].categoria != PAR_PROCEDIMENTO){
+            error("Identificador do var precisa ser uma variavel ou parametro! ");
+        }
         atrib();
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "getout") == 0)

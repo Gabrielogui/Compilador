@@ -11,8 +11,10 @@ def luz(char b, char x)
 endp
 
 def escuridao()
-    gabriel = 2
-    do luiz(2)
+    luiz = 2
+    //var luz from 1 + 1 to 2 + 2 endv
+
+
     //gabriel = 2
 endp
 
