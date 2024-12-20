@@ -1,38 +1,18 @@
-def init
-    if(1)
-        do id(2, 3)
-    elif(2)
-        while(1) endw
-    elif(3)
-        if(a)
+int luiz
 
-        elif(b)
+char lucas, alan, lulinha
 
-        endi
-    elif(4)
-        a = 1
-        var id from 4 to 5 endv
+real tati, caio
 
-    else
-        banco = 'b'
-        while(a)
-            var id from a to a endv
-        endw
+prot id(char, int)
 
-        if(b)
-
-        elif(c)
-            b = 2
-
-        endi
-
-    endi
-
-
-    //if(2 + 2)
-        do id(2 + 1)            // -> )
-        while(1) endw           // -> endw
-        var id from 2 to 2 endv // -> proximo token apos ele
-        //g = 2                 // -> proximo token apos ele
-
+def luz(char b, char x)
+    int gabriel
 endp
+
+def escuridao()
+    gabriel = 2
+    do luiz(2)
+    //gabriel = 2
+endp
+

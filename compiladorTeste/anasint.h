@@ -8,25 +8,25 @@
 
 // |=======| ENUMs |=======|
 // ESCOPO:
-enum escopo {GLOBAL, LOCAL};
+enum escopo {GLOBAL = 1, LOCAL};
 
 // TIPO:
-enum tipo {INT_TIPO, REAL_TIPO, CHAR_TIPO, BOOL_TIPO, NA_TIPO};
+enum tipo {INT_TIPO = 1, REAL_TIPO, CHAR_TIPO, BOOL_TIPO, NA_TIPO};
 
 // CATEGORIA:
-enum categoria {VAR_GLOBAL, VAR_LOCAL, PROTOTIPO, PROCEDIMENTO, PAR_PROCEDIMENTO};
+enum categoria {VAR_GLOBAL = 1, VAR_LOCAL, PROTOTIPO, PROCEDIMENTO, PAR_PROCEDIMENTO};
 
 // PASSAGEM:
-enum passagem {COPIA, REFERENCIA, NA_PASSAGEM};
+enum passagem {COPIA = 1, REFERENCIA, NA_PASSAGEM};
 
 // ZUMBI:
-enum zumbi {VIVO, ZUMBI, NA_ZUMBI};
+enum zumbi {VIVO = 1, ZUMBI, NA_ZUMBI};
 
 // ARRAY:
-enum isArray {ESCALAR, VETOR, MATRIZ, NA_ISARRAY};
+enum isArray {ESCALAR = 1, VETOR, MATRIZ, NA_ISARRAY};
 
 // � CONSTANTE:
-enum eh_const {SIM, NAO};
+enum eh_const {SIM = 1, NAO};
 
 // |=======| STRUCT DO REGISTRO DA TABELA DE S�MBOLO(TS) |=======|
 typedef struct{

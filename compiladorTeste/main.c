@@ -151,6 +151,7 @@ void testarAnasint(){
         printf("\n[ERRO] - ERRO ao abrir o arquivo\n");
     }
     while(1){
+        //mostrarTabelaDeSimbolos();
         if(tk.processado != 1)
         {
             tk = analise_lexica(fd);
@@ -164,4 +165,5 @@ void testarAnasint(){
         prog();
 
     }
+    mostrarTabelaDeSimbolos();
 }

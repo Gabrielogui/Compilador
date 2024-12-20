@@ -35,6 +35,9 @@ int consultaTabelaDeSimbolos(char lexema[TAM_MAX_LEXEMA]){
 }
 
 void excluirTabelaDeSimbolos(){
+    // TIRANDO O TOPO VAZIO
+    memset(&ts.Linhas[ts.topo], 0, sizeof(REG_TS));
+    ts.topo--;
     // limpando a tabela de simbolos
     while(ts.Linhas[ts.topo].categoria == VAR_LOCAL && ts.Linhas[ts.topo].escopo == LOCAL)
     {
@@ -48,8 +51,35 @@ void excluirTabelaDeSimbolos(){
         ts.Linhas[topo_auxx].zumbi = ZUMBI;
         topo_auxx--;
     }
+
+    ts.topo++;
     tk.processado = 0; // PEGANDO O PRÓXIMO TOKEN, QUE PODE SER O ENDFILE
 }
+
+void mostrarTabelaDeSimbolos(){
+    int topoAux = ts.topo;
+    //system("cls||clear");
+
+    printf("\n |================================================ TABELA DE SIMBOLOS ================================================|");
+    for( topoAux ; topoAux >= 0 ; topoAux--){
+
+        printf("\n | POSICAO  : %d", topoAux                     );
+        printf("\n | LEXEMA   : %s", ts.Linhas[topoAux].lexema   );
+        printf("\n | ESCOPO   : %d", ts.Linhas[topoAux].escopo   );
+        printf("\n | TIPO     : %d", ts.Linhas[topoAux].tipo     );
+        printf("\n | CATEGORIA: %d", ts.Linhas[topoAux].categoria);
+        printf("\n | PASSAGEM : %d", ts.Linhas[topoAux].passagem );
+        printf("\n | ZUMBI    : %d", ts.Linhas[topoAux].zumbi    );
+        printf("\n | ARRAY    : %d", ts.Linhas[topoAux].isArray  );
+        printf("\n | DIM01    : %d", ts.Linhas[topoAux].dim01    );
+        printf("\n | DIM02    : %d", ts.Linhas[topoAux].dim02    );
+        printf("\n | EH_CONST : %d", ts.Linhas[topoAux].eh_const );
+
+        printf("\n |--------------------------------------------------------------------------------------------------------------------|");
+    }
+
+}
+
 
 // |=======| TABELA DE TIPOS |=======|
 const char *tipos[TAM_TIPOS] = {
@@ -82,6 +112,7 @@ void prog(){
    // printf("\n%d", contLinhas);
    // printf("\n%s", tk.lexema);
 
+    //mostrarTabelaDeSimbolos();
 
     if(tk.cat == FIM_ARQ){
         printf("\nArquivo encerrado\n");
@@ -572,7 +603,7 @@ void decl_def_proc(){
 
 // ======= DECL_LIST_VAR =======
 void decl_list_var(){
-
+    int constVirgula;
 
     if(strcmp(tk.lexema, "const") == 0){
         ts.Linhas[ts.topo].eh_const = SIM;
@@ -586,6 +617,7 @@ void decl_list_var(){
     else{
         ts.Linhas[ts.topo].eh_const = NAO;
     }
+
     decl_var();
 
     //lido = 1;
@@ -597,25 +629,53 @@ void decl_list_var(){
     while(tk.cat == SN && tk.codigo == VIRGULA){
         tk = analise_lexica(fd);
         var_virg_aux = 1;
+
+        if(ts.Linhas[ts.topo].escopo == GLOBAL){
+            constVirgula = ts.Linhas[ts.topo].eh_const;
+            printf("\n lexema: %s , tipo: %d %d", ts.Linhas[ts.topo].lexema, ts.Linhas[ts.topo].tipo, constVirgula);
+            ts.topo++;
+
+            ts.Linhas[ts.topo].escopo    = GLOBAL;
+            ts.Linhas[ts.topo].categoria = VAR_GLOBAL;
+            ts.Linhas[ts.topo].passagem  = NA_PASSAGEM;
+            ts.Linhas[ts.topo].zumbi     = NA_ZUMBI;
+            ts.Linhas[ts.topo].eh_const  = constVirgula;
+
+            //printf("\n tipo: %d ", ts.Linhas[ts.topo].tipo);
+        }else{
+            constVirgula = ts.Linhas[ts.topo].eh_const;
+            ts.topo++;
+
+            ts.Linhas[ts.topo].escopo    = LOCAL;
+            ts.Linhas[ts.topo].categoria = VAR_LOCAL;
+            ts.Linhas[ts.topo].passagem  = NA_PASSAGEM;
+            ts.Linhas[ts.topo].zumbi     = NA_ZUMBI;
+            ts.Linhas[ts.topo].eh_const  = constVirgula;
+        }
+
         decl_var();
     }
     if (!(tk.cat == SN && tk.codigo == VIRGULA))
     {
+        ts.topo++;
         tk.processado = 1;
     }
 }
 
 // ======= DECL_VAR =======
 void decl_var(){
+
+
     // DECLARA��O DE VARI�VEIS:
     if(var_virg_aux == 1){
         int topoAux_virg = ts.topo - 1; // CUIDADO COM ISSO
-        ts.Linhas[ts.topo].tipo = ts.Linhas[var_virg_aux].tipo;
+        ts.Linhas[ts.topo].tipo = ts.Linhas[topoAux_virg].tipo;
         var_virg_aux = 0;
     }else if(strcmp(tk.lexema, "int") == 0){
         ts.Linhas[ts.topo].tipo = INT_TIPO;
         tk = analise_lexica(fd);
     }else if(strcmp(tk.lexema, "real") == 0){
+        //printf("\n tk.lexema de real: ", tk.lexema);
         ts.Linhas[ts.topo].tipo = REAL_TIPO;
         tk = analise_lexica(fd);
     }else if(strcmp(tk.lexema, "char") == 0){
@@ -630,6 +690,14 @@ void decl_var(){
 
     if(tk.cat != ID){
         error("Tem que passar identificador ap�s tipo!");
+    }
+
+    int consulta = consultaTabelaDeSimbolos(tk.lexema);
+    if(consulta == -1) pass;
+    else{
+        if(ts.Linhas[consulta].escopo == ts.Linhas[ts.topo].escopo){
+            error("Variavel com esse nome ja foi declarada! ");
+        }
     }
 
     strcpy(ts.Linhas[ts.topo].lexema, tk.lexema); // COLOCAR IDENTIFICADOR NA TABELA DE S�MBOLO
@@ -788,11 +856,11 @@ void decl_var(){
 
     }
     if((ts.Linhas[ts.topo].isArray != VETOR) && (ts.Linhas[ts.topo].isArray != MATRIZ)){
-        //printf("\nvericiando");
+
         ts.Linhas[ts.topo].isArray = ESCALAR;
     }
-    //printf("\n%d", tk.cat);
-    ts.topo++; // INCREMENTA��O DO TOPO
+
+    //ts.topo++; // INCREMENTA��O DO TOPO
 
 
 }
@@ -805,14 +873,22 @@ void cmd()
     {
         int flag_virgula = 0;
 
-   //     printf("\n 10 %d | %s", tk.codigo, tk.lexema);
+
         tk = analise_lexica(fd);
-    //    printf("\n 11 %d | %s", tk.codigo, tk.lexema); // do id()
+
         if(tk.cat == ID)
         {
-    //        printf("\n 12 %d | %s", tk.codigo, tk.lexema);
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+
+            if(consulta == -1){
+                error("Identificador nao foi declarado antes");
+            }
+            if(ts.Linhas[consulta].categoria != PROCEDIMENTO){
+                error("Identificador nao eh um procedimento");
+            }
+
             tk = analise_lexica(fd);
-     //       printf("\n 13 %d | %s", tk.codigo, tk.lexema);
+
             if(tk.cat == SN && tk.codigo == ABRE_PAR)
             {
                 tk = analise_lexica(fd);
