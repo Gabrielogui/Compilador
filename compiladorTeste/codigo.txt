@@ -1,20 +1,11 @@
-int luiz
+prot id(int, char)
 
-char lucas, alan, lulinha
+char h
 
-real tati, caio
+def id2(int c)
 
-prot id(char, int)
-
-def luz(char b, char x)
-    int gabriel
 endp
 
-def escuridao()
-    luiz = 2
-    //var luz from 1 + 1 to 2 + 2 endv
+def id(int a, char b)
 
-
-    //gabriel = 2
 endp
-

@@ -154,6 +154,15 @@ void decl_def_proc(){
         tk = analise_lexica(fd);
         if(tk.cat == ID)
         {
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+            if((consulta != -1) && (ts.Linhas[consulta].categoria == PROTOTIPO) ){
+                error("Esse identificador de prototipo ja foi utilizado! ");
+            }
+            if((consulta != -1) && (ts.Linhas[consulta].categoria == PROCEDIMENTO)){
+                error("Esse prototipo tem que ser declarado antes do procedimento! ");
+            }
+
+
             strcpy(ts.Linhas[ts.topo].lexema, tk.lexema);
             ts.topo++;
             tk = analise_lexica(fd);
@@ -351,21 +360,42 @@ void decl_def_proc(){
         tk = analise_lexica(fd);
         if(tk.cat == PVR && strcmp(tk.lexema, "init") == 0)
         {
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+            if(consulta != -1){
+                error("O init ja foi declarado! ");
+            }
             strcpy(ts.Linhas[ts.topo].lexema, tk.lexema);
             ts.topo++;
             tk = analise_lexica(fd);
         }
         else if(tk.cat == ID)
         {
+
+            int defFlag = 0;
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+            if((consulta != -1) && (ts.Linhas[consulta].categoria == PROCEDIMENTO)){
+                error("Esse identificador de procedimento ja foi utilizado! ");
+            }
+
+            if((consulta != -1) && (ts.Linhas[consulta].categoria == PROTOTIPO)){
+                defFlag = 1;
+            }
+
             strcpy(ts.Linhas[ts.topo].lexema, tk.lexema);
             ts.topo++;
             tk = analise_lexica(fd);
             if(tk.cat == SN && tk.codigo == ABRE_PAR)
             {
+                int i = 1;
                 do{
+
                     tk = analise_lexica(fd);
+
                     if(tk.cat == SN && tk.codigo == E_COMERCIAL)
                     {
+                        if(defFlag == 1 && (ts.Linhas[consulta + i].passagem != REFERENCIA)){
+                            error("Precisa ser passado por referencia! ");
+                        }
                         ts.Linhas[ts.topo].passagem = REFERENCIA;
                         tk = analise_lexica(fd);
                     }
@@ -375,22 +405,63 @@ void decl_def_proc(){
                     }
                     else if(tk.cat == SN && tk.codigo == FECHA_PAR)
                     {
+                        if(defFlag == 1 && ts.Linhas[consulta + 1].categoria == PAR_PROCEDIMENTO){
+                            error("Procedimento precisa ter parametros! ");
+                        }
                         break;
                     }
+
                     if(strcmp(tk.lexema, "int") == 0)
                     {
+
+                        if(defFlag == 1){
+                            if(ts.Linhas[consulta + i].categoria == PAR_PROCEDIMENTO){
+                                if(ts.Linhas[consulta + i].tipo != INT_TIPO){
+                                    error("Tipo incompativel 1! ");
+                                }
+                            }else{
+                                error("Nao tem parametros suficiente! ");
+                            }
+                        }
                         ts.Linhas[ts.topo].tipo = INT_TIPO;
                     }
                     else if(strcmp(tk.lexema, "real") == 0)
                     {
+                        if(defFlag == 1){
+                            if(ts.Linhas[consulta + i].categoria == PAR_PROCEDIMENTO){
+                                if(ts.Linhas[consulta + i].tipo != REAL_TIPO){
+                                    error("Tipo incompativel 1! ");
+                                }
+                            }else{
+                                error("Nao tem parametros suficiente! ");
+                            }
+                        }
                         ts.Linhas[ts.topo].tipo = REAL_TIPO;
                     }
                     else if(strcmp(tk.lexema, "char") == 0)
                     {
+                        if(defFlag == 1){
+                            if(ts.Linhas[consulta + i].categoria == PAR_PROCEDIMENTO){
+                                if(ts.Linhas[consulta + i].tipo != CHAR_TIPO){
+                                    error("Tipo incompativel 1! ");
+                                }
+                            }else{
+                                error("Nao tem parametros suficiente! ");
+                            }
+                        }
                         ts.Linhas[ts.topo].tipo = CHAR_TIPO;
                     }
                     else if(strcmp(tk.lexema, "bool") == 0)
                     {
+                        if(defFlag == 1){
+                            if(ts.Linhas[consulta + i].categoria == PAR_PROCEDIMENTO){
+                                if(ts.Linhas[consulta + i].tipo != BOOL_TIPO){
+                                    error("Tipo incompativel 1! ");
+                                }
+                            }else{
+                                error("Nao tem parametros suficiente! ");
+                            }
+                        }
                         ts.Linhas[ts.topo].tipo = BOOL_TIPO;
                     }
                     else
@@ -404,6 +475,12 @@ void decl_def_proc(){
                     tk = analise_lexica(fd);
                     if(tk.cat == ID)
                     {
+
+                        if(consultaTabelaDeSimbolos(tk.lexema) != -1 &&
+                           (ts.Linhas[consultaTabelaDeSimbolos(tk.lexema)].categoria == PAR_PROCEDIMENTO)){
+                            error("Identificador de parametro ja usado! ");
+                        }
+
                         strcpy(ts.Linhas[ts.topo].lexema, tk.lexema);
                         tk = analise_lexica(fd);
                         if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
@@ -411,6 +488,9 @@ void decl_def_proc(){
                            tk = analise_lexica(fd);
                            if(tk.cat == ID) // BUSCA DO DIM01 CASO SEJA CONSTANTE
                            {
+
+
+
                                 int topoAux1 = ts.topo;
                                 int strcmp_aux1 = 0;
                                 while(topoAux1 >= 0)
@@ -532,7 +612,13 @@ void decl_def_proc(){
                     {
                         error("parametro de procedimento sem identificador!");
                     }
+                    i++;
                 }while(tk.cat == SN && tk.codigo == VIRGULA);
+                if(defFlag == 1){
+                    if(ts.Linhas[consulta + i].categoria == PAR_PROCEDIMENTO){
+                        error("O prototipo tem mais parametros! ");
+                    }
+                }
             }
             if(tk.cat == SN && tk.codigo == FECHA_PAR)
             {
@@ -883,8 +969,8 @@ void cmd()
             if(consulta == -1){
                 error("Identificador nao foi declarado antes");
             }
-            if(ts.Linhas[consulta].categoria != PROCEDIMENTO){
-                error("Identificador nao eh um procedimento");
+            if(ts.Linhas[consulta].categoria != PROCEDIMENTO && ts.Linhas[consulta].categoria != PROTOTIPO){
+                error("Identificador nao eh um procedimento ou prototipo");
             }
 
             tk = analise_lexica(fd);
@@ -1465,12 +1551,10 @@ void termo(){
 
 // ======= FATOR ======
 void fator(){
-  //  printf("\n 20 %d | %s", tk.codigo, tk.lexema);
     if(tk.cat == ID)
     {
         tk = analise_lexica(fd);
 
-  //      printf("\n 21 %d | %s", tk.codigo, tk.lexema);
 
         // SUPER WHILE
         while(tk.cat != CT_I && tk.cat != CT_R && tk.cat != CT_C && tk.codigo != ABRE_PAR && tk.codigo != FECHA_PAR &&
