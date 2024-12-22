@@ -16,6 +16,10 @@
     - DUVIDA: ZUMBI DE PROT
     - PERGUNTAR: SOBRE PUTSTR E GETSTR
 
+-> SEMÂNTICA
+    - DUVIDA: 3.2.0
+    -
+
 
 -> FUNÇÕES JÁ FEITAS: (Falta tabela de simbolos)
     - prog

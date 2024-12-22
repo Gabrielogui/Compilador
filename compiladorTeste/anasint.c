@@ -1553,6 +1553,14 @@ void termo(){
 void fator(){
     if(tk.cat == ID)
     {
+        int consulta = consultaTabelaDeSimbolos(tk.lexema);
+        // PROCEDIMENTO NÃO PODE FAZER PARTE DE UMA EXPRESSÃO
+        if(consulta == -1) error("Identificador nao declarado! ");
+
+        if((consulta != -1) && (ts.Linhas[consulta].categoria == PROCEDIMENTO || ts.Linhas[consulta].categoria == PROTOTIPO)){
+            error("Procedimento ou prototipo nao podem ser passados como expressao! ");
+        }
+
         tk = analise_lexica(fd);
 
 

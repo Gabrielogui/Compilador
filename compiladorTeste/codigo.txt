@@ -1,6 +1,10 @@
+def michele()
+
+endp
+
+int a
 
 def init
-
-    franca = 2
-
+    if(a)
+    endi
 endp

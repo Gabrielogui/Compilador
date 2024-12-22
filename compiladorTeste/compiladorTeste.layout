@@ -2,55 +2,22 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="codigo.txt" open="1" top="1" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="codigo.txt" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="65" topLine="0" />
+			<Cursor1 position="159" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="analex.c" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="anasint.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="13385" topLine="258" />
+			<Cursor1 position="474" topLine="6" />
 		</Cursor>
-		<Folding>
-			<Collapse line="17" />
-		</Folding>
 	</File>
-	<File name="anasint.c" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2773" topLine="27" />
+			<Cursor1 position="5381" topLine="13" />
 		</Cursor>
 		<Folding>
-			<Collapse line="18" />
-			<Collapse line="36" />
-			<Collapse line="89" />
-			<Collapse line="118" />
-			<Collapse line="128" />
-			<Collapse line="337" />
-			<Collapse line="343" />
-			<Collapse line="531" />
-			<Collapse line="828" />
-			<Collapse line="891" />
-			<Collapse line="952" />
-			<Collapse line="1057" />
-			<Collapse line="1071" />
-			<Collapse line="1086" />
-			<Collapse line="1117" />
-			<Collapse line="1142" />
-			<Collapse line="1146" />
-			<Collapse line="1150" />
-			<Collapse line="1162" />
-			<Collapse line="1174" />
-			<Collapse line="1186" />
-			<Collapse line="1198" />
-			<Collapse line="1214" />
-			<Collapse line="1230" />
-			<Collapse line="1246" />
-			<Collapse line="1262" />
-			<Collapse line="1269" />
-			<Collapse line="1322" />
-			<Collapse line="1342" />
-			<Collapse line="1376" />
-			<Collapse line="1398" />
+			<Collapse line="29" />
 		</Folding>
 	</File>
 	<File name="analex.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -58,17 +25,49 @@
 			<Cursor1 position="0" topLine="2" />
 		</Cursor>
 	</File>
-	<File name="anasint.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="analex.c" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="277" topLine="24" />
-		</Cursor>
-	</File>
-	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5347" topLine="26" />
+			<Cursor1 position="8584" topLine="240" />
 		</Cursor>
 		<Folding>
-			<Collapse line="29" />
+			<Collapse line="17" />
+		</Folding>
+	</File>
+	<File name="anasint.c" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="17521" topLine="501" />
+		</Cursor>
+		<Folding>
+			<Collapse line="18" />
+			<Collapse line="36" />
+			<Collapse line="58" />
+			<Collapse line="84" />
+			<Collapse line="91" />
+			<Collapse line="104" />
+			<Collapse line="110" />
+			<Collapse line="361" />
+			<Collapse line="632" />
+			<Collapse line="638" />
+			<Collapse line="657" />
+			<Collapse line="677" />
+			<Collapse line="683" />
+			<Collapse line="955" />
+			<Collapse line="958" />
+			<Collapse line="1029" />
+			<Collapse line="1090" />
+			<Collapse line="1203" />
+			<Collapse line="1288" />
+			<Collapse line="1300" />
+			<Collapse line="1304" />
+			<Collapse line="1316" />
+			<Collapse line="1328" />
+			<Collapse line="1340" />
+			<Collapse line="1352" />
+			<Collapse line="1368" />
+			<Collapse line="1384" />
+			<Collapse line="1400" />
+			<Collapse line="1416" />
+			<Collapse line="1552" />
 		</Folding>
 	</File>
 </CodeBlocks_layout_file>
