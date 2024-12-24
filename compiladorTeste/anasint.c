@@ -11,6 +11,9 @@
 // |=======| TABELA DE S�MBOLOS |=======|
 TABELA_SIMBOLO ts;
 
+// |=======| EXPRESSÃO |=======|
+EXPRESSAO expressao;
+
 int var_virg_aux = 0;
 int flag_endi = 0;
 
@@ -781,9 +784,11 @@ void decl_var(){
     int consulta = consultaTabelaDeSimbolos(tk.lexema);
     if(consulta == -1) pass;
     else{
-        if(ts.Linhas[consulta].escopo == ts.Linhas[ts.topo].escopo){
+        if(ts.Linhas[consulta].escopo == ts.Linhas[ts.topo].escopo && ts.Linhas[consulta].categoria == ts.Linhas[ts.topo].categoria){
             error("Variavel com esse nome ja foi declarada! ");
         }
+
+
     }
 
     strcpy(ts.Linhas[ts.topo].lexema, tk.lexema); // COLOCAR IDENTIFICADOR NA TABELA DE S�MBOLO
@@ -959,7 +964,6 @@ void cmd()
     {
         int flag_virgula = 0;
 
-
         tk = analise_lexica(fd);
 
         if(tk.cat == ID)
@@ -978,7 +982,7 @@ void cmd()
             if(tk.cat == SN && tk.codigo == ABRE_PAR)
             {
                 tk = analise_lexica(fd);
-
+                int i = 1;
                 do{
 
                     if(tk.cat == SN && tk.codigo == VIRGULA){
@@ -993,14 +997,34 @@ void cmd()
                     flag_virgula = 0;
                     expr();
 
+                    if(ts.Linhas[consulta + i].tipo == INT_TIPO){
+                        if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == CHAR_EXPR) pass;
+                        else error("Tipos invalidos! Parametro inteiro. Esperando inteiro ou char! ");
+                    }else if(ts.Linhas[consulta + i].tipo == CHAR_TIPO){
+                        if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == CHAR_EXPR) pass;
+                        else error("Tipos invalidos! Parametro char. Esperando inteiro ou char! ");
+                    }else if(ts.Linhas[consulta + i].tipo == REAL_TIPO){
+                        if(expressao.tipoExpr == REAL_EXPR) pass;
+                        else error("Tipos Invalidos! Paremetro Real. Esperando real");
+                    }else if(ts.Linhas[consulta + i].tipo == BOOL_TIPO){
+                        if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == BOOL_EXPR) pass;
+                        else error("Tipos Invalidos! BOOL so eh compativel com inteiro ou bool");
+                    }else{
+                        error("Nao tem argumentos suficientes! ");
+                    }
+
                     if(tk.processado != 1)
                     {
                         tk = analise_lexica(fd);
                         tk.processado = 0;
                     }
 
-
+                    i++;
                 }while(tk.cat == SN && tk.codigo == VIRGULA);
+
+                if(ts.Linhas[consulta + i].categoria == PAR_PROCEDIMENTO){
+                    error("O procedimento tem mais parametros! ");
+                }
 
 
                 if(tk.cat == SN && tk.codigo == FECHA_PAR)
@@ -1295,7 +1319,7 @@ void cmd()
             ts.Linhas[consulta].categoria != PAR_PROCEDIMENTO){
             error("Identificador do var precisa ser uma variavel ou parametro! ");
         }
-        atrib();
+        atrib(consulta);
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "getout") == 0)
     {
@@ -1420,27 +1444,28 @@ void cmd()
 }
 
 // ======= ATRIB =======
-void atrib()
+void atrib(int consulta)
 {
-    //printf("\n 50 %d | %s", tk.codigo, tk.lexema);
+
     tk = analise_lexica(fd);
-   // printf("\n 51 %d | %s", tk.codigo, tk.lexema);
+
     while(tk.codigo != ATRIBUICAO)
     {
-      //  printf("\n 52 %d | %s", tk.codigo, tk.lexema);
+
         if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
         {
-           // printf("\n 53 %d | %s", tk.codigo, tk.lexema);
+
             tk = analise_lexica(fd);
-           // printf("\n 54 %d | %s", tk.codigo, tk.lexema);
+
             expr();
-           // printf("\n 55 %d | %s", tk.codigo, tk.lexema);
+            if(expressao.tipoExpr != INT_EXPR) error("Precisa ser inteiro entre []! ");
+
             if(tk.processado != 1)
             {
                 tk = analise_lexica(fd);
                 tk.processado = 0;
             }
-           // printf("\n 55 %d | %s", tk.codigo, tk.lexema);
+
             if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
             {
                 tk = analise_lexica(fd);
@@ -1458,11 +1483,28 @@ void atrib()
     }
     if(tk.cat == SN && tk.codigo == ATRIBUICAO)
     {
-       // printf("\n 56 %d | %s", tk.codigo, tk.lexema);
+
         tk = analise_lexica(fd);
-       // printf("\n 57 %d | %s", tk.codigo, tk.lexema);
+
         expr();
-       // printf("\n 58 %d | %s", tk.codigo, tk.lexema);
+
+        if(ts.Linhas[consulta].tipo == INT_TIPO){
+            if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == CHAR_EXPR) pass;
+            else error("Tipos invalidos! Int so eh valido com int ou char! ");
+        }else if(ts.Linhas[consulta].tipo == CHAR_TIPO){
+            if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == CHAR_EXPR) pass;
+            else error("Tipos invalidos! Char so eh valido com int ou char! ");
+        }else if(ts.Linhas[consulta].tipo == REAL_TIPO){
+            if(expressao.tipoExpr == REAL_EXPR) pass;
+            else error("Tipos Invalidos! Real so eh compativel com real");
+        }else if(ts.Linhas[consulta].tipo == BOOL_TIPO){
+            if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == BOOL_EXPR) pass;
+            else error("Tipos Invalidos! BOOL so eh compativel com inteiro ou bool");
+
+            // CONFERIR SE EH 0 = FALSO ; DIFERENTE DE 0 = VERDADEIRO;
+        }
+
+
     }
     else
     {
@@ -1532,10 +1574,6 @@ void termo(){
 
     fator();
 
-   // printf("\n 27 %d | %s", tk.codigo, tk.lexema);
-
-  //  printf("\n 28 %d | %s", tk.codigo, tk.lexema);
-
     while((tk.cat == SN && (tk.codigo == MULTIPLICACAO || tk.codigo == DIVISAO || tk.codigo == AND)) /*|| (tk.cat == ID)*/)
     {
         if(tk.cat == SN && (tk.codigo == MULTIPLICACAO || tk.codigo == DIVISAO || tk.codigo == AND))
@@ -1561,6 +1599,8 @@ void fator(){
             error("Procedimento ou prototipo nao podem ser passados como expressao! ");
         }
 
+        expressao.tipoExpr = ts.Linhas[consulta].tipo;
+
         tk = analise_lexica(fd);
 
 
@@ -1571,24 +1611,19 @@ void fator(){
               tk.codigo != MAIOR_OU_IGUAL && tk.codigo != MAIOR_QUE && tk.codigo != AND && tk.codigo != OR && tk.codigo != VIRGULA &&
               strcmp(tk.lexema, "to") != 0 && strcmp(tk.lexema, "dt") == 0 && strcmp(tk.lexema, "by") == 0 )
         {
-  //          printf("\n 22 %d | %s", tk.codigo, tk.lexema);
+
             if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
             {
-   //             printf("\n 23 %d | %s", tk.codigo, tk.lexema);
+
                 tk = analise_lexica(fd);
 
-    //            printf("\n 24 %d | %s", tk.codigo, tk.lexema);
                 expr();
-
-    //            printf("\n 25 %d | %s", tk.codigo, tk.lexema);
 
                 if(tk.processado != 1)
                 {
                     tk = analise_lexica(fd);
                     tk.processado = 0;
                 }
-
-   //             printf("\n 26 %d | %s", tk.codigo, tk.lexema);
 
                 if(tk.cat == SN && tk.codigo == FECHA_COLCHETES)
                 {
@@ -1608,25 +1643,27 @@ void fator(){
     }
     else if(tk.cat == CT_I)
     {
+        expressao.tipoExpr = INT_EXPR;
         tk = analise_lexica(fd);
     }
     else if(tk.cat == CT_R)
     {
+        expressao.tipoExpr = REAL_EXPR;
         tk = analise_lexica(fd);
     }
     else if(tk.cat == CT_C)
     {
+        expressao.tipoExpr = CHAR_EXPR;
         tk = analise_lexica(fd);
     }
     else if(tk.cat == SN && tk.codigo == ABRE_PAR)
     {
-   //     printf("\n 40 %d | %s", tk.codigo, tk.lexema);
+
         tk = analise_lexica(fd);
-   //     printf("\n 41 %d | %s", tk.codigo, tk.lexema);
+
         expr();
-   //     printf("\n 42 %d | %s", tk.codigo, tk.lexema);
+
         //tk = analise_lexica(fd);
-   //     printf("\n 43 %d | %s", tk.codigo, tk.lexema);
         if(tk.cat == SN && tk.codigo == FECHA_PAR)
         {
             tk = analise_lexica(fd); // CONFERIR
@@ -1639,6 +1676,7 @@ void fator(){
     }
     else if(tk.cat == SN && tk.codigo == NEGACAO)
     {
+        expressao.tipoExpr = BOOL_EXPR;
         tk = analise_lexica(fd);
 
         fator();

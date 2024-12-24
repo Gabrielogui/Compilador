@@ -1,10 +1,21 @@
-def michele()
+prot michele(char, real)
+
+def michele(char a, real b)
 
 endp
 
 int a
 
 def init
-    if(a)
-    endi
+    int b
+
+    b = 4 * 7.2 + 2
+
+    do michele('a', 1.2)
+
+    a[b] = 7
 endp
+
+// TRATAR do michele('a', 1.2, 3)
+// REALIZAR UMA STRUCT EXPRESSÃO COM O SEU TIPO
+// EXPRESSAO DENTRO DO COLCHETES DE UM ARRAY? 3.2.2.3 (SO ACEITA IDCONST OU INT)

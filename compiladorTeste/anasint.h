@@ -3,6 +3,7 @@
 
 #define TAM_MAX_LEXEMA 31
 #define TAM_MAX_TS 80
+#define TAM_MAX_EXP 50
 
 // LEXEMA ; ESCOPO ; TIPO ; CATEGORIA ; PASSAGEM ; ZUMBI ; ARRAY ; DIM1 ; DIM2 ; ENDERE�O ; R�TULO
 
@@ -56,6 +57,21 @@ typedef struct{
     REG_TS Linhas[TAM_MAX_TS];
     int topo;
 }TABELA_SIMBOLO;
+
+// |=======| STRUCT DA EXPRESSÃO |=======|
+// ENUM DO TIPO DA EXPRESSÃO
+enum tipoExpr {INT_EXPR = 1, REAL_EXPR, CHAR_EXPR, BOOL_EXPR};
+
+typedef struct{
+    enum tipoExpr tipoExpr;
+}EXPRESSAO;
+
+
+typedef struct{
+    EXPRESSAO expressao[TAM_MAX_EXP];
+    int topo;
+}TABELA_EXPRESSAO;
+
 
 // |=======| DECLARA��ES DAS FUN��ES |=======|
 
