@@ -7,9 +7,22 @@ endp
 int a
 
 def init
-    int b
+    int b, k
+    real h
 
-    b = 4 * 7.2 + 2
+    if(b > k)
+
+    elif(b > k)
+
+    endi
+
+    while(k && b) endw
+
+    h = 5.22 + 5.2
+
+    b = 7 * 7 * 5 *  6 * 'c'
+
+   // c = 'c' + 'b' + 3
 
     do michele('a', 1.2)
 
@@ -19,3 +32,5 @@ endp
 // TRATAR do michele('a', 1.2, 3)
 // REALIZAR UMA STRUCT EXPRESSÃO COM O SEU TIPO
 // EXPRESSAO DENTRO DO COLCHETES DE UM ARRAY? 3.2.2.3 (SO ACEITA IDCONST OU INT)
+// COMPARAÇÃO REAL COM INT TA FUNCIONANDO, É PARA SER ASSIM? EX: INT A; REAL B; A < B
+// AND E OR NAO FUNCIONA SE FOREM DE TIPOS INCOMPATIVEIS

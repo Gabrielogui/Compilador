@@ -12,10 +12,11 @@
 TABELA_SIMBOLO ts;
 
 // |=======| EXPRESSÃO |=======|
-EXPRESSAO expressao;
+EXPRESSOES expressoes;
 
 int var_virg_aux = 0;
 int flag_endi = 0;
+int boolFlag = 0;
 
 // |=======| FUNÇÃO TABELA DE SÍMBOLOS |=======|
 
@@ -998,16 +999,16 @@ void cmd()
                     expr();
 
                     if(ts.Linhas[consulta + i].tipo == INT_TIPO){
-                        if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == CHAR_EXPR) pass;
+                        if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo].tipoExpr == CHAR_EXPR) pass;
                         else error("Tipos invalidos! Parametro inteiro. Esperando inteiro ou char! ");
                     }else if(ts.Linhas[consulta + i].tipo == CHAR_TIPO){
-                        if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == CHAR_EXPR) pass;
+                        if(expressoes.expressao[expressoes.topo].tipoExpr || expressoes.expressao[expressoes.topo].tipoExpr == CHAR_EXPR) pass;
                         else error("Tipos invalidos! Parametro char. Esperando inteiro ou char! ");
                     }else if(ts.Linhas[consulta + i].tipo == REAL_TIPO){
-                        if(expressao.tipoExpr == REAL_EXPR) pass;
+                        if(expressoes.expressao[expressoes.topo].tipoExpr == REAL_EXPR) pass;
                         else error("Tipos Invalidos! Paremetro Real. Esperando real");
                     }else if(ts.Linhas[consulta + i].tipo == BOOL_TIPO){
-                        if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == BOOL_EXPR) pass;
+                        if(expressoes.expressao[expressoes.topo].tipoExpr || expressoes.expressao[expressoes.topo].tipoExpr == BOOL_EXPR) pass;
                         else error("Tipos Invalidos! BOOL so eh compativel com inteiro ou bool");
                     }else{
                         error("Nao tem argumentos suficientes! ");
@@ -1059,9 +1060,13 @@ void cmd()
         {
 
             tk = analise_lexica(fd);
-           // printf("\n 63 %d | %s", tk.codigo, tk.lexema);
+
             expr();
-            //printf("\n 64 %d | %s", tk.codigo, tk.lexema);
+
+            // EXPRESSAO DO WHILE PRECISA SER BOOL
+            if(expressoes.expressao[expressoes.topo].tipoExpr == BOOL_TIPO) pass;
+            else error("Expressao do WHILE precisa ser do tipo booleano! ");
+
             if(tk.processado != 1)
             {
                 tk = analise_lexica(fd);
@@ -1234,6 +1239,10 @@ void cmd()
         tk = analise_lexica(fd);
         expr();
 
+        // EXPRESSAO DO IF PRECISA SER BOOL
+        if(expressoes.expressao[expressoes.topo].tipoExpr == BOOL_TIPO) pass;
+        else error("Expressao do IF precisa ser do tipo booleano! ");
+
         // TOKEN ESPERANDO O FECHA PARÊNTESE - APÓS 'expr()'
         if(tk.cat == SN && tk.codigo == FECHA_PAR) tk.processado = 0;
         else error("Fecha Parentese - ')' Esperado no if! ");
@@ -1245,12 +1254,10 @@ void cmd()
                 tk = analise_lexica(fd);
                 tk.processado = 0;
             }
-            //printf("\n 1 %d | %s", tk.codigo, tk.lexema);
             // CONDIÇÕES PARA SAIR DO LAÇO
             if(tk.cat == PVR && ((strcmp(tk.lexema, "elif") == 0) || (strcmp(tk.lexema, "else") == 0) || (strcmp(tk.lexema, "endi") == 0))) break;
 
             cmd();
-            //printf("\n 2 %d | %s", tk.codigo, tk.lexema);
         }
 
         // LAÇO DO ELIF
@@ -1263,6 +1270,10 @@ void cmd()
 
             tk = analise_lexica(fd);
             expr();
+
+            // EXPRESSAO DO ELIF PRECISA SER BOOL
+            if(expressoes.expressao[expressoes.topo].tipoExpr == BOOL_TIPO) pass;
+            else error("Expressao do ELIF precisa ser do tipo booleano! ");
 
             // TOKEN ESPERANDO O FECHA PARÊNTESE - APÓS 'expr()'
             if(tk.cat == SN && tk.codigo == FECHA_PAR) tk.processado = 0;
@@ -1458,7 +1469,7 @@ void atrib(int consulta)
             tk = analise_lexica(fd);
 
             expr();
-            if(expressao.tipoExpr != INT_EXPR) error("Precisa ser inteiro entre []! ");
+            if(expressoes.expressao[expressoes.topo].tipoExpr != INT_EXPR) error("Precisa ser inteiro entre []! ");
 
             if(tk.processado != 1)
             {
@@ -1489,20 +1500,32 @@ void atrib(int consulta)
         expr();
 
         if(ts.Linhas[consulta].tipo == INT_TIPO){
-            if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == CHAR_EXPR) pass;
+            if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR ){
+                 expressoes.expressao[expressoes.topo].tipoExpr = INT_EXPR;
+            }else if(expressoes.expressao[expressoes.topo].tipoExpr == CHAR_EXPR){
+                 expressoes.expressao[expressoes.topo].tipoExpr = INT_EXPR;
+            }
             else error("Tipos invalidos! Int so eh valido com int ou char! ");
         }else if(ts.Linhas[consulta].tipo == CHAR_TIPO){
-            if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == CHAR_EXPR) pass;
+            if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR){
+                expressoes.expressao[expressoes.topo].tipoExpr = INT_EXPR;
+            }else if(expressoes.expressao[expressoes.topo].tipoExpr == CHAR_EXPR){
+                expressoes.expressao[expressoes.topo].tipoExpr = CHAR_EXPR;
+            }
             else error("Tipos invalidos! Char so eh valido com int ou char! ");
         }else if(ts.Linhas[consulta].tipo == REAL_TIPO){
-            if(expressao.tipoExpr == REAL_EXPR) pass;
+            if(expressoes.expressao[expressoes.topo].tipoExpr == REAL_EXPR) expressoes.expressao[expressoes.topo].tipoExpr = REAL_EXPR;
             else error("Tipos Invalidos! Real so eh compativel com real");
         }else if(ts.Linhas[consulta].tipo == BOOL_TIPO){
-            if(expressao.tipoExpr == INT_EXPR || expressao.tipoExpr == BOOL_EXPR) pass;
+            if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo].tipoExpr == BOOL_EXPR){
+                expressoes.expressao[expressoes.topo].tipoExpr = BOOL_EXPR;
+            }
             else error("Tipos Invalidos! BOOL so eh compativel com inteiro ou bool");
 
             // CONFERIR SE EH 0 = FALSO ; DIFERENTE DE 0 = VERDADEIRO;
         }
+
+        // APAGAR
 
 
     }
@@ -1518,21 +1541,43 @@ void atrib(int consulta)
 void expr()
 {
     expr_simp();
-    //printf("\n 34 %d | %s", tk.codigo, tk.lexema);
+
     if(tk.processado != 1)
     {
         tk = analise_lexica(fd);
         tk.processado = 0;
     }
-   // printf("\n 35 %d | %s", tk.codigo, tk.lexema);
+
     if(tk.cat == SN && (tk.codigo == COMPARACAO || tk.codigo == DIFERENTE || tk.codigo == MENOR_OU_IGUAL
     || tk.codigo == MENOR_QUE || tk.codigo == MAIOR_OU_IGUAL || tk.codigo == MAIOR_QUE))
     {
+        boolFlag = 1;
         tk = analise_lexica(fd);
 
         expr_simp();
+
+        if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
+            else error("Tipo Invalido na expr! Int so aceita int ou char! "); // 2 * 3 * 3.2 ->
+        }else if(expressoes.expressao[expressoes.topo].tipoExpr == CHAR_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
+            else error("Tipo Invalido na expr! Char so aceita int ou char! ");
+        }else if(expressoes.expressao[expressoes.topo].tipoExpr == REAL_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == REAL_EXPR) pass;
+            else error("Tipo Invalido na expr! Real so aceita real! ");
+        }else if(expressoes.expressao[expressoes.topo].tipoExpr == BOOL_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == BOOL_EXPR) pass;
+            else error("Tipo Invalido na expr! bool so aceita int! ");
+        }
     }
-    //printf("\n 36 %d | %s", tk.codigo, tk.lexema);
+
+    if(boolFlag == 1){
+        expressoes.topo++;
+        expressoes.expressao[expressoes.topo].tipoExpr = BOOL_EXPR;
+
+        boolFlag = 0;
+    }
+
 }
 
 // ======= EXPR_SIMP =======
@@ -1541,24 +1586,45 @@ void expr_simp(){
     {
         tk = analise_lexica(fd);
     }
-   // printf("\n 29 %d | %s", tk.codigo, tk.lexema);
+
     termo();
-  //  printf("\n 30 %d | %s", tk.codigo, tk.lexema);
+
     if(tk.processado != 1)
     {
         tk = analise_lexica(fd);
         tk.processado = 0;
     }
-   // printf("\n 31 %d | %s", tk.codigo, tk.lexema);
+
     while((tk.cat == SN && (tk.codigo == ADICAO || tk.codigo == SUBTRACAO || tk.codigo == OR )) /*|| (tk.cat == ID)*/)
     {
         if(tk.cat == SN && (tk.codigo == ADICAO || tk.codigo == SUBTRACAO || tk.codigo == OR ))
         {
+            if(tk.cat == SN && tk.codigo == OR) boolFlag = 1; // a + b && c - d || e * f
             tk = analise_lexica(fd);
         }
-  //      printf("\n 32 %d | %s", tk.codigo, tk.lexema);
+
+
+
         termo();
-  //      printf("\n 33 %d | %s", tk.codigo, tk.lexema);
+
+        // a > b + 2 - 'x'
+
+        if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
+            else error("Tipo Invalido na expr! Int so aceita int ou char! "); // 2 * 3 * 3.2 ->
+        }else if(expressoes.expressao[expressoes.topo].tipoExpr == CHAR_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
+            else error("Tipo Invalido na expr! Char so aceita int ou char! ");
+        }else if(expressoes.expressao[expressoes.topo].tipoExpr == REAL_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == REAL_EXPR) pass;
+            else error("Tipo Invalido na expr! Real so aceita real! ");
+        }else if(expressoes.expressao[expressoes.topo].tipoExpr == BOOL_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == BOOL_EXPR){
+                expressoes.topo++;
+                expressoes.expressao[expressoes.topo].tipoExpr = BOOL_EXPR;
+            }else error("Tipo Invalido na expr! bool so aceita int! ");
+        }
+
         if(tk.processado != 1)
         {
             tk = analise_lexica(fd);
@@ -1578,12 +1644,34 @@ void termo(){
     {
         if(tk.cat == SN && (tk.codigo == MULTIPLICACAO || tk.codigo == DIVISAO || tk.codigo == AND))
         {
+            if(tk.cat == SN && tk.codigo == AND) boolFlag = 1;
             tk = analise_lexica(fd);
         }
 
         fator();
-        //tk = analise_lexica(fd);
+
+        if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
+            else error("Tipo Invalido na expr! Int so aceita int ou char! "); // 2 * 3 * 3.2 ->
+        }else if(expressoes.expressao[expressoes.topo].tipoExpr == CHAR_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
+            else error("Tipo Invalido na expr! Char so aceita int ou char! ");
+        }else if(expressoes.expressao[expressoes.topo].tipoExpr == REAL_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == REAL_EXPR) pass;
+            else error("Tipo Invalido na expr! Real so aceita real! ");
+        }else if(expressoes.expressao[expressoes.topo].tipoExpr == BOOL_EXPR){
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == BOOL_EXPR) pass;
+            else error("Tipo Invalido na expr! bool so aceita int! ");
+        }
+
+        //expressoes.topo--; // DESTRUIR
+
+
+
     }
+
+
+
     tk.processado = 1;
 }
 
@@ -1599,7 +1687,8 @@ void fator(){
             error("Procedimento ou prototipo nao podem ser passados como expressao! ");
         }
 
-        expressao.tipoExpr = ts.Linhas[consulta].tipo;
+        expressoes.topo++;
+        expressoes.expressao[expressoes.topo].tipoExpr = ts.Linhas[consulta].tipo;
 
         tk = analise_lexica(fd);
 
@@ -1643,17 +1732,20 @@ void fator(){
     }
     else if(tk.cat == CT_I)
     {
-        expressao.tipoExpr = INT_EXPR;
+        expressoes.topo++;
+        expressoes.expressao[expressoes.topo].tipoExpr = INT_EXPR;
         tk = analise_lexica(fd);
     }
     else if(tk.cat == CT_R)
     {
-        expressao.tipoExpr = REAL_EXPR;
+        expressoes.topo++;
+        expressoes.expressao[expressoes.topo].tipoExpr = REAL_EXPR;
         tk = analise_lexica(fd);
     }
     else if(tk.cat == CT_C)
     {
-        expressao.tipoExpr = CHAR_EXPR;
+        expressoes.topo++;
+        expressoes.expressao[expressoes.topo].tipoExpr = CHAR_EXPR;
         tk = analise_lexica(fd);
     }
     else if(tk.cat == SN && tk.codigo == ABRE_PAR)
@@ -1676,7 +1768,10 @@ void fator(){
     }
     else if(tk.cat == SN && tk.codigo == NEGACAO)
     {
-        expressao.tipoExpr = BOOL_EXPR;
+        expressoes.topo++;
+        expressoes.expressao[expressoes.topo].tipoExpr = BOOL_EXPR;
+        boolFlag = 1;
+
         tk = analise_lexica(fd);
 
         fator();

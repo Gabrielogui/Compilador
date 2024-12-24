@@ -8,14 +8,14 @@
 
 1733754293 e:\users\gabriel\documents\github\compilador\compiladorteste\analex.h
 
-1735063326 source:e:\users\gabriel\documents\github\compilador\compiladorteste\anasint.c
+1735069657 source:e:\users\gabriel\documents\github\compilador\compiladorteste\anasint.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"analex.h"
 	"anasint.h"
 
-1735063365 e:\users\gabriel\documents\github\compilador\compiladorteste\anasint.h
+1735067281 e:\users\gabriel\documents\github\compilador\compiladorteste\anasint.h
 
 1734705125 source:e:\users\gabriel\documents\github\compilador\compiladorteste\main.c
 	<stdio.h>

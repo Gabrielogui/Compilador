@@ -3,7 +3,7 @@
 
 #define TAM_MAX_LEXEMA 31
 #define TAM_MAX_TS 80
-#define TAM_MAX_EXP 50
+#define TAM_MAX_EXP 999
 
 // LEXEMA ; ESCOPO ; TIPO ; CATEGORIA ; PASSAGEM ; ZUMBI ; ARRAY ; DIM1 ; DIM2 ; ENDERE�O ; R�TULO
 
@@ -70,7 +70,7 @@ typedef struct{
 typedef struct{
     EXPRESSAO expressao[TAM_MAX_EXP];
     int topo;
-}TABELA_EXPRESSAO;
+}EXPRESSOES;
 
 
 // |=======| DECLARA��ES DAS FUN��ES |=======|
