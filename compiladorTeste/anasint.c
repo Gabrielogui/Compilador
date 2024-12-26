@@ -190,28 +190,49 @@ void decl_def_proc(){
             if(strcmp(tk.lexema, "int") == 0)
             {
                 ts.Linhas[ts.topo].tipo = INT_TIPO;
+
+                ts.Linhas[ts.topo].zumbi = NA_ZUMBI;
+                ts.Linhas[ts.topo].eh_const = NAO;
+                ts.Linhas[ts.topo].escopo = LOCAL;
+                ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
+                tk = analise_lexica(fd);
             }
             else if(strcmp(tk.lexema, "real") == 0)
             {
                 ts.Linhas[ts.topo].tipo = REAL_TIPO;
+
+                ts.Linhas[ts.topo].zumbi = NA_ZUMBI;
+                ts.Linhas[ts.topo].eh_const = NAO;
+                ts.Linhas[ts.topo].escopo = LOCAL;
+                ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
+                tk = analise_lexica(fd);
             }
             else if(strcmp(tk.lexema, "char") == 0)
             {
                 ts.Linhas[ts.topo].tipo = CHAR_TIPO;
+
+                ts.Linhas[ts.topo].zumbi = NA_ZUMBI;
+                ts.Linhas[ts.topo].eh_const = NAO;
+                ts.Linhas[ts.topo].escopo = LOCAL;
+                ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
+                tk = analise_lexica(fd);
             }
             else if(strcmp(tk.lexema, "bool") == 0)
             {
                 ts.Linhas[ts.topo].tipo = BOOL_TIPO;
+
+                ts.Linhas[ts.topo].zumbi = NA_ZUMBI;
+                ts.Linhas[ts.topo].eh_const = NAO;
+                ts.Linhas[ts.topo].escopo = LOCAL;
+                ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
+                tk = analise_lexica(fd);
             }
+            else if(tk.cat == SN && tk.codigo == FECHA_PAR) saida_aux = 1;
             else
             {
                 error("tipo esperado!");
             }
-            ts.Linhas[ts.topo].zumbi = NA_ZUMBI;
-            ts.Linhas[ts.topo].eh_const = NAO;
-            ts.Linhas[ts.topo].escopo = LOCAL;
-            ts.Linhas[ts.topo].categoria = PAR_PROCEDIMENTO;
-            tk = analise_lexica(fd);
+
             if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
             {
                 tk = analise_lexica(fd);
@@ -245,8 +266,12 @@ void decl_def_proc(){
             }
             else
             {
-                ts.Linhas[ts.topo].isArray = ESCALAR;
-                ts.topo++;
+                if(saida_aux == 1) pass;
+                else{
+                    ts.Linhas[ts.topo].isArray = ESCALAR;
+                    ts.topo++;
+                }
+
             }
             if(tk.cat == SN && tk.codigo == FECHA_PAR)
             {
@@ -481,7 +506,8 @@ void decl_def_proc(){
                     {
 
                         if(consultaTabelaDeSimbolos(tk.lexema) != -1 &&
-                           (ts.Linhas[consultaTabelaDeSimbolos(tk.lexema)].categoria == PAR_PROCEDIMENTO)){
+                           (ts.Linhas[consultaTabelaDeSimbolos(tk.lexema)].categoria == PAR_PROCEDIMENTO &&
+                            ts.Linhas[consultaTabelaDeSimbolos(tk.lexema)].zumbi == VIVO)){
                             error("Identificador de parametro ja usado! ");
                         }
 
@@ -785,10 +811,9 @@ void decl_var(){
     int consulta = consultaTabelaDeSimbolos(tk.lexema);
     if(consulta == -1) pass;
     else{
-        if(ts.Linhas[consulta].escopo == ts.Linhas[ts.topo].escopo && ts.Linhas[consulta].categoria == ts.Linhas[ts.topo].categoria){
+        if(ts.Linhas[consulta].escopo == ts.Linhas[ts.topo].escopo && ts.Linhas[consulta].zumbi == VIVO){
             error("Variavel com esse nome ja foi declarada! ");
-        }
-
+        }else if(ts.Linhas[consulta].zumbi == VIVO) error("Parametro ja declarado! ");
 
     }
 
@@ -1011,7 +1036,7 @@ void cmd()
                         if(expressoes.expressao[expressoes.topo].tipoExpr || expressoes.expressao[expressoes.topo].tipoExpr == BOOL_EXPR) pass;
                         else error("Tipos Invalidos! BOOL so eh compativel com inteiro ou bool");
                     }else{
-                        error("Nao tem argumentos suficientes! ");
+                        error("Precisa de menos argumentos! ");
                     }
 
                     if(tk.processado != 1)
