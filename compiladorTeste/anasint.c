@@ -15,15 +15,13 @@ TABELA_SIMBOLO ts;
 EXPRESSOES expressoes;
 
 // |=======| ENDERECO |=======|
-int qtdEndereco = 0;
+int qtdEndereco = -1;
 
 int var_virg_aux = 0;
 int flag_endi = 0;
 int boolFlag = 0;
 
 // |=======| FUNÇÃO MÁQUINA DE PILHA |=======|
-
-
 
 char *gerarRotulo(){
     static char label[8];
@@ -130,33 +128,83 @@ void error(char msg[]) {
 // ======= PROG =======
 void prog(){
 
-    if(tk.cat == FIM_ARQ){
-        printf("\nArquivo encerrado\n");
+    if(tk.processado != 1)
+    {
+        tk = analise_lexica(fd);
+        tk.processado = 0;
     }
-    else if((strcmp(tk.lexema, "prot") == 0) || (strcmp(tk.lexema, "def") == 0)){
-        qtdEndereco = 0;
-        decl_def_proc();
-    } else if((strcmp(tk.lexema, "const") == 0) || (verificarTipo(tk.lexema) == 0)){
-        ts.Linhas[ts.topo].escopo    = GLOBAL;
-        ts.Linhas[ts.topo].categoria = VAR_GLOBAL;
-        ts.Linhas[ts.topo].passagem  = NA_PASSAGEM;
-        ts.Linhas[ts.topo].zumbi     = NA_ZUMBI;
-        decl_list_var();
-    }else{
-        error("Nao iniciou o procedimento!");
+
+    if((strcmp(tk.lexema, "const") == 0) || (verificarTipo(tk.lexema) == 0)){
+        while((strcmp(tk.lexema, "const") == 0) || (verificarTipo(tk.lexema) == 0)){
+
+            ts.Linhas[ts.topo].escopo    = GLOBAL;
+            ts.Linhas[ts.topo].categoria = VAR_GLOBAL;
+            ts.Linhas[ts.topo].passagem  = NA_PASSAGEM;
+            ts.Linhas[ts.topo].zumbi     = NA_ZUMBI;
+            decl_list_var();
+
+            if(tk.processado != 1)
+            {
+                tk = analise_lexica(fd);
+                tk.processado = 0;
+            }
+
+            if(tk.cat == FIM_ARQ){
+                printf("\nArquivo encerrado\n");
+
+                fprintf(mp, "LABEL L0\n");
+                int consulta = consultaTabelaDeSimbolos("init");
+
+                if(consulta == -1) printf("\n Codigo sem init! ");
+                else fprintf(mp, "CALL %s\n", ts.Linhas[consulta].rotulo);
+
+                fprintf(mp, "DMEM %d\n", qtdVarGlobais);
+                fprintf(mp, "HALT\n");
+                return;
+            }
+
+
+        }
     }
+
+    fprintf(mp, "GOTO L0\n");
+
+    if(strcmp(tk.lexema, "prot") == 0 || strcmp(tk.lexema, "def") == 0){
+        while(strcmp(tk.lexema, "prot") == 0 || strcmp(tk.lexema, "def") == 0){
+            qtdEndereco = -1;
+            decl_def_proc();
+
+            if(tk.processado != 1)
+            {
+                tk = analise_lexica(fd);
+                tk.processado = 0;
+            }
+
+            if(tk.cat == FIM_ARQ){
+                printf("\nArquivo encerrado\n");
+
+                fprintf(mp, "LABEL L0\n");
+                int consulta = consultaTabelaDeSimbolos("init");
+
+                if(consulta == -1) printf("\n Codigo sem init! ");
+                else fprintf(mp, "CALL %s\n", ts.Linhas[consulta].rotulo);
+
+                fprintf(mp, "DMEM %d\n", qtdVarGlobais);
+                fprintf(mp, "HALT\n");
+                return;
+            }
+
+        }
+    }
+
+    if(((strcmp(tk.lexema, "const") != 0) || (verificarTipo(tk.lexema) != 0)) && (strcmp(tk.lexema, "prot") != 0 || strcmp(tk.lexema, "def") != 0))
+        error("Procedimento Invalido");
+
 
 }
 
 // ======= DECL_DEF_PROC =======
 void decl_def_proc(){
-
-    /*
-        decl_def_proc ::=
-            prot idproc ( [[&] tipo { [ ] } { , [&] tipo { [ ] } }]] )
-            |
-            def ( init | idproc ( [ [&] tipo id1{ [( intcon2 | idconst2 )] } { , [&] tipo id2 { [( intcon2 | idconst2 )] } }] ) ) {decl_list_var} { cmd } endp
-    */
 
     int saida_aux = 0;
     if(strcmp(tk.lexema, "prot") == 0){
@@ -390,6 +438,8 @@ void decl_def_proc(){
     }
     else if(strcmp(tk.lexema, "def") == 0)
     {
+        int qtdParametros = 0;
+
         ts.Linhas[ts.topo].escopo = GLOBAL;
         ts.Linhas[ts.topo].tipo = NA_TIPO;
         ts.Linhas[ts.topo].categoria = PROCEDIMENTO;
@@ -660,8 +710,18 @@ void decl_def_proc(){
                     {
                         error("parametro de procedimento sem identificador!");
                     }
+                    qtdParametros++;
                     i++;
                 }while(tk.cat == SN && tk.codigo == VIRGULA);
+                int topoAux = ts.topo - 1;
+                int endPar = -3;
+
+                for(int j = 0 ; j < qtdParametros ; j++){
+                    ts.Linhas[topoAux].endereco = endPar;
+                    endPar--;
+                    topoAux--;
+                }
+
                 if(defFlag == 1){
                     if(ts.Linhas[consulta + i].categoria == PAR_PROCEDIMENTO){
                         error("O prototipo tem mais parametros! ");
@@ -704,29 +764,21 @@ void decl_def_proc(){
 
         while(strcmp(tk.lexema, "endp") != 0) // verificar depois se esta certo
         {
-            //printf("\n 5 %d | %s", tk.codigo, tk.lexema);
+
             cmd();
-           // printf("\n 6 %d | %s", tk.codigo, tk.lexema);
+
             if(tk.processado != 1)
             {
                 tk = analise_lexica(fd);
                 tk.processado = 0;
             }
-            //printf("\n 7 %d | %s", tk.codigo, tk.lexema);
         }
-
-
-
-      //  printf("\n 8 %d | %s", tk.codigo, tk.lexema);
-        // fazer função cmd
-
-
 
         if(tk.cat == PVR && strcmp(tk.lexema, "endp") == 0)
         {
-
+            fprintf(mp, "DMEM %d\n", qtdEndereco);
+            fprintf(mp, "RET 1, %d\n", qtdParametros);
             excluirTabelaDeSimbolos();
-
         }
         else
         {
@@ -753,7 +805,13 @@ void decl_list_var(){
         ts.Linhas[ts.topo].eh_const = NAO;
     }
 
+    qtdEndereco++;
+    ts.Linhas[ts.topo].endereco = qtdEndereco;
+
+    if(ts.Linhas[ts.topo].escopo == GLOBAL) qtdVarGlobais++;
     decl_var();
+
+
 
     if (!(tk.cat == SN && tk.codigo == VIRGULA))
     {
@@ -762,16 +820,13 @@ void decl_list_var(){
 
     while(tk.cat == SN && tk.codigo == VIRGULA){
         qtdAmem++;
-
+        printf("%d\n", qtdEndereco);
 
         tk = analise_lexica(fd);
         var_virg_aux = 1;
 
         if(ts.Linhas[ts.topo].escopo == GLOBAL){
             constVirgula = ts.Linhas[ts.topo].eh_const;
-
-            qtdEndereco++;
-            ts.Linhas[ts.topo].endereco = qtdEndereco;
 
             ts.topo++;
 
@@ -781,14 +836,14 @@ void decl_list_var(){
             ts.Linhas[ts.topo].zumbi     = NA_ZUMBI;
             ts.Linhas[ts.topo].eh_const  = constVirgula;
 
+            qtdEndereco++;
 
-            //printf("\n tipo: %d ", ts.Linhas[ts.topo].tipo);
+            ts.Linhas[ts.topo].endereco = qtdEndereco;
+
+            qtdVarGlobais++;
         }else{
 
             constVirgula = ts.Linhas[ts.topo].eh_const;
-
-            qtdEndereco++;
-            ts.Linhas[ts.topo].endereco = qtdEndereco;
 
             ts.topo++;
 
@@ -797,14 +852,18 @@ void decl_list_var(){
             ts.Linhas[ts.topo].passagem  = NA_PASSAGEM;
             ts.Linhas[ts.topo].zumbi     = NA_ZUMBI;
             ts.Linhas[ts.topo].eh_const  = constVirgula;
+
+            qtdEndereco++;
+
+            ts.Linhas[ts.topo].endereco = qtdEndereco;
         }
 
         decl_var();
     }
     if (!(tk.cat == SN && tk.codigo == VIRGULA))
     {
-        qtdEndereco++;
-        ts.Linhas[ts.topo].endereco = qtdEndereco;
+        //qtdEndereco++;
+        //ts.Linhas[ts.topo].endereco = qtdEndereco;
         ts.topo++;
         tk.processado = 1;
     }
@@ -848,7 +907,6 @@ void decl_var(){
         if(ts.Linhas[consulta].escopo == ts.Linhas[ts.topo].escopo && ts.Linhas[consulta].zumbi == VIVO){
             error("Variavel com esse nome ja foi declarada! ");
         }else if(ts.Linhas[consulta].zumbi == VIVO) error("Parametro ja declarado! ");
-
     }
 
     strcpy(ts.Linhas[ts.topo].lexema, tk.lexema); // COLOCAR IDENTIFICADOR NA TABELA DE S�MBOLO
@@ -862,21 +920,41 @@ void decl_var(){
             if(ts.Linhas[ts.topo].eh_const == SIM){
                 ts.Linhas[ts.topo].constInt = tk.valor_i;
             }
+
+            fprintf(mp, "PUSH %d\n", tk.valor_i);
+            if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf(mp, "STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+            else fprintf(mp, "STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+
             tk = analise_lexica(fd);
         }else if(ts.Linhas[ts.topo].tipo == REAL_TIPO && tk.cat == CT_R){
             if(ts.Linhas[ts.topo].eh_const == SIM){
                 ts.Linhas[ts.topo].constReal = tk.valor_r;
             }
+
+            fprintf(mp, "PUSH %r\n", tk.valor_r);
+            if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf(mp, "STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+            else fprintf(mp, "STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+
             tk = analise_lexica(fd);
         }else if(ts.Linhas[ts.topo].tipo == CHAR_TIPO && tk.cat == CT_C){
             if(ts.Linhas[ts.topo].eh_const == SIM){
                 ts.Linhas[ts.topo].constChar = tk.c;
             }
+
+            fprintf(mp, "PUSH %c\n", tk.c);
+            if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf(mp, "STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+            else fprintf(mp, "STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+
             tk = analise_lexica(fd);
         }else if(ts.Linhas[ts.topo].tipo == BOOL_TIPO && tk.cat == CT_I){
             if(ts.Linhas[ts.topo].eh_const == SIM){
                 ts.Linhas[ts.topo].constBool = tk.valor_i;
             }
+
+            fprintf(mp, "PUSH %d\n", tk.valor_i);
+            if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf(mp, "STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+            else fprintf(mp, "STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+
             tk = analise_lexica(fd);
         }else{
             error("Tipo incompativel com atribuicao");
@@ -1113,7 +1191,7 @@ void cmd()
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "while") == 0)
     {
-        fprintf(mp, "LABEL %s", gerarRotulo());
+        fprintf(mp, "LABEL %s\n", gerarRotulo());
         tk = analise_lexica(fd);
 
         if(tk.cat == SN && tk.codigo == ABRE_PAR)
@@ -1123,13 +1201,11 @@ void cmd()
 
             expr();
 
-
-
             // EXPRESSAO DO WHILE PRECISA SER BOOL
             if(expressoes.expressao[expressoes.topo].tipoExpr == BOOL_TIPO) pass;
             else error("Expressao do WHILE precisa ser do tipo booleano! ");
 
-            fprintf(mp, "");
+            //fprintf(mp, "");
 
             if(tk.processado != 1)
             {

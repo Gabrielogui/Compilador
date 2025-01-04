@@ -87,10 +87,13 @@ void termo();
 void fator();
 void op_rel();
 
+int consultaTabelaDeSimbolos(char[]);
+
 // |=======| VARI�VEIS GLOBAIS |=======|
 extern TABELA_SIMBOLO ts; // TABELA DE SÍMBOLO
 extern int qtdRotulo;     // QUANTIDADE ROTULO
 extern FILE *mp;          // ARQUIVO DA MAQUINA DE PILHA
+extern int qtdVarGlobais;
 //extern int lido;
 
 #endif // ANASINT_H_INCLUDED

@@ -9,8 +9,9 @@ FILE *fd;
 TOKEN tk;
 contLinhas = 1;
 lido = 0;
-qtdRotulo = 0;
+qtdRotulo = 1;
 FILE *mp;
+qtdVarGlobais = 0;
 
 // |=======| DECLARA��O DAS FUN��ES |=======|
 void testarAnalex();
@@ -157,20 +158,13 @@ void testarAnasint(){
         printf("\n[ERRO] - ERRO ao abrir o arquivo da maquina de pilha\n");
     }
 
-    while(1){
+    fprintf(mp, "INIP\n");
+
+
         //mostrarTabelaDeSimbolos();
-        if(tk.processado != 1)
-        {
-            tk = analise_lexica(fd);
-            tk.processado = 0;
-        }
 
-        if(tk.cat == FIM_ARQ){
-            printf("\nArquivo encerrado\n");
-            break;
-        }
-        prog();
+    prog();
 
-    }
+
     mostrarTabelaDeSimbolos();
 }
