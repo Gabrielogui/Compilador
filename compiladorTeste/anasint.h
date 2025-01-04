@@ -48,8 +48,8 @@ typedef struct{
         char constString[TAM_MAX_LEXEMA];
         int constBool; // 0 = TRUE ; 1 = FALSE
     };
-    //int endereco;
-    //int rotulo;
+    int endereco;
+    char rotulo[8]; // PROCEDIMENTOS
 }REG_TS;
 
 // |=======| STRUCT DA TABELA DE S�MBOLO(TS) |=======|
@@ -89,6 +89,7 @@ void op_rel();
 
 // |=======| VARI�VEIS GLOBAIS |=======|
 extern TABELA_SIMBOLO ts;
+extern int qtdRotulo;
 //extern int lido;
 
 #endif // ANASINT_H_INCLUDED

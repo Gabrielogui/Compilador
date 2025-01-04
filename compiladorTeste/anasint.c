@@ -14,9 +14,23 @@ TABELA_SIMBOLO ts;
 // |=======| EXPRESSÃO |=======|
 EXPRESSOES expressoes;
 
+// |=======| ENDERECO |=======|
+int qtdEndereco = 0;
+
 int var_virg_aux = 0;
 int flag_endi = 0;
 int boolFlag = 0;
+
+// |=======| FUNÇÃO MÁQUINA DE PILHA |=======|
+
+char *gerarRotulo(){
+    static char label[8];
+    snprintf(label, sizeof(label), "L%d", qtdRotulo);
+    qtdRotulo++;
+    printf("\n%s", label);
+    system("pause");
+    return label;
+}
 
 // |=======| FUNÇÃO TABELA DE SÍMBOLOS |=======|
 
@@ -78,6 +92,8 @@ void mostrarTabelaDeSimbolos(){
         printf("\n | DIM01    : %d", ts.Linhas[topoAux].dim01    );
         printf("\n | DIM02    : %d", ts.Linhas[topoAux].dim02    );
         printf("\n | EH_CONST : %d", ts.Linhas[topoAux].eh_const );
+        printf("\n | ROTULO   : %s", ts.Linhas[topoAux].rotulo   );
+        printf("\n | ENDERECO : %d", ts.Linhas[topoAux].endereco );
 
         printf("\n |--------------------------------------------------------------------------------------------------------------------|");
     }
@@ -385,6 +401,7 @@ void decl_def_proc(){
         ts.Linhas[ts.topo].dim01 = 0;
         ts.Linhas[ts.topo].dim02 = 0;
         ts.Linhas[ts.topo].eh_const = NAO;
+        strcpy(ts.Linhas[ts.topo].rotulo, gerarRotulo());
 
         tk = analise_lexica(fd);
         if(tk.cat == PVR && strcmp(tk.lexema, "init") == 0)
@@ -394,6 +411,7 @@ void decl_def_proc(){
                 error("O init ja foi declarado! ");
             }
             strcpy(ts.Linhas[ts.topo].lexema, tk.lexema);
+
             ts.topo++;
             tk = analise_lexica(fd);
         }

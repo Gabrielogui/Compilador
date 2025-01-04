@@ -2,77 +2,78 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="anasint.c" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="codigo.txt" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="63173" topLine="43" />
+			<Cursor1 position="359" topLine="9" />
 		</Cursor>
-		<Folding>
-			<Collapse line="22" />
-			<Collapse line="40" />
-			<Collapse line="62" />
-			<Collapse line="88" />
-			<Collapse line="95" />
-			<Collapse line="108" />
-			<Collapse line="114" />
-			<Collapse line="137" />
-			<Collapse line="147" />
-			<Collapse line="365" />
-			<Collapse line="375" />
-			<Collapse line="636" />
-			<Collapse line="642" />
-			<Collapse line="661" />
-			<Collapse line="681" />
-			<Collapse line="687" />
-			<Collapse line="694" />
-			<Collapse line="755" />
-			<Collapse line="961" />
-			<Collapse line="1119" />
-			<Collapse line="1232" />
-			<Collapse line="1323" />
-			<Collapse line="1335" />
-			<Collapse line="1339" />
-			<Collapse line="1351" />
-			<Collapse line="1363" />
-			<Collapse line="1375" />
-			<Collapse line="1387" />
-			<Collapse line="1403" />
-			<Collapse line="1419" />
-			<Collapse line="1435" />
-			<Collapse line="1451" />
-			<Collapse line="1458" />
-			<Collapse line="1541" />
-			<Collapse line="1583" />
-			<Collapse line="1638" />
-			<Collapse line="1678" />
-			<Collapse line="1751" />
-		</Folding>
 	</File>
 	<File name="anasint.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="131" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="analex.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="0" topLine="2" />
-		</Cursor>
-	</File>
-	<File name="codigo.txt" open="1" top="1" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="44" topLine="30" />
+			<Cursor1 position="2110" topLine="67" />
 		</Cursor>
 	</File>
 	<File name="analex.c" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="8584" topLine="240" />
+			<Cursor1 position="8584" topLine="431" />
 		</Cursor>
 		<Folding>
 			<Collapse line="17" />
 		</Folding>
 	</File>
-	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="analex.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="5381" topLine="13" />
+			<Cursor1 position="0" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="anasint.c" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2640" topLine="27" />
+		</Cursor>
+		<Folding>
+			<Collapse line="22" />
+			<Collapse line="40" />
+			<Collapse line="90" />
+			<Collapse line="97" />
+			<Collapse line="110" />
+			<Collapse line="116" />
+			<Collapse line="139" />
+			<Collapse line="149" />
+			<Collapse line="392" />
+			<Collapse line="402" />
+			<Collapse line="664" />
+			<Collapse line="670" />
+			<Collapse line="689" />
+			<Collapse line="709" />
+			<Collapse line="715" />
+			<Collapse line="722" />
+			<Collapse line="783" />
+			<Collapse line="988" />
+			<Collapse line="991" />
+			<Collapse line="1081" />
+			<Collapse line="1146" />
+			<Collapse line="1259" />
+			<Collapse line="1350" />
+			<Collapse line="1362" />
+			<Collapse line="1366" />
+			<Collapse line="1378" />
+			<Collapse line="1390" />
+			<Collapse line="1402" />
+			<Collapse line="1414" />
+			<Collapse line="1430" />
+			<Collapse line="1446" />
+			<Collapse line="1462" />
+			<Collapse line="1478" />
+			<Collapse line="1485" />
+			<Collapse line="1568" />
+			<Collapse line="1610" />
+			<Collapse line="1665" />
+			<Collapse line="1705" />
+			<Collapse line="1778" />
+		</Folding>
+	</File>
+	<File name="main.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="5381" topLine="0" />
 		</Cursor>
 		<Folding>
 			<Collapse line="29" />

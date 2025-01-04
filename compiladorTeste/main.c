@@ -9,6 +9,7 @@ FILE *fd;
 TOKEN tk;
 contLinhas = 1;
 lido = 0;
+qtdRotulo = 0;
 
 // |=======| DECLARA��O DAS FUN��ES |=======|
 void testarAnalex();
