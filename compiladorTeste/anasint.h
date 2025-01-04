@@ -88,8 +88,9 @@ void fator();
 void op_rel();
 
 // |=======| VARI�VEIS GLOBAIS |=======|
-extern TABELA_SIMBOLO ts;
-extern int qtdRotulo;
+extern TABELA_SIMBOLO ts; // TABELA DE SÍMBOLO
+extern int qtdRotulo;     // QUANTIDADE ROTULO
+extern FILE *mp;          // ARQUIVO DA MAQUINA DE PILHA
 //extern int lido;
 
 #endif // ANASINT_H_INCLUDED

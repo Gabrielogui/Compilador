@@ -10,6 +10,7 @@ TOKEN tk;
 contLinhas = 1;
 lido = 0;
 qtdRotulo = 0;
+FILE *mp;
 
 // |=======| DECLARA��O DAS FUN��ES |=======|
 void testarAnalex();
@@ -151,6 +152,11 @@ void testarAnasint(){
     if((fd = fopen("codigo.txt", "r")) == NULL){
         printf("\n[ERRO] - ERRO ao abrir o arquivo\n");
     }
+
+    if((mp = fopen("maquina_de_pilha.txt", "w")) == NULL){
+        printf("\n[ERRO] - ERRO ao abrir o arquivo da maquina de pilha\n");
+    }
+
     while(1){
         //mostrarTabelaDeSimbolos();
         if(tk.processado != 1)

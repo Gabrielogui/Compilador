@@ -1,64 +1,19 @@
-prot michele(char, real)
+char e, f // e -> 0, 0 ; 0, 1
 
-prot gabriel(int)
+def teste()
+    int a, b // a -> 1, 0 ; b -> 1, 1
+    int c
+    char d
 
-def michele(char d, real b)
+    while(a > b)
+    endw
+
+endp
+
+def h()
     int a
-    char c
-    do gabriel(a)
 endp
-
-def gabriel(int j)
-    int h
-    real c
-    //do michele(h, c, j)
-    c = 2.5
-endp
-
-def sla()
-    int j
-endp
-
-int a
 
 def init
-    int b, k
-    real h
-
-    if(b > k)
-
-    elif(b > k)
-
-        do michele('a', 1.2)
-
-    endi
-
-    while(k && b) endw
-
-    h = 5.22 + 5.2
-
-    b = 7 * 7 * 5 *  6 * 'c'
-
-   // c = 'c' + 'b' + 3
-
-    do michele('a', 1.2)
-
-    a[b] = 7
+    char r
 endp
-
-// TRATAR do michele('a', 1.2, 3)
-// REALIZAR UMA STRUCT EXPRESSÃO COM O SEU TIPO -
-// EXPRESSAO DENTRO DO COLCHETES DE UM ARRAY? 3.2.2.3 (SO ACEITA IDCONST OU INT) -
-// COMPARAÇÃO REAL COM INT TA FUNCIONANDO, É PARA SER ASSIM? EX: INT A; REAL B; A < B -> RESOLVIDO, MAS PERGUNTAR PARA O PROFESSOR
-// AND E OR NAO FUNCIONA SE FOREM DE TIPOS INCOMPATIVEIS
-// DT e TO em VAR expr1 menor/maior que expr2
-// procedimento chamado no corpo de outro -> prototipo obrigatorio?
-
-// duas variaveis com o mesmo nome
-// def michele(char a, real b)
-//    int a
-// endp
-
-
-
-// PARA CADA VARIÁVEL UM AMEM ASSOCIADO
