@@ -16,6 +16,7 @@ EXPRESSOES expressoes;
 
 // |=======| ENDERECO |=======|
 int qtdEndereco = -1;
+int qtdParametros = 0;
 
 int var_virg_aux = 0;
 int flag_endi = 0;
@@ -158,7 +159,8 @@ void prog(){
                 if(consulta == -1) printf("\n Codigo sem init! ");
                 else fprintf(mp, "CALL %s\n", ts.Linhas[consulta].rotulo);
 
-                fprintf(mp, "DMEM %d\n", qtdVarGlobais);
+                if(qtdVarGlobais > 0)
+                    fprintf(mp, "DMEM %d\n", qtdVarGlobais);
                 fprintf(mp, "HALT\n");
                 return;
             }
@@ -189,7 +191,7 @@ void prog(){
                 if(consulta == -1) printf("\n Codigo sem init! ");
                 else fprintf(mp, "CALL %s\n", ts.Linhas[consulta].rotulo);
 
-                fprintf(mp, "DMEM %d\n", qtdVarGlobais);
+                if(qtdVarGlobais > 0) fprintf(mp, "DMEM %d\n", qtdVarGlobais);
                 fprintf(mp, "HALT\n");
                 return;
             }
@@ -438,7 +440,7 @@ void decl_def_proc(){
     }
     else if(strcmp(tk.lexema, "def") == 0)
     {
-        int qtdParametros = 0;
+
 
         ts.Linhas[ts.topo].escopo = GLOBAL;
         ts.Linhas[ts.topo].tipo = NA_TIPO;
@@ -783,7 +785,9 @@ void decl_def_proc(){
 
         if(tk.cat == PVR && strcmp(tk.lexema, "endp") == 0)
         {
-            fprintf(mp, "DMEM %d\n", qtdEndereco);
+            qtdParametros = 0;
+            if(qtdEndereco > 0) fprintf(mp, "DMEM %d\n", qtdEndereco);
+
             fprintf(mp, "RET 1, %d\n", qtdParametros);
             excluirTabelaDeSimbolos();
         }
@@ -1522,7 +1526,7 @@ void cmd()
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "getout") == 0)
     {
-        pass; // TALVEZ ALGO AQUI
+        fprintf(mp, "RET 1, %d\n", qtdParametros);
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "getint") == 0)
     {
@@ -1957,7 +1961,7 @@ void termo(){
 
         if(op == MULTIPLICACAO) fprintf(mp, "MULT\n");
         if(op == DIVISAO) fprintf(mp, "DIV\n");
-        if(op == AND) fprintf(mp, "LABEL %s", L01);
+        if(op == AND) fprintf(mp, "LABEL %s\n", L01);
 
         if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR){
             if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;

@@ -1,25 +1,10 @@
-char e , f , g  // e -> 0, 0 ; f -> 0, 1 ; g -> 0, 2
-int h , i , j      // h -> 0, 3 ; i -> 0, 4 ; j -> 0, 5
-//const int l[2] = {5, 6}, k = 1
+def teste()
 
-//int m[3] = {1, 2, 3}
-
-def teste(char jota, char g[2], char l)
-    int a = 1, b  // a -> 1, 0 ; b -> 1, 1
-
-    while(a < b && a)
-    endw
-
-endp
-
-def h()
-
+getout
 endp
 
 def init
-    char r
+
+do teste()
+
 endp
-// LABEL L0
-// CALL LABEL DO INIT
-// DMEM QTD VARIAVEIS GLOBAIS
-// HALT
