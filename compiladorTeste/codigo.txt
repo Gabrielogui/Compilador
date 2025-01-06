@@ -6,18 +6,14 @@ int h , i , j      // h -> 0, 3 ; i -> 0, 4 ; j -> 0, 5
 
 def teste(char jota, char g[2], char l)
     int a = 1, b  // a -> 1, 0 ; b -> 1, 1
-    int c
-    char d = 'b'
-    c = 23
 
-    while(a < b)
+    while(a < b && a)
     endw
 
 endp
 
 def h()
-    char lon
-    do teste(e, lon, f)
+
 endp
 
 def init

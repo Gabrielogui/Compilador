@@ -1777,8 +1777,8 @@ void expr()
             case MENOR_OU_IGUAL:
                 fprintf(mp ,"SUB\n");
                 fprintf(mp ,"GOTRUE %s\n", L01);
-                fprintf(mp ,"PUSH 1");
-                fprintf(mp ,"GOTO %s", L02);
+                fprintf(mp ,"PUSH 1\n");
+                fprintf(mp ,"GOTO %s\n", L02);
                 fprintf(mp ,"LABEL %s\n", L01);
                 fprintf(mp ,"PUSH 0\n");
                 fprintf(mp ,"LABEL %s\n", L02);
@@ -1877,6 +1877,8 @@ void expr_simp(){
             tk = analise_lexica(fd);
         }
 
+        termo();
+
         char L01[8];
 
         if(op == OR){
@@ -1885,8 +1887,6 @@ void expr_simp(){
             fprintf(mp, "GOTRUE %s\n", L01);
             fprintf(mp, "POP\n");
         }
-
-        termo();
 
         switch(op){
             case ADICAO:
@@ -1944,6 +1944,8 @@ void termo(){
             tk = analise_lexica(fd);
         }
 
+        fator();
+
         char L01[8];
 
         if(op == AND){
@@ -1952,8 +1954,6 @@ void termo(){
             fprintf(mp, "GOFALSE %s\n", L01);
             fprintf(mp, "POP\n");
         }
-
-        fator();
 
         if(op == MULTIPLICACAO) fprintf(mp, "MULT\n");
         if(op == DIVISAO) fprintf(mp, "DIV\n");
