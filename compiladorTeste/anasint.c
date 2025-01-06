@@ -911,7 +911,6 @@ void decl_var(){
 
     strcpy(ts.Linhas[ts.topo].lexema, tk.lexema); // COLOCAR IDENTIFICADOR NA TABELA DE S�MBOLO
 
-
     tk = analise_lexica(fd);
     if(tk.cat == SN && tk.codigo == ATRIBUICAO){
         tk = analise_lexica(fd);
@@ -1075,6 +1074,8 @@ void decl_var(){
                     }else{
                         error("Tem que vir '{' apos atribuicao");
                     }
+                }else{
+                    if(ts.Linhas[ts.topo].eh_const == SIM) error("Toda constante array precisa ser atribuida! \t");
                 }
 
             }else{
@@ -1082,6 +1083,29 @@ void decl_var(){
             }
         }else{
             error("Tem que ser inteiro ou constante apos '['");
+        }
+
+    }else{
+        if(ts.Linhas[ts.topo].eh_const == SIM) error("Toda constante escalar precisa ser atribuida! \t");
+        else{
+            if(ts.Linhas[ts.topo].tipo == INT_TIPO){
+                fprintf("PUSH 0\n");
+                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf("STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+                else fprintf("STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+            }else if(ts.Linhas[ts.topo].tipo == CHAR_TIPO){
+                fprintf("PUSH \0\n");
+                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf("STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+                else fprintf("STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+            }else if(ts.Linhas[ts.topo].tipo == REAL_TIPO){
+                fprintf("PUSH 0.0\n");
+                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf("STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+                else fprintf("STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+            }else if(ts.Linhas[ts.topo].tipo == BOOL_TIPO){
+                fprintf("PUSH 0\n");
+                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf("STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+                else fprintf("STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+            }
+
         }
 
     }

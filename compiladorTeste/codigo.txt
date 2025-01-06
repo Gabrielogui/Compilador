@@ -1,6 +1,6 @@
 char e , f , g  // e -> 0, 0 ; f -> 0, 1 ; g -> 0, 2
 int h , i , j      // h -> 0, 3 ; i -> 0, 4 ; j -> 0, 5
-const int l, k
+const int l[2], k = 1
 
 def teste(char jota, char g, char l)
     int a = 1, b  // a -> 1, 0 ; b -> 1, 1
