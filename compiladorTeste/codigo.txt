@@ -1,10 +1,5 @@
-def teste()
-
-getout
-endp
-
 def init
-
-do teste()
-
+    int a, b, c
+    while(a == 2)
+    endw
 endp

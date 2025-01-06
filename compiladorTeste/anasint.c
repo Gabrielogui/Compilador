@@ -878,7 +878,6 @@ void decl_list_var(){
         ts.topo++;
         tk.processado = 1;
     }
-    fprintf(mp, "AMEM %d\n", qtdAmem);
 
 }
 
@@ -919,6 +918,8 @@ void decl_var(){
             error("Variavel com esse nome ja foi declarada! ");
         }else if(ts.Linhas[consulta].zumbi == VIVO) error("Parametro ja declarado! ");
     }
+
+    fprintf(mp, "AMEM 1\n");
 
     strcpy(ts.Linhas[ts.topo].lexema, tk.lexema); // COLOCAR IDENTIFICADOR NA TABELA DE S�MBOLO
 
@@ -1243,7 +1244,13 @@ void cmd()
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "while") == 0)
     {
-        fprintf(mp, "LABEL %s\n", gerarRotulo());
+        char L01[8];
+        char L02[8];
+
+        strcpy(L01, gerarRotulo());
+        strcpy(L02, gerarRotulo());
+
+        fprintf(mp, "LABEL %s\n", L01);
         tk = analise_lexica(fd);
 
         if(tk.cat == SN && tk.codigo == ABRE_PAR)
@@ -1302,6 +1309,9 @@ void cmd()
             {
                 error("')' esperado!");
             }
+            fprintf(mp, "GOFALSE %s\n", L02);
+            fprintf(mp, "GOTO %s\n", L01);
+            fprintf(mp, "LABEL %s\n", L02);
         }
         else
         {
@@ -1310,9 +1320,8 @@ void cmd()
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "var") == 0)
     {
-      //  printf("\n 90 %d | %s", tk.codigo, tk.lexema);
         tk = analise_lexica(fd);
-      //  printf("\n 91 %d | %s", tk.codigo, tk.lexema);
+
         if(tk.cat == ID)
         {
             int consulta = consultaTabelaDeSimbolos(tk.lexema);
@@ -1324,44 +1333,80 @@ void cmd()
                 error("Identificador do var precisa ser uma variavel ou parametro! ");
             }
 
+            if(ts.Linhas[consulta].tipo != INT_TIPO) error("[ERRO] <-+-> O IDENTIFICADOR DO VAR PRECISA SER INTEIRO! ");
+
+            char L01[8];
+            strcpy(L01, gerarRotulo());
+            fprintf(mp, "LABEL %s\n", L01);
+
             tk = analise_lexica(fd);
-        //    printf("\n 92 %d | %s", tk.codigo, tk.lexema);
             if(tk.cat == PVR && strcmp(tk.lexema, "from") == 0)
             {
-         //       printf("\n 921 %d | %s", tk.codigo, tk.lexema);
                 tk = analise_lexica(fd); // TALVEZ NAO TENHA
-          //      printf("\n 93 %d | %s", tk.codigo, tk.lexema);
                 expr();
-          //      printf("\n 94 %d | %s", tk.codigo, tk.lexema);
+
+                if(expressoes.expressao[expressoes.topo].tipoExpr != INT_EXPR) error(">ERRO< >VALOR INTEIRO ESPERADO NA EXPRESSÃO 01<");
+
                 if(tk.processado != 1)
                 {
                     tk = analise_lexica(fd);
                     tk.processado = 0;
                 }
-         //       printf("\n 95 %d | %s", tk.codigo, tk.lexema);
                 if(tk.cat == PVR && ((strcmp(tk.lexema, "to") == 0) || (strcmp(tk.lexema, "dt") == 0)))
                 {
-           //         printf("\n 951 %d | %s", tk.codigo, tk.lexema);
+                    int flagVar;
+                    if(strcmp(tk.lexema, "to") == 0) flagVar = 1;
+                    else if(strcmp(tk.lexema, "dt") == 0) flagVar = 0;
+
                     tk = analise_lexica(fd); // TALVEZ NAO TENHA
-           //         printf("\n 96 %d | %s", tk.codigo, tk.lexema);
+
                     expr();
-            //        printf("\n 97 %d | %s", tk.codigo, tk.lexema);
+
+                    if(expressoes.expressao[expressoes.topo].tipoExpr != INT_EXPR) error(">ERRO< >VALOR INTEIRO ESPERADO NA EXPRESSÃO 02<");
+
+                    char L02[8], L03[8], L04[8];
+                    strcpy(L02, gerarRotulo());
+                    strcpy(L03, gerarRotulo());
+                    strcpy(L04, gerarRotulo());
+
+                    if(flagVar == 1){
+                        fprintf(mp, "SUB\n");
+                        fprintf(mp, "COPY\n");
+                        fprintf(mp, "GOTRUE %s\n", L02);
+                        fprintf(mp, "GOFALSE %s\n", L03);
+                        fprintf(mp, "PUSH 1\n");
+                        fprintf(mp, "GOTO\n");
+                        fprintf(mp, "LABEL %s\n", L02);
+                        fprintf(mp, "POP\n");
+                        fprintf(mp, "LABEL %s\n", L03);
+                        fprintf(mp, "PUSH 0\n");
+                        fprintf(mp, "LABEL %s\n", L04);
+                    }else{
+                        fprintf(mp ,"SUB\n");
+                        fprintf(mp ,"GOTRUE %s\n", L02);
+                        fprintf(mp ,"PUSH 0\n");
+                        fprintf(mp ,"GOTO %s\n", L03);
+                        fprintf(mp ,"LABEL %s\n", L02);
+                        fprintf(mp ,"PUSH 1\n");
+                        fprintf(mp ,"LABEL %s\n", L03);
+                    }
+
                     if(tk.processado != 1)
                     {
                         tk = analise_lexica(fd);
                         tk.processado = 0;
                     }
-            //        printf("\n 971 %d | %s", tk.codigo, tk.lexema);
+
                     if(tk.cat == PVR && strcmp(tk.lexema, "by") == 0)
                     {
-             //           printf("\n 972 %d | %s", tk.codigo, tk.lexema);
+
                         tk = analise_lexica(fd);
-             //           printf("\n 98 %d | %s", tk.codigo, tk.lexema);
+
                         if(tk.cat == CT_I || tk.cat == ID)
                         {
-              //              printf("\n 981 %d | %s", tk.codigo, tk.lexema);
+
                             if(tk.cat == ID){
-                          //      printf("\n 99 %d | %s", tk.codigo, tk.lexema);
+
                                 int topoAux1 = ts.topo;
                                 int strcmp_aux1 = 0;
                                 while(topoAux1 >= 0){
@@ -1379,13 +1424,22 @@ void cmd()
                                     }
                                     topoAux1--;
                                 }
+
+
+                                for(int i = 0 ; i < ts.Linhas[topoAux1].constInt ; i = i + ts.Linhas[topoAux1].constInt)
+                                if(ts.Linhas[topoAux1].escopo == GLOBAL) fprintf(mp, "LOAD 0, %d", ts.Linhas[topoAux1].endereco);
+                                else fprintf(mp, "LOAD 1, %d", ts.Linhas[topoAux1].endereco);
+
                                 if(topoAux1 < 0 && strcmp_aux1 == 0){
                                     error("A constante nao eh compativel");
                                 }
+                            }else{
+                                fprintf(mp, "PUSH %d\n", tk.valor_i);
                             }
-                       //     printf("\n 100 %d | %s", tk.codigo, tk.lexema);
+
+                            fprintf(mp, "ADD\n");
                             tk = analise_lexica(fd);
-                        //    printf("\n 101 %d | %s", tk.codigo, tk.lexema);
+
                         }
                         else
                         {
@@ -1427,6 +1481,10 @@ void cmd()
         tk = analise_lexica(fd);
         if(tk.cat == SN && tk.codigo == ABRE_PAR) pass;
         else error("Abre Parentese - '(' Esperado no if! ");
+
+        char L01[8];
+        strcpy(L01, gerarRotulo());
+        fprintf(mp, "LABEL %s\n", L01);
 
         tk = analise_lexica(fd);
         expr();
@@ -1533,7 +1591,10 @@ void cmd()
         tk = analise_lexica(fd);
         if(tk.cat == ID)
         {
-            pass; // TALVEZ ALGO AQUI
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+            if(ts.Linhas[consulta].tipo != INT_TIPO) error("[ERRO] <=> PRECISA SER CHAR APOS GETCINT :D!");
+
+            fprintf(mp, "GET_I\n");
         }
         else
         {
@@ -1545,7 +1606,10 @@ void cmd()
         tk = analise_lexica(fd);
         if(tk.cat == ID)
         {
-            pass; // TALVEZ ALGO AQUI
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+            if(ts.Linhas[consulta].tipo != REAL_TIPO) error("[ERRO] <=> PRECISA SER REAL APOS GETCHAR :D!");
+
+            fprintf(mp, "GET_F\n");
         }
         else
         {
@@ -1557,7 +1621,11 @@ void cmd()
         tk = analise_lexica(fd);
         if(tk.cat == ID)
         {
-            pass; // TALVEZ ALGO AQUI
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+            if(ts.Linhas[consulta].tipo != CHAR_TIPO) error("[ERRO] <=> PRECISA SER CHAR APOS GETCHAR :D!");
+
+            fprintf(mp, "GET_C\n");
+
         }
         else
         {
@@ -1569,7 +1637,13 @@ void cmd()
         tk = analise_lexica(fd);
         if(tk.cat == ID)
         {
-            pass; // TALVEZ ALGO AQUI
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+
+            if(ts.Linhas[consulta].tipo != CHAR_TIPO && ts.Linhas[consulta].isArray != VETOR) error("[ERRO] <=> GETSTR PRECISA TER IDENTIFICADOR STRING!");
+
+            for(int i = 0 ; i < ts.Linhas[consulta].dim01 ; i++){
+                fprintf(mp, "GET_C\n");
+            }
         }
         else
         {
@@ -1581,59 +1655,86 @@ void cmd()
         tk = analise_lexica(fd);
         if(tk.cat == ID)
         {
-            pass; // TALVEZ ALGO AQUI
-        }
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+
+            if(ts.Linhas[consulta].tipo != INT_TIPO) error("[ERRO] <+> APENAS INT E ACEITO NO PUTREAL! \t");
+
+            if(ts.Linhas[consulta].escopo == GLOBAL) fprintf(mp, "LOAD 0, %d\n", ts.Linhas[consulta].endereco);
+            else fprintf(mp, "LOAD 1, %d\n", ts.Linhas[consulta].endereco);
+                   }
         else if(tk.cat == CT_I)
         {
-            pass; // TALVEZ ALGO AQUI
-        }
+            fprintf(mp, "PUSH %d\n", tk.valor_i);        }
         else
         {
             error("identificador ou inteiro esperado!");
         }
+        fprintf(mp, "PUT_I\n");
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "putreal") == 0)
     {
         tk = analise_lexica(fd);
         if(tk.cat == ID)
         {
-            pass; // TALVEZ ALGO AQUI
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+            if(ts.Linhas[consulta].tipo != REAL_TIPO) error("[ERRO] <+> APENAS REAL E ACEITO NO PUTREAL! \t");
+
+            if(ts.Linhas[consulta].escopo == GLOBAL) fprintf(mp, "LOAD 0, %d\n", ts.Linhas[consulta].endereco);
+            else fprintf(mp, "LOAD 1, %d\n", ts.Linhas[consulta].endereco);
         }
         else if(tk.cat == CT_R)
         {
-            pass; // TALVEZ ALGO AQUI
+            fprintf(mp, "PUSHF %f\n", tk.valor_r);
+
         }
         else
         {
             error("identificador ou real esperado!");
         }
+        fprintf(mp, "PUT_F\n");
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "putchar") == 0)
     {
         tk = analise_lexica(fd);
         if(tk.cat == ID)
         {
-            pass; // TALVEZ ALGO AQUI
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+
+            if(ts.Linhas[consulta].tipo != CHAR_TIPO) error("[ERRO] <+> APENAS CHAR E ACEITO NO PUTREAL! \t");
+
+            if(ts.Linhas[consulta].escopo == GLOBAL) fprintf(mp, "LOAD 0, %d\n", ts.Linhas[consulta].endereco);
+            else fprintf(mp, "LOAD 1, %d\n", ts.Linhas[consulta].endereco);
         }
         else if(tk.cat == CT_C)
         {
-            pass; // TALVEZ ALGO AQUI
+            fprintf(mp, "PUSH %c\n", tk.c);
         }
         else
         {
             error("identificador ou char esperado!");
         }
+        fprintf(mp, "PUT_C\n");
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "putstr") == 0)
     {
         tk = analise_lexica(fd);
         if(tk.cat == ID)
         {
-            pass; // TALVEZ ALGO AQUI
+            int consulta = consultaTabelaDeSimbolos(tk.lexema);
+
+            if(ts.Linhas[consulta].tipo != CHAR_TIPO && ts.Linhas[consulta].isArray != VETOR) error("[ERRO] <+> GETSTR ACEITA APENAS STRING!");
+
+            // FAZER LOAD NA STRING
+
+            for(int i = 0 ; i < ts.Linhas[consulta].dim01 ; i++){
+                fprintf(mp, "PUT_C\n");
+            }
         }
         else if(tk.cat == CT_S)
         {
-            pass; // TALVEZ ALGO AQUI
+            for(int i = 0 ; i < strlen(tk.lexema) ; i++){
+                fprintf(mp, "PUT_C\n");
+            }
         }
         else
         {
