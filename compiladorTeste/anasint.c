@@ -452,6 +452,7 @@ void decl_def_proc(){
         strcpy(ts.Linhas[ts.topo].rotulo, gerarRotulo());
 
         fprintf(mp, "LABEL %s\n", ts.Linhas[ts.topo].rotulo);
+        fprintf(mp, "INIPR 1\n");
 
         tk = analise_lexica(fd);
         if(tk.cat == PVR && strcmp(tk.lexema, "init") == 0)
@@ -583,9 +584,15 @@ void decl_def_proc(){
                         tk = analise_lexica(fd);
                         if(tk.cat == SN && tk.codigo == ABRE_COLCHETES)
                         {
-                           tk = analise_lexica(fd);
-                           if(tk.cat == ID) // BUSCA DO DIM01 CASO SEJA CONSTANTE
-                           {
+
+                            if(ts.Linhas[ts.topo].passagem == REFERENCIA)
+                                error("Array nao deve ter '&'. Ele ja e passado como referencia automaticamente! ");
+
+                            ts.Linhas[ts.topo].passagem = REFERENCIA; // TODO ARRAY DEVE SER POR REFERÊNCIA
+
+                            tk = analise_lexica(fd);
+                            if(tk.cat == ID) // BUSCA DO DIM01 CASO SEJA CONSTANTE
+                            {
 
 
 
@@ -930,7 +937,7 @@ void decl_var(){
                 ts.Linhas[ts.topo].constReal = tk.valor_r;
             }
 
-            fprintf(mp, "PUSH %r\n", tk.valor_r);
+            fprintf(mp, "PUSHF %r\n", tk.valor_r);
             if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf(mp, "STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
             else fprintf(mp, "STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
 
@@ -971,16 +978,16 @@ void decl_var(){
 
             if(tk.cat == ID){ // BUSCA DO DIM01 CASO SEJA CONSTANTE
                 int a = consultaTabelaDeSimbolos(tk.lexema);
-                if(a == -1) error("Constante nao eh compativel");
+                if(a == -1) error("Constante nao foi declarda! \t");
                 if(ts.Linhas[a].eh_const == SIM){
                     if(ts.Linhas[a].tipo == INT_TIPO){
                         ts.Linhas[ts.topo].dim01 = ts.Linhas[a].constInt;
 
                     }else{
-                        error("A constante nao eh compativel");
+                        error("A constante nao eh compativel - constante nao e inteira! \t");
                     }
                 }else{
-                    error("A constante nao eh compativel");
+                    error("O identificador nao e constante! \t");
                 }
             }else{
                 ts.Linhas[ts.topo].dim01 = tk.valor_i;
@@ -1044,15 +1051,24 @@ void decl_var(){
 
 
                 if(tk.cat == SN && tk.codigo == ATRIBUICAO){
+                    int contAtribuicaoArray = 0;
+
                     tk = analise_lexica(fd);
                     if(tk.cat == SN && tk.codigo == ABRE_CHAVES){
+
                         tk = analise_lexica(fd);
+
                         if(!((tk.cat == CT_I ) || (tk.cat == CT_C ) || (tk.cat == CT_R ))){
-                            error("Valor esperado! ");
+                            error("Valor esperado - int, char ou real! ");
                         }
+
+                        contAtribuicaoArray++;
+
                         while(1){
+
                             tk = analise_lexica(fd);
                             if((tk.cat == SN) && (tk.codigo == VIRGULA)){
+                                contAtribuicaoArray++; // CONTANDO QUANTOS ELEMENTOS FOI COLOCADO
                                 tk = analise_lexica(fd);
                                 if(!((tk.cat == CT_I ) || (tk.cat == CT_C ) || (tk.cat == CT_R ))){
                                     error("Valor esperado! ");
@@ -1069,6 +1085,12 @@ void decl_var(){
 
                         }
 
+                        if(ts.Linhas[ts.topo].isArray == VETOR){
+                            if(ts.Linhas[ts.topo].dim01 < contAtribuicaoArray) error("Numero de elementos incoerente com o passado no Vetor! \t");
+                        }else if(ts.Linhas[ts.topo].isArray == MATRIZ){
+                            int qtdAtribuicaoMatriz = ts.Linhas[ts.topo].dim01 * ts.Linhas[ts.topo].dim02;
+                            if(qtdAtribuicaoMatriz < contAtribuicaoArray) error("Numero de elementos incoerente com o passado na Matriz! \t");
+                        }
 
 
                     }else{
@@ -1089,21 +1111,21 @@ void decl_var(){
         if(ts.Linhas[ts.topo].eh_const == SIM) error("Toda constante escalar precisa ser atribuida! \t");
         else{
             if(ts.Linhas[ts.topo].tipo == INT_TIPO){
-                fprintf("PUSH 0\n");
-                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf("STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
-                else fprintf("STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+                fprintf(mp, "PUSH 0\n");
+                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf(mp, "STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+                else fprintf(mp, "STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
             }else if(ts.Linhas[ts.topo].tipo == CHAR_TIPO){
-                fprintf("PUSH \0\n");
-                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf("STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
-                else fprintf("STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+                fprintf(mp, "PUSH %c\n", '\0');
+                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf(mp, "STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+                else fprintf(mp, "STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
             }else if(ts.Linhas[ts.topo].tipo == REAL_TIPO){
-                fprintf("PUSH 0.0\n");
-                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf("STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
-                else fprintf("STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+                fprintf(mp, "PUSH 0.0\n");
+                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf(mp, "STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+                else fprintf(mp, "STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
             }else if(ts.Linhas[ts.topo].tipo == BOOL_TIPO){
-                fprintf("PUSH 0\n");
-                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf("STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
-                else fprintf("STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
+                fprintf(mp, "PUSH 0\n");
+                if(ts.Linhas[ts.topo].escopo == GLOBAL) fprintf(mp, "STOR 0, %d\n", ts.Linhas[ts.topo].endereco);
+                else fprintf(mp, "STOR 1, %d\n", ts.Linhas[ts.topo].endereco);
             }
 
         }
@@ -1139,6 +1161,8 @@ void cmd()
             if(ts.Linhas[consulta].categoria != PROCEDIMENTO && ts.Linhas[consulta].categoria != PROTOTIPO){
                 error("Identificador nao eh um procedimento ou prototipo");
             }
+
+            fprintf(mp, "CALL %s\n", ts.Linhas[consulta].rotulo);
 
             tk = analise_lexica(fd);
 
@@ -1926,7 +1950,7 @@ void termo(){
             strcpy(L01, gerarRotulo());
             fprintf(mp, "COPY\n");
             fprintf(mp, "GOFALSE %s\n", L01);
-            fprintf(mp, "POP");
+            fprintf(mp, "POP\n");
         }
 
         fator();
@@ -1968,8 +1992,10 @@ void fator(){
         expressoes.topo++;
         expressoes.expressao[expressoes.topo].tipoExpr = ts.Linhas[consulta].tipo;
 
-        tk = analise_lexica(fd);
+        if(ts.Linhas[consulta].escopo == GLOBAL) fprintf(mp, "LOAD 0, %d\n", ts.Linhas[consulta].endereco);
+        else fprintf(mp, "LOAD 1, %d\n", ts.Linhas[consulta].endereco);
 
+        tk = analise_lexica(fd);
 
         // SUPER WHILE
         while(tk.cat != CT_I && tk.cat != CT_R && tk.cat != CT_C && tk.codigo != ABRE_PAR && tk.codigo != FECHA_PAR &&
@@ -2012,18 +2038,27 @@ void fator(){
     {
         expressoes.topo++;
         expressoes.expressao[expressoes.topo].tipoExpr = INT_EXPR;
+
+       fprintf(mp, "PUSH %d\n", tk.valor_i);
+
         tk = analise_lexica(fd);
     }
     else if(tk.cat == CT_R)
     {
         expressoes.topo++;
         expressoes.expressao[expressoes.topo].tipoExpr = REAL_EXPR;
+
+        fprintf(mp, "PUSHF %f\n", tk.valor_r);
+
         tk = analise_lexica(fd);
     }
     else if(tk.cat == CT_C)
     {
         expressoes.topo++;
         expressoes.expressao[expressoes.topo].tipoExpr = CHAR_EXPR;
+
+        fprintf(mp, "PUSH %c\n", tk.c);
+
         tk = analise_lexica(fd);
     }
     else if(tk.cat == SN && tk.codigo == ABRE_PAR)
