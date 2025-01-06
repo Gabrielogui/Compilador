@@ -1,12 +1,17 @@
 char e , f , g  // e -> 0, 0 ; f -> 0, 1 ; g -> 0, 2
 int h , i , j      // h -> 0, 3 ; i -> 0, 4 ; j -> 0, 5
+const int l, k
 
 def teste(char jota, char g, char l)
     int a = 1, b  // a -> 1, 0 ; b -> 1, 1
     int c
     char d = 'b'
 
-    while(a > b)
+
+
+    c = 23
+
+    while(a < b)
     endw
 
 endp

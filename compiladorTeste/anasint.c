@@ -1639,6 +1639,9 @@ void atrib(int consulta)
 
         expr();
 
+        if(ts.Linhas[consulta].escopo == GLOBAL) fprintf(mp, "STOR 0, %d\n", ts.Linhas[consulta].endereco);
+        else fprintf(mp, "STOR 1, %d\n", ts.Linhas[consulta].endereco);
+
         if(ts.Linhas[consulta].tipo == INT_TIPO){
             if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR ){
                  expressoes.expressao[expressoes.topo].tipoExpr = INT_EXPR;
@@ -1691,10 +1694,87 @@ void expr()
     if(tk.cat == SN && (tk.codigo == COMPARACAO || tk.codigo == DIFERENTE || tk.codigo == MENOR_OU_IGUAL
     || tk.codigo == MENOR_QUE || tk.codigo == MAIOR_OU_IGUAL || tk.codigo == MAIOR_QUE))
     {
+
+        int op = tk.codigo; // a < b
+
+        char L01[8];
+        char L02[8];
+        strcpy(L01, gerarRotulo());
+        strcpy(L02, gerarRotulo());
+
         boolFlag = 1;
         tk = analise_lexica(fd);
 
         expr_simp();
+
+        switch(op){ // A + 40 - J < B
+            case COMPARACAO:
+                fprintf(mp ,"SUB\n");
+                fprintf(mp, "GOFALSE %s\n", L01);
+                fprintf(mp, "PUSH 0\n");
+                fprintf(mp, "GOTO %s\n", L02);
+                fprintf(mp ,"LABEL %s\n", L01);
+                fprintf(mp ,"PUSH 1\n");
+                fprintf(mp ,"LABEL %s\n", L02);
+                break;
+            case DIFERENTE:
+                fprintf(mp ,"SUB\n");
+                fprintf(mp, "GOFALSE %s\n", L01);
+                fprintf(mp, "PUSH 1\n");
+                fprintf(mp, "GOTO %s\n", L02);
+                fprintf(mp ,"LABEL %s\n", L01);
+                fprintf(mp ,"PUSH 0\n");
+                fprintf(mp ,"LABEL %s\n", L02);
+                break;
+            case MENOR_OU_IGUAL:
+                fprintf(mp ,"SUB\n");
+                fprintf(mp ,"GOTRUE %s\n", L01);
+                fprintf(mp ,"PUSH 1");
+                fprintf(mp ,"GOTO %s", L02);
+                fprintf(mp ,"LABEL %s\n", L01);
+                fprintf(mp ,"PUSH 0\n");
+                fprintf(mp ,"LABEL %s\n", L02);
+                break;
+            case MENOR_QUE:
+                fprintf(mp ,"SUB\n"); // a < b -> a - b < 0
+                fprintf(mp, "COPY\n");
+                fprintf(mp ,"GOTRUE %s\n", L01);
+                fprintf(mp ,"GOFALSE %s\n", L02);
+                fprintf(mp ,"PUSH 1\n");
+                char L03[8];
+                strcpy(L03, gerarRotulo());
+                fprintf(mp ,"GOTO %s\n", L03);
+                fprintf(mp ,"LABEL %s\n", L01);
+                fprintf(mp, "POP\n");
+                fprintf(mp, "LABEL %s\n", L02);
+                fprintf(mp ,"PUSH 0\n");
+                fprintf(mp ,"LABEL %s\n", L03);
+                break;
+            case MAIOR_OU_IGUAL:
+                fprintf(mp ,"SUB\n"); // a < b -> a - b < 0
+                fprintf(mp, "COPY\n");
+                fprintf(mp ,"GOTRUE %s\n", L01);
+                fprintf(mp ,"GOFALSE %s\n", L02);
+                fprintf(mp ,"PUSH 0\n");
+                char L03_[8];
+                strcpy(L03_, gerarRotulo());
+                fprintf(mp ,"GOTO %s\n", L03);
+                fprintf(mp ,"LABEL %s\n", L01);
+                fprintf(mp, "POP\n");
+                fprintf(mp, "LABEL %s\n", L02);
+                fprintf(mp ,"PUSH 1\n");
+                fprintf(mp ,"LABEL %s\n", L03);
+                break;
+            case MAIOR_QUE:
+                fprintf(mp ,"SUB\n");
+                fprintf(mp ,"GOTRUE %s\n", L01);
+                fprintf(mp ,"PUSH 0\n");
+                fprintf(mp ,"GOTO %s\n", L02);
+                fprintf(mp ,"LABEL %s\n", L01);
+                fprintf(mp ,"PUSH 1\n");
+                fprintf(mp ,"LABEL %s\n", L02);
+                break;
+        }
 
         if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR){
             if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
@@ -1709,6 +1789,10 @@ void expr()
             if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == BOOL_EXPR) pass;
             else error("Tipo Invalido na expr! bool so aceita int! ");
         }
+
+
+
+
     }
 
     if(boolFlag == 1){
@@ -1737,15 +1821,36 @@ void expr_simp(){
 
     while((tk.cat == SN && (tk.codigo == ADICAO || tk.codigo == SUBTRACAO || tk.codigo == OR )) /*|| (tk.cat == ID)*/)
     {
+        int op = tk.codigo;
+
         if(tk.cat == SN && (tk.codigo == ADICAO || tk.codigo == SUBTRACAO || tk.codigo == OR ))
         {
             if(tk.cat == SN && tk.codigo == OR) boolFlag = 1; // a + b && c - d || e * f
             tk = analise_lexica(fd);
         }
 
+        char L01[8];
 
+        if(op == OR){
+            strcpy(L01, gerarRotulo());
+            fprintf(mp, "COPY\n");
+            fprintf(mp, "GOTRUE %s\n", L01);
+            fprintf(mp, "POP\n");
+        }
 
         termo();
+
+        switch(op){
+            case ADICAO:
+                fprintf(mp, "ADD\n");
+                break;
+            case SUBTRACAO:
+                fprintf(mp, "SUB\n");
+                break;
+            case OR:
+                fprintf(mp, "LABEL %s\n", L01);
+                break;
+        }
 
         // a > b + 2 - 'x'
 
@@ -1782,13 +1887,29 @@ void termo(){
 
     while((tk.cat == SN && (tk.codigo == MULTIPLICACAO || tk.codigo == DIVISAO || tk.codigo == AND)) /*|| (tk.cat == ID)*/)
     {
+
+        int op = tk.codigo;
+
         if(tk.cat == SN && (tk.codigo == MULTIPLICACAO || tk.codigo == DIVISAO || tk.codigo == AND))
         {
             if(tk.cat == SN && tk.codigo == AND) boolFlag = 1;
             tk = analise_lexica(fd);
         }
 
+        char L01[8];
+
+        if(op == AND){
+            strcpy(L01, gerarRotulo());
+            fprintf(mp, "COPY\n");
+            fprintf(mp, "GOFALSE %s\n", L01);
+            fprintf(mp, "POP");
+        }
+
         fator();
+
+        if(op == MULTIPLICACAO) fprintf(mp, "MULT\n");
+        if(op == DIVISAO) fprintf(mp, "DIV\n");
+        if(op == AND) fprintf(mp, "LABEL %s", L01);
 
         if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR){
             if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
@@ -1803,14 +1924,7 @@ void termo(){
             if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == BOOL_EXPR) pass;
             else error("Tipo Invalido na expr! bool so aceita int! ");
         }
-
-        //expressoes.topo--; // DESTRUIR
-
-
-
     }
-
-
 
     tk.processado = 1;
 }
