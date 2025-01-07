@@ -1087,7 +1087,6 @@ void decl_var(){
                                 error("Fecha chaves ou virgula esperado");
                             }
 
-
                         }
 
                         if(ts.Linhas[ts.topo].isArray == VETOR){
@@ -1477,6 +1476,8 @@ void cmd()
     }
     else if(tk.cat == PVR && strcmp(tk.lexema, "if") == 0)
     {
+        //int flagGoto = 0;
+
         // TOKEN ESPERANDO O ABRE PARÊNTESE
         tk = analise_lexica(fd);
         if(tk.cat == SN && tk.codigo == ABRE_PAR) pass;
@@ -1484,10 +1485,14 @@ void cmd()
 
         char L01[8];
         strcpy(L01, gerarRotulo());
-        fprintf(mp, "LABEL %s\n", L01);
+
 
         tk = analise_lexica(fd);
         expr();
+
+        char L02[8];
+        strcpy(L02, gerarRotulo());
+        fprintf(mp, "GOFALSE %s", L02);
 
         // EXPRESSAO DO IF PRECISA SER BOOL
         if(expressoes.expressao[expressoes.topo].tipoExpr == BOOL_TIPO) pass;
@@ -1499,6 +1504,7 @@ void cmd()
 
         // LAÇO DO CMD '{cmd}'
         while(1){
+            //flagGoto = 1;
             // CONFERINDO SE ELE SAI DE CMD PROCESSADO (SE PEGOU O PRÓXIMO APÓS CMD)
             if(tk.processado != 1){
                 tk = analise_lexica(fd);
@@ -1510,39 +1516,52 @@ void cmd()
             cmd();
         }
 
+        fprintf(mp, "GOTO %s\n", L01);
+
         // LAÇO DO ELIF
-        while(tk.cat == PVR && strcmp(tk.lexema, "elif") == 0){
+        if(tk.cat == PVR && strcmp(tk.lexema, "elif") == 0){
+            fprintf(mp, "LABEL %s\n", L02);
+            while(tk.cat == PVR && strcmp(tk.lexema, "elif") == 0){
 
-            // TOKEN ESPERANDO O ABRE PARÊNTESE
-            tk = analise_lexica(fd);
-            if(tk.cat == SN && tk.codigo == ABRE_PAR) pass;
-            else error("Abre Parentese - '(' Esperado no elif! ");
-
-            tk = analise_lexica(fd);
-            expr();
-
-            // EXPRESSAO DO ELIF PRECISA SER BOOL
-            if(expressoes.expressao[expressoes.topo].tipoExpr == BOOL_TIPO) pass;
-            else error("Expressao do ELIF precisa ser do tipo booleano! ");
-
-            // TOKEN ESPERANDO O FECHA PARÊNTESE - APÓS 'expr()'
-            if(tk.cat == SN && tk.codigo == FECHA_PAR) tk.processado = 0;
-            else error("Fecha Parentese - ')' Esperado no elif! ");
-
-            while(1){
-            // CONFERINDO SE ELE SAI DE CMD PROCESSADO (SE PEGOU O PRÓXIMO APÓS CMD)
-            if(tk.processado != 1){
+                // TOKEN ESPERANDO O ABRE PARÊNTESE
                 tk = analise_lexica(fd);
-                tk.processado = 0;
+                if(tk.cat == SN && tk.codigo == ABRE_PAR) pass;
+                else error("Abre Parentese - '(' Esperado no elif! ");
+
+                tk = analise_lexica(fd);
+                expr();
+
+                char LZ[8];
+                strcpy(LZ, gerarRotulo());
+                fprintf(mp, "GOFALSE %s\n", LZ);
+
+                // EXPRESSAO DO ELIF PRECISA SER BOOL
+                if(expressoes.expressao[expressoes.topo].tipoExpr == BOOL_TIPO) pass;
+                else error("Expressao do ELIF precisa ser do tipo booleano! ");
+
+                // TOKEN ESPERANDO O FECHA PARÊNTESE - APÓS 'expr()'
+                if(tk.cat == SN && tk.codigo == FECHA_PAR) tk.processado = 0;
+                else error("Fecha Parentese - ')' Esperado no elif! ");
+
+                while(1){
+                // CONFERINDO SE ELE SAI DE CMD PROCESSADO (SE PEGOU O PRÓXIMO APÓS CMD)
+                if(tk.processado != 1){
+                    tk = analise_lexica(fd);
+                    tk.processado = 0;
+                }
+
+                // CONDIÇÕES PARA SAIR DO LAÇO
+                if(tk.cat == PVR && ((strcmp(tk.lexema, "elif") == 0) || (strcmp(tk.lexema, "else") == 0) || (strcmp(tk.lexema, "endi") == 0))) break;
+
+                cmd();
+
+                }
+                fprintf(mp, "GOTO %s\n", L01);
+                fprintf(mp, "LABEL %s\n", LZ);
+
             }
-
-            // CONDIÇÕES PARA SAIR DO LAÇO
-            if(tk.cat == PVR && ((strcmp(tk.lexema, "elif") == 0) || (strcmp(tk.lexema, "else") == 0) || (strcmp(tk.lexema, "endi") == 0))) break;
-
-            cmd();
-
-            }
-
+        }else{
+            fprintf(mp, "LABEL %s\n", L02);
         }
 
         // ELSE
@@ -1565,7 +1584,10 @@ void cmd()
             }
         }
 
-        if(tk.cat == PVR && strcmp(tk.lexema, "endi") == 0) tk.processado = 0;
+        if(tk.cat == PVR && strcmp(tk.lexema, "endi") == 0){
+            tk.processado = 0;
+            fprintf(mp, "LABEL %s\n", L01);
+        }
         else error("'endi' Esperado! ");
 
         // NÃO PRECISA PEGAR PRÓXIMO -> COLOCAR TK.PROCESSADO = 0

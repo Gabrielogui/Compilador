@@ -1,5 +1,15 @@
 def init
-    int a, b, c
-    while(a == 2)
-    endw
+    int a = 5
+    if(a == 2)
+        a = a + 1
+    elif(a == 5)
+        a = a + 6
+    elif(a == 10)
+        a = a + 7
+    else
+        a = a + 4
+    endi
 endp
+
+
+
