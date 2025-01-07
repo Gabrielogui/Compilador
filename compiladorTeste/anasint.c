@@ -18,6 +18,8 @@ EXPRESSOES expressoes;
 int qtdEndereco = -1;
 int qtdParametros = 0;
 
+int flagVar_ = 0;
+
 int var_virg_aux = 0;
 int flag_endi = 0;
 int boolFlag = 0;
@@ -128,6 +130,8 @@ void error(char msg[]) {
 
 // ======= PROG =======
 void prog(){
+
+    expressoes.expressao[expressoes.topo].result = 0;
 
     if(tk.processado != 1)
     {
@@ -1346,6 +1350,8 @@ void cmd()
 
                 if(expressoes.expressao[expressoes.topo].tipoExpr != INT_EXPR) error(">ERRO< >VALOR INTEIRO ESPERADO NA EXPRESSÃO 01<");
 
+                int expr01 = expressoes.expressao[expressoes.topo].result;
+
                 if(tk.processado != 1)
                 {
                     tk = analise_lexica(fd);
@@ -1363,31 +1369,33 @@ void cmd()
 
                     if(expressoes.expressao[expressoes.topo].tipoExpr != INT_EXPR) error(">ERRO< >VALOR INTEIRO ESPERADO NA EXPRESSÃO 02<");
 
+                    int expr02 = expressoes.expressao[expressoes.topo].result;
+
                     char L02[8], L03[8], L04[8];
                     strcpy(L02, gerarRotulo());
                     strcpy(L03, gerarRotulo());
                     strcpy(L04, gerarRotulo());
 
                     if(flagVar == 1){
-                        fprintf(mp, "SUB\n");
+                        fprintf(mp ,"SUB\n"); // a < b -> a - b < 0
                         fprintf(mp, "COPY\n");
-                        fprintf(mp, "GOTRUE %s\n", L02);
-                        fprintf(mp, "GOFALSE %s\n", L03);
-                        fprintf(mp, "PUSH 1\n");
-                        fprintf(mp, "GOTO\n");
-                        fprintf(mp, "LABEL %s\n", L02);
+                        fprintf(mp ,"GOTRUE %s\n", L02);
+                        fprintf(mp ,"GOFALSE %s\n", L03);
+                        fprintf(mp ,"PUSH 0\n");
+                        fprintf(mp ,"GOTO %s\n", L04);
+                        fprintf(mp ,"LABEL %s\n", L02);
                         fprintf(mp, "POP\n");
                         fprintf(mp, "LABEL %s\n", L03);
-                        fprintf(mp, "PUSH 0\n");
-                        fprintf(mp, "LABEL %s\n", L04);
+                        fprintf(mp ,"PUSH 1\n");
+                        fprintf(mp, "GOFALSE %s", L04);
                     }else{
                         fprintf(mp ,"SUB\n");
                         fprintf(mp ,"GOTRUE %s\n", L02);
-                        fprintf(mp ,"PUSH 0\n");
+                        fprintf(mp ,"PUSH 1\n");
                         fprintf(mp ,"GOTO %s\n", L03);
                         fprintf(mp ,"LABEL %s\n", L02);
-                        fprintf(mp ,"PUSH 1\n");
-                        fprintf(mp ,"LABEL %s\n", L03);
+                        fprintf(mp ,"PUSH 0\n");
+                        fprintf(mp, "GOFALSE %s", L03);
                     }
 
                     if(tk.processado != 1)
@@ -1424,25 +1432,63 @@ void cmd()
                                     topoAux1--;
                                 }
 
+                                if(flagVar == 1){
+                                    for(int i = 0 ; i <= expr01 - expr02 ; i = i + ts.Linhas[topoAux1].constInt){
+                                        if(ts.Linhas[topoAux1].escopo == GLOBAL) fprintf(mp, "LOAD 0, %d\n", ts.Linhas[topoAux1].endereco);
+                                        else fprintf(mp, "LOAD 1, %d\n", ts.Linhas[topoAux1].endereco);
+                                        fprintf(mp, "PUSH %d\n", tk.valor_i);
+                                        fprintf(mp, "ADD\n");
+                                    }
+                                }else{
+                                    for(int i = 0 ; i <= expr02 - expr01 ; i = i + ts.Linhas[topoAux1].constInt){
+                                        if(ts.Linhas[topoAux1].escopo == GLOBAL) fprintf(mp, "LOAD 0, %d\n", ts.Linhas[topoAux1].endereco);
+                                        else fprintf(mp, "LOAD 1, %d\n", ts.Linhas[topoAux1].endereco);
+                                        fprintf(mp, "PUSH %d\n", tk.valor_i);
+                                        fprintf(mp, "ADD\n");
+                                    }
+                                }
 
-                                for(int i = 0 ; i < ts.Linhas[topoAux1].constInt ; i = i + ts.Linhas[topoAux1].constInt)
-                                if(ts.Linhas[topoAux1].escopo == GLOBAL) fprintf(mp, "LOAD 0, %d", ts.Linhas[topoAux1].endereco);
-                                else fprintf(mp, "LOAD 1, %d", ts.Linhas[topoAux1].endereco);
+
 
                                 if(topoAux1 < 0 && strcmp_aux1 == 0){
                                     error("A constante nao eh compativel");
                                 }
                             }else{
-                                fprintf(mp, "PUSH %d\n", tk.valor_i);
+                              //  fprintf(mp, "PUSH %d\n", tk.valor_i);
+
+                                if(flagVar == 1){
+                                    for(int i = 0 ; i <= expr01 - expr02 ; i = i + tk.valor_i){
+                                        fprintf(mp, "PUSH %d\n", tk.valor_i);
+                                        fprintf(mp, "ADD\n");
+                                    }
+                                }else{
+                                    for(int i = 0 ; i <= expr02 - expr01 ; i = i + tk.valor_i){
+                                        fprintf(mp, "PUSH %d\n", tk.valor_i);
+                                        fprintf(mp, "ADD\n");
+                                    }
+                                }
                             }
 
-                            fprintf(mp, "ADD\n");
+
                             tk = analise_lexica(fd);
 
                         }
                         else
                         {
                             error("inteiro ou identificador esperado!");
+                        }
+                    }
+                    else{
+                        if(flagVar == 1){
+                            for(int i = 0 ; i <= expr01 - expr02 ; i++){
+                                fprintf(mp, "PUSH 1\n");
+                                fprintf(mp, "ADD\n");
+                            }
+                        }else{
+                            for(int i = 0 ; i <= expr02 - expr01 ; i++){
+                                fprintf(mp, "PUSH 1\n");
+                                fprintf(mp, "ADD\n");
+                            }
                         }
                     }
                     while(strcmp(tk.lexema, "endv") != 0)
@@ -1458,6 +1504,10 @@ void cmd()
                     }
                     tk = analise_lexica(fd);
                     tk.processado = 1;
+
+                    fprintf(mp, "GOTO %s\n", L01);
+                    if(flagVar == 1) fprintf(mp ,"LABEL %s\n", L04);
+                    else fprintf(mp ,"LABEL %s\n", L03);
                 }
                 else
                 {
@@ -1492,7 +1542,7 @@ void cmd()
 
         char L02[8];
         strcpy(L02, gerarRotulo());
-        fprintf(mp, "GOFALSE %s", L02);
+        fprintf(mp, "GOFALSE %s\n", L02);
 
         // EXPRESSAO DO IF PRECISA SER BOOL
         if(expressoes.expressao[expressoes.topo].tipoExpr == BOOL_TIPO) pass;
@@ -1858,6 +1908,7 @@ void atrib(int consulta)
 // ======= EXPR =======
 void expr()
 {
+    if (tk.cat == CT_I) expressoes.expressao[expressoes.topo].result = tk.valor_i;
     expr_simp();
 
     if(tk.processado != 1)
@@ -2018,9 +2069,11 @@ void expr_simp(){
         switch(op){
             case ADICAO:
                 fprintf(mp, "ADD\n");
+                flagVar_ = ADICAO;
                 break;
             case SUBTRACAO:
                 fprintf(mp, "SUB\n");
+                flagVar_ = SUBTRACAO;
                 break;
             case OR:
                 fprintf(mp, "LABEL %s\n", L01);
@@ -2032,6 +2085,19 @@ void expr_simp(){
         if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR){
             if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
             else error("Tipo Invalido na expr! Int so aceita int ou char! "); // 2 * 3 * 3.2 ->
+
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR){
+                switch(flagVar_){
+                case ADICAO:
+                    expressoes.expressao[expressoes.topo].result = expressoes.expressao[expressoes.topo - 1].result + expressoes.expressao[expressoes.topo].result;
+                    break;
+                case SUBTRACAO:
+                    expressoes.expressao[expressoes.topo].result = expressoes.expressao[expressoes.topo - 1].result - expressoes.expressao[expressoes.topo].result;
+                    break;
+                default:
+                    break;
+                }
+            }
         }else if(expressoes.expressao[expressoes.topo].tipoExpr == CHAR_EXPR){
             if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
             else error("Tipo Invalido na expr! Char so aceita int ou char! ");
@@ -2082,13 +2148,32 @@ void termo(){
             fprintf(mp, "POP\n");
         }
 
-        if(op == MULTIPLICACAO) fprintf(mp, "MULT\n");
-        if(op == DIVISAO) fprintf(mp, "DIV\n");
+        if(op == MULTIPLICACAO){
+            fprintf(mp, "MULT\n");
+            flagVar_ = MULTIPLICACAO;
+        }
+        if(op == DIVISAO){
+            fprintf(mp, "DIV\n");
+            flagVar_ = DIVISAO;
+        }
         if(op == AND) fprintf(mp, "LABEL %s\n", L01);
 
         if(expressoes.expressao[expressoes.topo].tipoExpr == INT_EXPR){
             if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
             else error("Tipo Invalido na expr! Int so aceita int ou char! "); // 2 * 3 * 3.2 ->
+
+            if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR){
+                switch(flagVar_){
+                case MULTIPLICACAO:
+                    expressoes.expressao[expressoes.topo].result = expressoes.expressao[expressoes.topo - 1].result * expressoes.expressao[expressoes.topo].result;
+                    break;
+                case DIVISAO:
+                    expressoes.expressao[expressoes.topo].result = expressoes.expressao[expressoes.topo - 1].result / expressoes.expressao[expressoes.topo].result;
+                    break;
+                default:
+                    break;
+                }
+            }
         }else if(expressoes.expressao[expressoes.topo].tipoExpr == CHAR_EXPR){
             if(expressoes.expressao[expressoes.topo - 1].tipoExpr == INT_EXPR || expressoes.expressao[expressoes.topo - 1].tipoExpr == CHAR_EXPR) pass;
             else error("Tipo Invalido na expr! Char so aceita int ou char! ");
@@ -2165,7 +2250,23 @@ void fator(){
     {
         expressoes.topo++;
         expressoes.expressao[expressoes.topo].tipoExpr = INT_EXPR;
-
+        switch(flagVar_){
+        case ADICAO:
+            expressoes.expressao[expressoes.topo].result = expressoes.expressao[expressoes.topo].result + tk.valor_i;
+            break;
+        case SUBTRACAO:
+            expressoes.expressao[expressoes.topo].result = expressoes.expressao[expressoes.topo].result - tk.valor_i;
+            break;
+        case MULTIPLICACAO:
+            expressoes.expressao[expressoes.topo].result = expressoes.expressao[expressoes.topo].result * tk.valor_i;
+            break;
+        case DIVISAO:
+            expressoes.expressao[expressoes.topo].result = expressoes.expressao[expressoes.topo].result / tk.valor_i;
+            break;
+        default:
+            break;
+        }
+        expressoes.expressao[expressoes.topo].result = tk.valor_i;
        fprintf(mp, "PUSH %d\n", tk.valor_i);
 
         tk = analise_lexica(fd);

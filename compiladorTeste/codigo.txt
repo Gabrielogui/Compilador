@@ -1,14 +1,6 @@
 def init
-    int a = 5
-    if(a == 2)
-        a = a + 1
-    elif(a == 5)
-        a = a + 6
-    elif(a == 10)
-        a = a + 7
-    else
-        a = a + 4
-    endi
+    int a = 5, b = 7, c
+    var c from a to b endv
 endp
 
 

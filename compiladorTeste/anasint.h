@@ -64,6 +64,7 @@ enum tipoExpr {INT_EXPR = 1, REAL_EXPR, CHAR_EXPR, BOOL_EXPR};
 
 typedef struct{
     enum tipoExpr tipoExpr;
+    int result;
 }EXPRESSAO;
 
 
