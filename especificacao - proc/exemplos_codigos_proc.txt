@@ -1,0 +1,53 @@
+// EXEMPLO 01
+
+prot soma(int, int)
+prot subtrai(int, int)
+
+def init
+    int num1 = 2
+    int num2 = 3
+    do soma(num1, num2)
+
+endp
+
+def soma(int a, int b)
+    int result
+    result = a + b
+    
+    putint result
+endp
+
+def subtrai(int a, int b)
+    int result
+    result = a - b
+    
+    putint result
+endp
+
+// EXEMPLO 02
+
+def init
+    int a, b
+    a = 2
+    b = 6
+    if(b > a)
+        b = a
+    elif(b == a)
+        b = a + 1
+    else
+        a = b + 1
+
+    endi
+
+endp
+
+// EXEMPLO 03
+
+def init
+    int a = 0
+    const char letra = 'l'
+    while(a < 32)
+        putchar letra
+        a = a + 1
+    endw
+endp

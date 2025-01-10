@@ -1,8 +1,8 @@
 # COMPILADOR - LINGUAGEM PROC
 
 Este projeto é um compilador para a linguagem de programação **Proc**, com todas as suas especificações, desenvolvido em **C** utilizando o ambiente de desenvolvimento **CodeBlocks**. Ele realiza a análise léxica, 
-sintática e semântica, além de gerar o código intermediário para programas escritos na linguagem **Proc**.
-Esse projeto universitário foi parte da disciplina de Compiladores. A linguagem Proc foi idealizada pelo doscente da disciplina.
+sintática e semântica, além de gerar o código intermediário (Máquina de pilha) para programas escritos na linguagem **Proc**.
+Esse projeto universitário foi parte da disciplina Fundamentos de Compiladores. A linguagem Proc foi idealizada pelo doscente da disciplina.
 
 ## 📂 ESTRUTURA DO PROJETO
 
@@ -37,17 +37,21 @@ git clone https://github.com/Gabrielogui/Compilador
 
 2. Abra o arquivo 'compiladorTeste'
 
-3. Digite um código em proc (Pode utilizar os exemplos)
+3. Digite um código em proc no arquivo 'codigo.txt' (Pode utilizar os exemplos)
 
 4. Compile o projeto com o gcc
+
+5. O código intermediário da máquina de pilha será gerado e pode ser encontrado no arquivo 'maquina_de_pilha.txt'
 
 Utilizando o Code::Blocks:
 
 2. Abra o projeto 'compiladorTeste.cbp'
 
-3. Digite um código em proc (Pode utilizar os exemplos)
+3. Digite um código em proc no arquivo 'codigo.txt' (Pode utilizar os exemplos)
 
 4. Compile o projeto
+
+5. O código intermediário da máquina de pilha será gerado e pode ser encontrado no arquivo 'maquina_de_pilha.txt'
 
 Caso dê conflito com pastas, faça dessa forma:
 
@@ -55,11 +59,11 @@ Caso dê conflito com pastas, faça dessa forma:
 
 3. Importe os arquivos: main.c ; analex.c ; analex.h ; anasint.c ; anasint.h ; codigo.txt
 
-4. Digite um código em proc (Pode utilizar os exemplos)
+4. Digite um código em proc no arquivo 'codigo.txt' (Pode utilizar os exemplos)
 
 5. Compile o projeto
 
-## 🖥️ EXEMPLOS DE CÓDIGO
+6. O código intermediário da máquina de pilha será gerado e pode ser encontrado no arquivo 'maquina_de_pilha.txt'
 
 ## 📖 ESPECIFICAÇÃO DA LÍNGUAGEM
 
@@ -85,4 +89,4 @@ Consulte o documento para entender os detalhes sobre:
 ## 📈 MELHORIAS FUTURAS:
 
 - Implementação de um gerador de código para máquina virtual.
-- Otimização do código intermediário gerado(Máquina de Pilha).
+- Otimização do código intermediário gerado (Máquina de Pilha).
