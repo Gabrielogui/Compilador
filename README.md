@@ -71,3 +71,19 @@ Consulte o documento para entender os detalhes sobre:
 - Gramática
 - Estruturas de controles e tipos de dados
 - Regras semânticas
+
+## 🧑‍💻 COLABORADORES
+
+- Gabriel Rodrigues:
+Github: https://github.com/Gabrielogui
+Linkedin: https://www.linkedin.com/in/gabriel-rodrigues-a551012a2
+
+- Luiz Vinícius:
+Github: https://github.com/luizvn
+Linkedin: https://www.linkedin.com/in/luizvn
+
+## 📈 MELHORIAS FUTURAS:
+
+- Implementação de um gerador de código para máquina virtual.
+- Otimização do código intermediário gerado(Máquina de Pilha).
+- 
