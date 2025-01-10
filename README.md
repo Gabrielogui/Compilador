@@ -4,7 +4,7 @@ Este projeto é um compilador para a linguagem de programação **Proc**, com to
 sintática e semântica, além de gerar o código intermediário para programas escritos na linguagem **Proc**.
 Esse projeto universitário foi parte da disciplina de Compiladores. A linguagem Proc foi idealizada pelo doscente da disciplina.
 
-## ESTRUTURA DO PROJETO
+## 📂 ESTRUTURA DO PROJETO
 
 O projeto está organizado da seguinte forma:
 
@@ -13,7 +13,7 @@ O projeto está organizado da seguinte forma:
 - **compiladorTeste/**: Pasta onde está o código fonte completo do compilador, compreendendo todas as etpas: léxica, sintática, semântica e geração do código intermediário.
 - **especificacao - proc/**: Pasta onde está localizada a especificação da linguagem proc.
 
-## ⚙️ Funcionalidades
+## ⚙️ FUNCIONALIDADES
 
 O compilador da linguagem **Proc** inclui:
 
@@ -21,3 +21,53 @@ O compilador da linguagem **Proc** inclui:
 - **Análise Sintática**: Verificação da estrutura gramatical do programa.
 - **Análise Semântica**: Garantia de consistência e coerência dos tipos e símbolos.
 - **Geração de Código Intermediário**: Produção de uma representação intermediária do programa - Máquina de Pilha - que pode ser usada para posterior tradução ou execução.
+
+## 🛠️ REQUISITOS
+
+- **Compilador GCC**: Integrado ao CodeBlocks para compilar o código C.
+- **Sistema Operacional**: Windows, Linux ou macOS.
+
+> [!NOTE]
+> O projeto foi desenvolvido utilizando a IDE Code::Blocks 20.03.
+
+## 🚀 CONFIGURAR E USAR
+
+1. Clone o repositório
+git clone https://github.com/Gabrielogui/Compilador
+
+2. Abra o arquivo 'compiladorTeste'
+
+3. Digite um código em proc (Pode utilizar os exemplos)
+
+4. Compile o projeto com o gcc
+
+Utilizando o Code::Blocks:
+
+2. Abra o projeto 'compiladorTeste.cbp'
+
+3. Digite um código em proc (Pode utilizar os exemplos)
+
+4. Compile o projeto
+
+Caso dê conflito com pastas, faça dessa forma:
+
+2. Crie um projeto console (console application)
+
+3. Importe os arquivos: main.c ; analex.c ; analex.h ; anasint.c ; anasint.h ; codigo.txt
+
+4. Digite um código em proc (Pode utilizar os exemplos)
+
+5. Compile o projeto
+
+## 🖥️ EXEMPLOS DE CÓDIGO
+
+## 📖 ESPECIFICAÇÃO DA LÍNGUAGEM
+
+A especificação completa da linguagem está em um arquivo na pasta **especificacao - proc**
+Consulte o documento para entender os detalhes sobre:
+
+- Regras léxicas
+- Regras sintáticas
+- Gramática
+- Estruturas de controles e tipos de dados
+- Regras semânticas
