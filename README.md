@@ -37,7 +37,7 @@ git clone https://github.com/Gabrielogui/Compilador
 
 2. Abra o arquivo 'compiladorTeste'
 
-3. Digite um código em proc no arquivo 'codigo.txt' (Pode utilizar os exemplos)
+3. Digite um código em proc no arquivo 'codigo.txt' (Pode utilizar os exemplos, que estão em 'especificacao - proc/exemplos_codigos_proc.txt')
 
 4. Compile o projeto com o gcc
 
@@ -47,7 +47,7 @@ Utilizando o Code::Blocks:
 
 2. Abra o projeto 'compiladorTeste.cbp'
 
-3. Digite um código em proc no arquivo 'codigo.txt' (Pode utilizar os exemplos)
+3. Digite um código em proc no arquivo 'codigo.txt' (Pode utilizar os exemplos, que estão em 'especificacao - proc/exemplos_codigos_proc.txt')
 
 4. Compile o projeto
 
@@ -59,7 +59,7 @@ Caso dê conflito com pastas, faça dessa forma:
 
 3. Importe os arquivos: main.c ; analex.c ; analex.h ; anasint.c ; anasint.h ; codigo.txt
 
-4. Digite um código em proc no arquivo 'codigo.txt' (Pode utilizar os exemplos)
+4. Digite um código em proc no arquivo 'codigo.txt' (Pode utilizar os exemplos, que estão em 'especificacao - proc/exemplos_codigos_proc.txt')
 
 5. Compile o projeto
 
